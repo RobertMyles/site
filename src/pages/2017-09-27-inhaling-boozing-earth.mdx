@@ -1,0 +1,130 @@
+---
+title: Inhaling/Boozing Earth
+author: Robert Myles McDonnell
+slug: inhaling-boozing-earth
+categories: [R, maps, booze]
+tags: []
+date: "2016-08-13"
+output: 
+  html_document:
+    keep_md: true
+---
+
+*This post got lost mysteriously when I transitioned to Netlify -- just reposting. It was originally from June 2017.* 
+
+
+After seeing Nadieh Bremer’s great [Breathing Earth](http://www.datasketch.es/april/code/nadieh/) infographic, I thought it would be cool to recreate it in R, as you do. Then I saw that it was made from lots of tif files…hmmm. I did some work with those before, ain’t doin it again voluntarily, no thanks.
+
+So then I started thinking about something else that would be (kind of) similar and interesting. I saw the sf package and its interesting `geom_sf()` recently, and so I thought it would be a nice opportunity to try that out. Given we started with ‘breathing’ Earth, the natural next step was to think of ‘inhaling’ Earth! A quick download of some cannabis data from [here](https://data.unodc.org/?lf=1&lng=en)^[Refresh the page if it doesn't log in automatically. You're looking for "Annual prevalence, adults" > "Cannabis" > "Download as Excel". *Sigh*, just create an API, UN. *AND* these are .xls files. **Grrrr!!!** So you're better off opening it up and saving it as a .csv.] and we’re (almost) ready to go, just some cleaning, tidying and merging with the geometry data from the [rnaturalearth](https://github.com/ropenscilabs/rnaturalearth) package. This takes some tidying, unfortunately.^[I save both of these as gifs and store them on imgur, since they don't render correctly with blogdown for some reason]  
+
+
+```r
+library(stringi)
+library(sf)
+library(rnaturalearth)
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+weed <- read_csv("/Users/robert/Downloads/General Prevalence (27 Sep 2017 2207).csv", skip = 2) %>% 
+  filter(!is.na(Year)) %>% 
+  select(Region, Country, Rate = Best, Year) %>% 
+  mutate(Year = ifelse(Year == "2013-2014", "2014", ifelse(
+    Year == "2014/15", "2014", ifelse(
+      Year == "2013/14", "2014", ifelse(
+        Year == "2012/13", "2012", Year)))),
+    Year = paste0(Year, "-01-01"), 
+    Year = lubridate::parse_date_time(Year, "Ymd"),
+    Country = stri_trans_general(Country, "Latin-ASCII"),
+    Country = case_when(
+      .$Country == "Venezuela (Bolivarian Republic of)" ~ "Venezuela",
+      grepl("United Kingdom ", .$Country) ~ "United Kingdom",
+      .$Country == "The former Yugoslav Republic of Macedonia" ~ "Macedonia",
+      .$Country == "Taiwan Province of China" ~ "Taiwan",
+      .$Country == "Russian Federation" ~ "Russia",
+      .$Country == "Lao People's Democratic Republic" ~ "Laos",
+      grepl("China,", .$Country) ~ "China",
+      .$Country == "Bolivia (Plurinational State of)" ~ "Bolivia",
+      TRUE ~ .$Country),
+    Period = ifelse(Year < "2006-01-01", "2000-2005", ifelse(
+      Year > "2010-01-01", "2010-2015", "2006-2010")))
+
+globe <- ne_countries(scale = 110, type = "countries", returnclass =  "sf") %>% 
+  select(Country = admin, formal = formal_en, geometry)
+
+two <- full_join(weed, globe) %>% st_as_sf() %>%
+  filter(!is.na(formal))
+
+pp <- ggplot(two, aes(frame = Period)) + geom_sf(aes(fill = Rate)) +
+  scale_fill_continuous(trans = "reverse", low = "#558833", high = "white") +
+  theme_minimal()
+
+animation::ani.options(ani.width = 800, ani.height = 600)
+gganimate::gganimate(pp, interval = 3, "first.gif")
+```
+
+![](https://imgur.com/PJygETS.gif)  
+
+Hmm, not a good candidate for animations... Look at all that missing data. 
+<br>
+How about booze? We can get some data from [here](http://apps.who.int/gho/data/node.main.A1022?lang=en), (filtered for 'All Types'), join the years available (three tables) and tidy it all up:  
+
+
+```r
+library(magrittr)
+library(tidyr)
+library(lubridate)
+
+booze1 <- read_csv("/Users/robert/Downloads/Boozedata1.csv", skip = 1) %>% 
+  select(Country, `1961`:`1979`)
+booze2 <- read_csv("/Users/robert/Downloads/Boozedata2.csv", skip = 1) %>% 
+  select(Country, `1980`:`1999`)
+booze3 <- read_csv("/Users/robert/Downloads/Boozedata3.csv", skip = 1) %>% 
+  select(Country, `2000`:`2014`)
+booze <- full_join(booze1, booze2) %>% 
+  full_join(booze3) %>% 
+  distinct(Country, .keep_all = TRUE) %>% 
+  gather(year, value, `1961`:`2014`) %>% 
+  mutate(Country = case_when(
+      .$Country == "Venezuela (Bolivarian Republic of)" ~ "Venezuela",
+      grepl("United Kingdom ", .$Country) ~ "United Kingdom",
+      .$Country == "The former Yugoslav Republic of Macedonia" ~ "Macedonia",
+      .$Country == "Taiwan Province of China" ~ "Taiwan",
+      .$Country == "Russian Federation" ~ "Russia",
+      .$Country == "Democratic People's Republic of Korea" ~ "North Korea",
+      .$Country == "Lao People's Democratic Republic" ~ "Laos",
+      .$Country == "Czechia" ~ "Czech Republic",
+      .$Country == "Timor-Leste" ~ "East Timor",
+      .$Country == "Viet Nam" ~ "Vietnam",
+      .$Country == "Brunei Darussalam" ~ "Brunei",
+      .$Country == "Bahamas" ~ "The Bahamas",
+      .$Country == "Côte d'Ivoire"  ~ "Ivory Coast",
+      .$Country == "Guinea-Bissau"  ~ "Guinea Bissau",
+      .$Country == "Syrian Arab Republic"  ~ "Syria",
+      .$Country == "Iran (Islamic Republic of)"  ~ "Iran",
+      .$Country == "Republic of Korea"  ~ "South Korea",
+      .$Country == "Congo"  ~ "Republic of Congo",
+      .$Country == "Serbia"  ~ "Republic of Serbia",
+      .$Country == "Moldova"  ~ "Republic of Moldova",
+      .$Country == "Bolivia (Plurinational State of)" ~ "Bolivia",
+      TRUE ~ .$Country)) %>% 
+  full_join(globe) %>% filter(!is.na(formal)) %>% 
+  mutate(day = "01", month = "12", date = paste0(year, month, day),
+         year = year(parse_date_time(date, orders = "ymd")),
+         value = as.numeric(value)) %>% 
+  filter(!is.na(year))
+  
+
+b <- ggplot(booze, aes(frame = year)) + geom_sf(aes(fill = value)) +
+  scale_fill_continuous(trans = "reverse", low = "#722f37", high = "white") + #nice wine colour
+  theme_minimal() + 
+  guides(fill = guide_legend(title="Recorded alcohol\n consumption \n per capita"))
+
+gganimate::gganimate(b, filename = "second.gif", interval = 2, ani.width=800, ani.height=600)
+```
+
+![](https://imgur.com/MS8lSbV.gif)
+
+<br>
+That works! Nice. Ok, it’s pretty simple, but given the hellish wrangling involved with some spatial polygon sets and administrative unit geographical data, I’m really impressed with how easy `geom_sf()` was to use. Good work, ggplot & sf folks!  
+
