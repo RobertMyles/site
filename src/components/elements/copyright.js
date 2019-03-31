@@ -31,11 +31,14 @@ const Aa = styled.a`
   }
 `
 const Pp = styled.p`
-  color: ${styles.colors.mainWhite};
+  color: ${styles.colors.mainBlue};
   font-family: ${styles.bodyFont};
-  font-weight: 100;
+  font-weight: 200;
   align-text: center;
   display: flex;
   margin: auto;
   justify-content: center;
+  left: 0;
+  bottom: 0;
+  right: 0;
 `

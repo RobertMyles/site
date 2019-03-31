@@ -1,32 +1,37 @@
-import React, { Component } from "react"
+import React from "react"
 import styled from "styled-components"
 import { styles } from "../../utils"
 import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa"
 
-export default function NavbarIcons() {
+export default function NavbarIcons(props) {
+  const { iconcolor, iconhover } = props
   return (
     <>
-      <IconWrapper>
+      <IconWrapper iconcolor={iconcolor} iconhover={iconhover}>
         <a
+          className="ikons"
+          style={{ color: iconcolor }}
           href="https://github.com/RobertMyles"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <FaGithub className="icon git" />
+          <FaGithub className="ikons" />
         </a>
         <a
+          style={{ color: iconcolor }}
           href="https://www.linkedin.com/in/robert-mcdonnell-7475b320/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <FaLinkedin className="icon link" />
+          <FaLinkedin className="ikons" />
         </a>
         <a
+          style={{ color: iconcolor }}
           href="https://twitter.com/RobertMylesMc"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <FaTwitter className="icon twit" />
+          <FaTwitter className="ikons" />
         </a>
       </IconWrapper>
     </>
@@ -38,17 +43,10 @@ const IconWrapper = styled.div`
   cursor: pointer;
   ${styles.transObject({})};
   padding: 0.5rem 1.5rem;
-  .git {
-    color: ${styles.colors.mainBlue};
-  }
-  .link {
-    color: ${styles.colors.mainBlue};
-  }
-  .twit {
-    color: ${styles.colors.mainBlue};
-  }
-  .icon:hover {
-    color: ${styles.colors.mainYellow};
+  padding-top: 1rem;
+  color: ${props => props.icon};
+  .ikons:hover {
+    color: ${props => props.iconhover};
   }
   display: none;
   @media (min-width: 768px) {
@@ -57,3 +55,12 @@ const IconWrapper = styled.div`
     justify-content: space-around;
   }
 `
+// .git {
+//   color: ${props => props.icon};
+// }
+// .link {
+//   color: ${props => props.icon};
+// }
+// .twit {
+//   color: ${props => props.icon};
+// }

@@ -4,7 +4,8 @@ import { Link } from "gatsby"
 import { styles } from "../../utils"
 
 export default function NavbarLink(props) {
-  console.log(`props: ${props.navbarOpen}`)
+  const { linkcolor, linkbackground, linkhover } = props
+
   const links = [
     {
       id: 0,
@@ -39,7 +40,11 @@ export default function NavbarLink(props) {
   ]
 
   return (
-    <LinkWrapper navbarOpen={props.navbarOpen}>
+    <LinkWrapper
+      linkbackground={linkbackground}
+      linkhover={linkhover}
+      linkcolor={linkcolor}
+    >
       {links.map(item => {
         return (
           <li key={item.id}>
@@ -61,20 +66,21 @@ const LinkWrapper = styled.ul`
   .nav-link {
     display: block;
     font-family: ${styles.bodyFont};
+    font-size: 1.2rem;
     font-weight: bold;
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    color: ${styles.colors.mainBlue};
+    padding: 1rem;
+    padding-bottom: 1.5rem;
+    color: ${props => props.linkcolor};
     font-weight: 700;
     text-transform: capitalize;
     cursor: pointer;
-    ${styles.transDefault};
     &:hover {
-      background: ${styles.colors.mainBlue};
-      color: ${styles.colors.mainWhite};
+      background: ${props => props.linkbackground};
+      color: ${props => props.linkhover};
     }
   }
-  height: ${props => (props.navbarOpen ? "345px" : "0px;")};
+  height: "345px";
   overflow: hidden;
   ${styles.transObject({})};
   @media (min-width: 768px) {
@@ -82,8 +88,8 @@ const LinkWrapper = styled.ul`
     display: flex;
     margin: 0 auto;
     .nav-link:hover {
-      color: ${styles.colors.mainRed};
-      background: ${styles.colors.mainWhite};
+      color: ${props => props.linkhover};
+      background: ${props => props.linkbackground};
     }
   }
 `

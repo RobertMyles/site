@@ -1,23 +1,29 @@
 import React from "react"
 import styled from "styled-components"
-import { styles } from "../../utils"
-import landing from "../../images/web_landing.png"
+import circle from "../../images/circle_border.jpeg"
 import IconWrapper from "../elements/IconWrapper"
-import LandingDivs from "../landings/LandingDivs"
+import LandingDivs from "../elements/LandingDivs"
 import Copyright from "../elements/copyright"
+import Grid from "@material-ui/core/Grid"
+import TitleDivs from "../elements/TitleDivs"
 
 export default function LandingLayout() {
   return (
-    <Fulldiv>
-      <Image src={landing} alt="website landing page" height={380} />
+    <Grid
+      container
+      direction="column"
+      justify="space-between"
+      alignItems="center"
+    >
+      <Image src={circle} height={450} />
+      <TitleDivs />
+      <br />
       <br />
       <LandingDivs />
       <br />
-      <br />
-      <br />
       <IconWrapper />
       <Copyright />
-    </Fulldiv>
+    </Grid>
   )
 }
 
@@ -26,7 +32,8 @@ const Image = styled.img`
   margin-left: auto;
   margin-right: auto;
 `
-const Fulldiv = styled.div`
-  background: ${styles.colors.mainBlack};
-  min-height: 100vh;
-`
+// const Fulldiv = styled.div`
+//   background: ${styles.colors.mainBlack};
+//   min-height: 100vh;
+// `
+// <Fulldiv>

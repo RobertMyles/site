@@ -1,26 +1,15 @@
 ---
 title: Easier web scraping in R
-date: '2016-08-05'
-output: 
-  html_document:
-    keep_md: true
-categories:
-  - R
-  - webscraping
-tags: []
-description: ''
+date: "2016-08-05"
 ---
-
-
-
 
 In an earlier [post](http://robertmyles.github.io//web-navigation-and-scraping-with-r.html), I described some ways in which you can interact with a web browser using R and `RSelenium`. This is ideal when you need to access data through drop-down menus and search bars. However, working with `RSelenium` can be tricky. There are, of course, easier ways to get information from the internet using R.
 
-Perhaps the most straightforward way is to use `rvest`, in tandem with other packages of the [Hadleyverse](https://barryrowlingson.github.io/hadleyverse/#1)<sup id="a1">[1](#fn1)</sup>, such as `dplyr` and `tidyr` for data preparation and cleaning after the webscrape. I'm going to use a simple example that I came across recently in my work, getting the name of each mayor in Brazil.
+Perhaps the most straightforward way is to use `rvest`, in tandem with other packages of the [Hadleyverse](https://barryrowlingson.github.io/hadleyverse/#1)[^1], such as `dplyr` and `tidyr` for data preparation and cleaning after the webscrape. I'm going to use a simple example that I came across recently in my work, getting the name of each mayor in Brazil.
 
-Finding out who was *elected* to the mayor's office in each municipality in Brazil is easy: that data exists and is available on the [website](http://www.tse.jus.br/) of the *Tribunal Superior Eleitoral*. However, just because someone was elected to office (in this case in 2014) does not mean that they are still in office now, two years later. After searching around the web for a bit, I realised that this data is not available as a dataset. 
+Finding out who was _elected_ to the mayor's office in each municipality in Brazil is easy: that data exists and is available on the [website](http://www.tse.jus.br/) of the _Tribunal Superior Eleitoral_. However, just because someone was elected to office (in this case in 2014) does not mean that they are still in office now, two years later. After searching around the web for a bit, I realised that this data is not available as a dataset.
 
-After wandering to the website of the [IBGE](http://www.ibge.gov.br/home/), a Brazilian statistics agency, I found a way to get the name of the mayor currently in charge of each municipality. Each municipality has its own webpage on the IGBE's dedicated [Cidades@](http://www.cidades.ibge.gov.br/xtras/home.php) site. 
+After wandering to the website of the [IBGE](http://www.ibge.gov.br/home/), a Brazilian statistics agency, I found a way to get the name of the mayor currently in charge of each municipality. Each municipality has its own webpage on the IGBE's dedicated [Cidades@](http://www.cidades.ibge.gov.br/xtras/home.php) site.
 
 For example, you will see the a webpage for the municipality of Acrelândia, shown in the image below. As you can see, the name of the mayor ("Prefeito") is on the right-hand side of the page. Since we now know we can get this for each municipality, we have three tasks to do in order to get this info into R:
 
@@ -28,16 +17,14 @@ For example, you will see the a webpage for the municipality of Acrelândia, sho
 - send the corresponding information to the server using R;
 - scrape the page and tidy up the resulting data in R.
 
-&nbsp; 
+&nbsp;
 
-<img src="http://i.imgur.com/MGqKffr.png" style="width:750px;height:500px;"> 
+<img src="http://i.imgur.com/MGqKffr.png" style="width:750px;height:500px;" />
 
-&nbsp; 
+&nbsp;
 
 The url for [Acrelândia](http://www.cidades.ibge.gov.br/xtras/perfil.php?lang=&codmun=120001&search=acre|acrelandia) is unique at: "codmun=120001" and "search=acre|acrelandia".  
 The number in "codmun" is available as the IBGE municipal code (although missing the final digit, strangely...but that's not a problem, we just take it off the end for each one) and the rest is just the state and the municipality, all information that is easy to get from various sources. For this example, I've uploaded this basic dataset to Github so we can use it here.
-
-
 
 ```r
 library(dplyr)
@@ -48,21 +35,19 @@ library(stringi)
 library(rvest)
 
 ## read in data and create variables for webscraping:
-Mayors <- read_csv("https://raw.githubusercontent.com/RobertMyles/RobertMyles.github.io/master/_data/IBGE_codes.csv") %>% 
-  select(-c(UF, Cod.Mun)) %>% 
-  dplyr::rename(Code_IBGE = Cod.IBGE) %>% 
-  mutate(MUNIC2 = tolower(.$MUNIC)) %>% 
-  mutate(MUNIC2 = gsub(" ", "-", .$MUNIC2)) %>% 
-  mutate(Name_UF2 = tolower(.$Name_UF)) %>% 
-  mutate(Code2 = unlist(str_extract_all(.$Code_IBGE, "[0-9]{6}"))) %>% 
-  unite(col = Link, Name_UF2, MUNIC2, sep = "|", remove = F) %>% 
-  arrange(ACR_UF) 
+Mayors <- read_csv("https://raw.githubusercontent.com/RobertMyles/RobertMyles.github.io/master/_data/IBGE_codes.csv") %>%
+  select(-c(UF, Cod.Mun)) %>%
+  dplyr::rename(Code_IBGE = Cod.IBGE) %>%
+  mutate(MUNIC2 = tolower(.$MUNIC)) %>%
+  mutate(MUNIC2 = gsub(" ", "-", .$MUNIC2)) %>%
+  mutate(Name_UF2 = tolower(.$Name_UF)) %>%
+  mutate(Code2 = unlist(str_extract_all(.$Code_IBGE, "[0-9]{6}"))) %>%
+  unite(col = Link, Name_UF2, MUNIC2, sep = "|", remove = F) %>%
+  arrange(ACR_UF)
 ```
 
-&nbsp; 
-In the code snippet above, we've taken out unnecessary columns, renamed one, changed the names of the municipalities to lower case (for the url), taken six numbers of the IBGE code for use in the webscrape and joined the state and municipality names together, with `|` seperating them, as in the url for each municipality webpage. We also need to create some empty data frames to fill, and remove the municipality of Brasília, which does not have a *Prefeito*, just a [governor](http://www.cidades.ibge.gov.br/xtras/perfil.php?lang=&codmun=530010&search=distrito-federal|brasilia), which is all done below:
-
-
+&nbsp;
+In the code snippet above, we've taken out unnecessary columns, renamed one, changed the names of the municipalities to lower case (for the url), taken six numbers of the IBGE code for use in the webscrape and joined the state and municipality names together, with `|` seperating them, as in the url for each municipality webpage. We also need to create some empty data frames to fill, and remove the municipality of Brasília, which does not have a _Prefeito_, just a [governor](http://www.cidades.ibge.gov.br/xtras/perfil.php?lang=&codmun=530010&search=distrito-federal|brasilia), which is all done below:
 
 ```r
 url <- "http://www.cidades.ibge.gov.br/xtras/perfil.php?lang=&codmun="
@@ -78,10 +63,7 @@ Cidades <- data.frame()
 Pref <- data.frame()
 ```
 
-
 Next comes our webscrape, which is incredibly easy with `rvest` (`xml2` is likewise easy). The only hard part of this entire scrape is getting the words "Prefeito" along with the name of the mayor out of the document. This relies on regex, which can be tricky. But trial and error should lead you to the right answer for whatever you need. Or search [Google](http://www.rexegg.com/regex-quickstart.html), of course.
-
-
 
 ```r
 for(i in 1:length(link)){
@@ -100,14 +82,13 @@ for(i in 1:length(link)){
 
 With a little tidying, we have a nice little dataset of each current mayors for each municipality in Brazil.
 
-
 ```r
-colnames(Pref) <- c("Prefeito", "Municipio") 
+colnames(Pref) <- c("Prefeito", "Municipio")
 Pref$Prefeito <- gsub("Prefeito", "", Pref$Prefeito)
 Pref$Prefeito <- stri_trans_general(Pref$Prefeito, "Latin-ASCII")
-Pref1 <- Pref 
-Pref1$Municipio <- Pref1$Municipio %>% 
-  str_split_fixed("\\|", n = 2) %>% 
+Pref1 <- Pref
+Pref1$Municipio <- Pref1$Municipio %>%
+  str_split_fixed("\\|", n = 2) %>%
   toupper()
 Pref$Name_UF <- Pref1$Municipio[,1]
 Pref$MUNIC <- Pref1$Municipio[,2]
@@ -122,11 +103,8 @@ Prefeitos <- select(Prefeitos, -c(Link, MUNIC2, Name_UF2, Code2))
 Prefeitos <- Prefeitos[,c(1:5, 7, 6)]
 ```
 
-
-<img src="http://i.imgur.com/TRMOSkV.png" style="width:650px;height:400px;"> 
-
+<img src="http://i.imgur.com/TRMOSkV.png" style="width:650px;height:400px;" />
 
 &nbsp;
 
-<b id="fn1">1</b> Supposedly, Hadley Wickham doesn't actually like this term, but I'll use it anyway, I'm sure he wouldn't mind :smiley:. [↩](#a1)  
-
+[^1]: Supposedly, Hadley Wickham doesn't actually like this term, but I'll use it anyway, I'm sure he wouldn't mind :smiley:.

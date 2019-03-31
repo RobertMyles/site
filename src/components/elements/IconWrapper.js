@@ -35,11 +35,12 @@ const A = styled.a`
   padding-right: 12px;
 `
 const DDiv = styled.div`
-  font-size: 2rem;
+  font-size: 2.25rem;
   cursor: pointer;
   display: flex;
   margin: auto;
   justify-content: center;
+  padding: 20px;
   ${styles.transObject({})};
   .git {
     color: ${styles.colors.mainBlue};

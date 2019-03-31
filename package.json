@@ -5,9 +5,13 @@
   "version": "0.1.0",
   "author": "Robert Myles McDonnell <robertmylesmcdonnell@gmail.com>",
   "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@mdx-js/mdx": "^0.20.3",
+    "@mdx-js/tag": "^0.20.3",
     "dompurify": "^1.0.10",
     "gatsby": "^2.2.6",
     "gatsby-image": "^2.0.33",
+    "gatsby-mdx": "^0.4.4",
     "gatsby-plugin-manifest": "^2.0.24",
     "gatsby-plugin-offline": "^2.0.25",
     "gatsby-plugin-react-helmet": "^3.0.9",

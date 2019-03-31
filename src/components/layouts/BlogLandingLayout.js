@@ -1,37 +1,50 @@
-import React from "react"
-import { StaticQuery, Link, graphql } from "gatsby"
-// import Navbar from "../navbar"
-import { styles } from "../../utils"
+// import React from "react"
+// import { StaticQuery, Link, graphql } from "gatsby"
+// // import Navbar from "../navbar"
+// import { styles } from "../../utils"
 
-export default ({ data }) => (
-  <StaticQuery
-    query={graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-            author
-          }
-        }
-      }
-    `}
-    render={data => (
-      <div>
-        <h1 style={{ color: styles.colors.mainWhite }}>
-          About {data.site.siteMetadata.title}
-        </h1>
-        <p style={{ color: styles.colors.mainWhite }}>
-          desc: {data.site.siteMetadata.author}
-        </p>
-      </div>
-    )}
-  />
-)
+// // export default ({ data }) => (
+// //   <StaticQuery
+// //     query={graphql`
+// //       query {
+// //         allMdx {
+// //           edges {
+// //             node {
+// //               id
+// //               excerpt
+// //               frontmatter {
+// //                 title
+// //               }
+// //               fields {
+// //                 slug
+// //               }
+// //             }
+// //           }
+// //         }
+// //       }
+// //     `}
+// //     render={data => (
+// //       <div>
+// //         <h1>Blog Posts</h1>
+// //         <ul>
+// //           {posts.map(({ node: post }) => (
+// //             <li key={post.id}>
+// //             <Link to={post.fields.slug}>
+// //             <h2>{post.frontmatter.title}</h2>
+// //             </Link>
+// //             <p>{post.excerpt}</p>
+// //             </li>
+// //           ))}
+// //         </ul>
+// //       </div>
+// //     )}
+// //   />
+// // )
 // export default ({ data }) => (
 //   <div>
 //     <h1>Blog Posts</h1>
-//     <h4>{data.allMarkdownRemark.totalCount} Posts</h4>
-//     {data.allMarkdownRemark.edges.map(({ node }) => (
+//     <h4>{data.allMdx.totalCount} Posts</h4>
+//     {data.allMdx.edges.map(({ node }) => (
 //       <div key={node.id}>
 //         <Link to={node.fields.slug}>
 //           <h3>
@@ -43,18 +56,18 @@ export default ({ data }) => (
 //     ))}
 //   </div>
 // )
+// // export const query = graphql`
+// //   query {
+// //     site {
+// //       siteMetadata {
+// //         title
+// //       }
+// //     }
+// //   }
+// // `
 // export const query = graphql`
 //   query {
-//     site {
-//       siteMetadata {
-//         title
-//       }
-//     }
-//   }
-// `
-// export const query = graphql`
-//   query {
-//     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+//     allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
 //       totalCount
 //       edges {
 //         node {

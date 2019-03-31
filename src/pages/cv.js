@@ -1,8 +1,5 @@
-/* eslint-disable */
 import React from "react"
-// import Layout from "../components/layout"
 import { graphql, Link } from "gatsby"
-// import { css } from "@emotion/core"
 import {
   FaBirthdayCake,
   FaPhone,
@@ -12,14 +9,19 @@ import {
 } from "react-icons/fa"
 
 export default ({ data }) => (
-  // <Layout>
-  // <div css={css`padding-left: 14px;`}>
-  // <p><FaBirthdayCake css={css`color: #42CAFD;`}/>  19/12/1980</p>
-  // <p><FaPhone css={css`color: #42CAFD;`}/>  +353 87 667 5328</p>
-  // <a css={css`text-decoration: none;`} href="mailto:robertmylesmcdonnell@gmail.com">
-  //     <p css={css`color: #373737;`}><FaEnvelope css={css`color: #42CAFD;`}/> robertmylesmcdonnell@gmail.com</p></a>
-  // </div>
   <>
+    <p>
+      <FaBirthdayCake /> 19/12/1980
+    </p>
+    <p>
+      <FaPhone /> +353 87 667 5328
+    </p>
+    <a href="mailto:robertmylesmcdonnell@gmail.com">
+      <p>
+        <FaEnvelope /> robertmylesmcdonnell@gmail.com
+      </p>
+    </a>
+
     <p>
       I'm a creative data scientist with an interest in the big picture of data
       science -- figuring out how all the pieces go together, from data
@@ -33,7 +35,7 @@ export default ({ data }) => (
 
     <br />
     <h3>Data Scientist, First Data Corporation</h3>
-    {/* <p css={css`color: #FF6B6B`}>08/2018 — Present</p> */}
+    <p>08/2018 — Present</p>
     <p>
       Modelling of fraud in high-volume real-time settings; member of
       three-person team responsible for First Data's global data strategy;
@@ -41,7 +43,7 @@ export default ({ data }) => (
     </p>
     <br />
     <h3>Lead Data Scientist, Avanade, São Paulo</h3>
-    {/* <p css={css`color: #FF6B6B`}>08/2017 — 07/2018</p> */}
+    <p>08/2017 — 07/2018</p>
     <p>
       I brought data science into Avanade Brazil, working on various problems
       for different clients. This work including fraud modelling using deep
@@ -54,7 +56,7 @@ export default ({ data }) => (
     <h3>
       Data Science Team Director, Ministry of Finance, São Paulo City Council
     </h3>
-    {/* <p css={css`color: #FF6B6B`}>03/2017 — 07/2017</p> */}
+    <p>03/2017 — 07/2017</p>
     <p>
       I headed a team responsible for making accurate forecasts of data on
       public spending. A big part of my job was also modernizing the way the
@@ -67,7 +69,7 @@ export default ({ data }) => (
     <h3>
       Course Tutor, Brazilian Institute of Research and Data Analysis (IBPAD)
     </h3>
-    {/* <p css={css`color: #FF6B6B`}>08/2016 — 06/2018</p> */}
+    <p>08/2016 — 06/2018</p>
     <p>
       Responsible for designing and giving courses on Data Science with R and
       Data Visualization with ggplot2, and producing blog posts on data science
@@ -80,7 +82,7 @@ export default ({ data }) => (
     </p>
     <br />
     <h3>Freelance Data Scientist</h3>
-    {/* <p css={css`color: #FF6B6B`}>01/2014 — 01/2017</p> */}
+    <p>01/2014 — 01/2017</p>
     <p>
       I've helped people with projects ranging from their academic work to
       scraping information from social media sites, text analysis to statistics,
@@ -91,7 +93,7 @@ export default ({ data }) => (
       Master's Degree Materials Writer and Data Scientist, Getúlio Vargas
       Foundation (FGV), São Paulo
     </h3>
-    {/* <p css={css`color: #FF6B6B`}>08/2016 — 03/2017</p> */}
+    <p>08/2016 — 03/2017</p>
     <p>
       Responsible for writing case studies for FGV, which are used as teaching
       materials in their post-graduate courses. Also some data science work
@@ -105,7 +107,7 @@ export default ({ data }) => (
       <FaGraduationCap /> Academic Background
     </h2>
     <h3>PhD International Relations, University of São Paulo</h3>
-    {/* <p css={css`color: #FF6B6B`}>2016</p> */}
+    <p>2016</p>
     <p>
       Thesis: Explaining the Determinants of Foreign Policy Voting Behaviour in
       the Brazilian Houses of Legislature, with a Focus on the Senate. Available{" "}
@@ -116,7 +118,7 @@ export default ({ data }) => (
       Master's International Relations, Dublin City University (First Class
       Honour)
     </h3>
-    {/* <p css={css`color: #FF6B6B`}>2010</p> */}
+    <p>2010</p>
     <p>
       Thesis: Brazil’s Foreign Policy- Domestic Interests, Presidentialism or
       the Autonomy of Itamaraty?
@@ -126,7 +128,7 @@ export default ({ data }) => (
       Bachelor’s Degree in Fine Art, National College of Art & Design, Dublin
       (Honours)
     </h3>
-    {/* <p css={css`color: #FF6B6B`}>2004</p> */}
+    <p>2004</p>
     <br />
     <br />
     <h2>
@@ -142,7 +144,10 @@ export default ({ data }) => (
       </li>
       <li>Experienced user of Stan & JAGS</li>
       <li>Learning Scala, Spark and the tools of the Hadoop Ecosystem</li>
-      {/* <p css={css`font-family: "Playfair Display";`}><b>R packages:</b></p> */}
+      <p>
+        <b>R packages:</b>
+      </p>{" "}
+      */}
       <ul>
         <li>
           <a href="https://github.com/RobertMyles/tidyRSS">tidyRSS</a>
@@ -171,7 +176,6 @@ export default ({ data }) => (
         ...and others.
       </ul>
     </p>
-    {/* </Layout> */}
   </>
 )
 
