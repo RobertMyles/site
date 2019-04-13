@@ -1,66 +1,42 @@
 import React from "react"
-import { StaticQuery, graphql } from "gatsby"
+import { graphql } from "gatsby"
 import BlogLayout from "../components/layouts/BlogLayout"
-// import dompurify from "dompurify"
 import "katex/dist/katex.min.css"
 import MDXRenderer from "gatsby-mdx/mdx-renderer"
+import Helmet from "react-helmet"
+import get from "lodash/get"
 
-const PageTemplate = () => (
-  <StaticQuery
-    query={graphql`
-      query BlogPostQuery($id: String) {
-        mdx(id: { eq: $id }) {
-          id
-          frontmatter {
-            title
-          }
-          code {
-            body
-          }
-        }
-      }
-    `}
-    render={data => (
-      <>
-        <BlogLayout>
-          <div>
-            <h1>{data.mdx.frontmatter.title}</h1>
-            <MDXRenderer>{data.mdx.code.body}</MDXRenderer>
-          </div>
-        </BlogLayout>
-      </>
-    )}
-  />
-)
+const PageTemplate = props => {
+  const mdx = props.data.mdx
+  const siteTitle = get(props, "data.site.siteMetadata.title")
+  return (
+    <>
+      <BlogLayout>
+        <Helmet title={`${mdx.frontmatter.title} | ${siteTitle}`} />
+        <h1>{mdx.frontmatter.title}</h1>
+        <MDXRenderer>{mdx.code.body}</MDXRenderer>
+      </BlogLayout>
+    </>
+  )
+}
 
-// export const query = graphql`
-//   query BlogPostQuery($id: String) {
-//     mdx(id: { eq: $id }) {
-//       id
-//       frontmatter {
-//         title
-//       }
-//       code {
-//         body
-//       }
-//     }
-//   }
-// `
 export default PageTemplate
-
-// export const query = graphql`
-//   query($slug: String!) {
-//     markdownRemark(fields: { slug: { eq: $slug } }) {
-//       html
-//       frontmatter {
-//         title
-//       }
-//     }
-//   }
-// `
-
-// const post = data.markdownRemark
-//{/* <div dangerouslySetInnerHTML={{ __html: sanitizer(post.html) }} /> */}
-
-// with post.frontmatter below
-// const sanitizer = dompurify.sanitize
+export const query = graphql`
+  query BlogPostQuery($slug: String!) {
+    mdx(fields: { slug: { eq: $slug } }) {
+      id
+      code {
+        body
+      }
+      frontmatter {
+        title
+      }
+    }
+    site {
+      siteMetadata {
+        title
+        author
+      }
+    }
+  }
+`

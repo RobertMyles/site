@@ -1,0 +1,144 @@
+---
+title: How to make a GitHub pages blog with RStudio and Hugo
+date: "2017-02-01"
+---
+
+_Update: for some people who may have some issues setting up the blog the way I've set out here, see Kate's helpful comments below._
+
+Since April or so of last year, I've had a personal website on GitHub pages, where I keep this blog and a few other things. Setting it up was at times frustrating, but a good learning process (I especially picked up a lot of Git through that experience). Actually writing, not so good. I picked a theme I [liked](https://jekyllthemes.io/theme/45074676/sustain), all good, but I soon realised that writing as I often do in R Markdown was a little less convenient in the GitHub-flavoured markdown $\rightarrow$ jekyll $\rightarrow$ theme $\rightarrow$ website process. This post is an explanation of why I moved to [Hugo](https://gohugo.io/) and specifically to [blogdown](https://github.com/rstudio/blogdown). I found the guides on the process (blogdown-focused, that is) to have some errors^[There are three guides that I found on the net, not including the Hugo tutorial, and a big thanks to the authors for taking the time to write those posts and share their experience. In the end I think they confused me more than they helped, but it was a learning process! One is [here](https://hjdskes.github.io/blog/deploying-hugo-on-personal-gh-pages/index.html), by Jente Hidskes, which has some curious items in the bash scripts he provides (why the "Grabbing one file from the \$SOURCE\ branch so that a commit can be made" part, when "touch file" would have been far easier, for example? And anyway, it didn't work, for me, there is an error with `git rm --cached` from what I can figure out, and some other lines didn't work.) Another is [here](http://code.markedmondson.me/new-blog-down/), which is closest to what I did (apart from the Hugo tutorial), except it's missing a whole host of info on blogdown, Hugo and particularly GitHub. It also takes the project-custom-build approach, which gave me problems. But nice site, Mark. The last one is [here](https://proquestionasker.github.io/blog/Making_Site/), which is lovely and detailed (thanks Amber for taking the time), although it depends on the (I think) faulty bash scripts of Jente. It is also overly complicated, there is no need for the orphan master process. Anyway, they all helped, so thanks folks.], so I will explain each step in getting your own GitHub pages blog, built by blogdown in RStudio, for anybody who is interested. Feel free to skip to the setup [guide](#how-to-set-up-your-own-github-pages-blog-and-post-using-blogdown) to get started.
+
+### What I _used_ to do
+
+In R Markdown, code (naturally) and equations are easy to format. Back ticks format the text inside as `code` style text, and full chunks of R code (or [other languages](https://yihui.name/knitr/demo/engines/)) can be placed inside three backticks with the accompanying name of the language afterwards inside two curly braces. To do this in April last year, with the theme I had chosen, I needed to write a whole load of Liquid tags like this: `{% highlight R linenos=table %}` and `{% endhighlight %}`.
+
+So that was code formatting, which is quite a frequent need in my blogging. But that wasn't as bad as $\LaTeX$. "Meu Deus", as my Brazilian wife might say. To get the word "LaTeX" like I just wrote above, I had to write `{% raw %}\\(\LaTeX\\){% endraw %}`. Put that in a paragraph a few times and start to regret it. In R Markdown? `$\LaTeX$`.^[If you are _not_ using the default blogdown Hugo theme, you will have to enable mathjax, and include [this](https://github.com/yihui/hugo-lithium-theme/blob/7d436d803df90c873cdaecf24aeeff827696d77c/layouts/partials/footer.html#L21-L30) piece of html in one of the html files in your layouts/partials files, preferably one that is loaded with every blog post, like footer or header. I put mine in footer.html.] I'll take that, thanks very much.
+
+Footnotes were also irritating. Instead of the simple `^[footnote]` in R Markdown, I was using this: `<sup id="a1">[1](#fn1)</sup>`, with the accompanying `<b id="fn1">1</b> footnote (#a1)` (actually, I think that last part is missing something). I thought I was doing great. Hahaha!
+
+### Enter R (pt. 1)
+
+So I liked the sustain theme that I had chosen, but after seeing that [Julia Silge](http://juliasilge.com/) writes her lovely GitHub pages blog in R Markdown, I thought, 'huh? That would be _much_ easier'. Yes, and no. Big no.
+
+First, I changed my theme. I chose the same one as Julia, simply because I liked it the most. It's called the so-simple theme, and its developer Michael Rose is a _really_ nice guy (you can see him [here](https://github.com/mmistakes/so-simple-theme/issues/227) helping me out of my confusion relative to a point I will get to shortly about jekyll). So now I was happy, with a cool new blog that I could write in R Markdown.
+
+In order to convert the .Rmd R Markdown files to ordinary markdown .md files that both jekyll and GitHub can process, I first used the same converting [function](https://github.com/dgrtwo/dgrtwo.github.com/blob/master/_scripts/knitpages.R) that Julia uses, adapted by David Robinson from [Jason Fisher](http://jfisher-usgs.github.io/r/2012/07/03/knitr-jekyll). It was ok, except it converted whatever .Rmd files I had in the source folder, even ones that weren't ready, and I still had to manually change the draft to a full post (changing the title to the date format jekyll uses) and move it around. There were a few other things about it that discommoded me, I can't remember now. Anyway, I then found [this one](https://github.com/AndySouth/andysouth.github.io/blob/master/rmd2md.r), adapted by a chap called Andy South. I liked the look of this and set about customizing it to do what I wanted. _Then_ I realised just how annoying the R Markdown -- jekyll -- GitHub pages workflow can be.
+
+The issues had to do with the paths that jekyll and knitr use to find the files they need to create the posts I was writing. Any file that starts with `_` is ignored by jekyll. That's useful for putting our .Rmd files in, so I did, in a `_source` folder. But then when I tried to preview the drafts with jekyll (which was forever unreliable even before this problem), it couldn't find the images which were embedded in a `_` folder. Fine. Then I made `_source` into `source` and knitr started complaining about file paths. Not to mention that jekyll started giving errors about datetimes being 'nil' and refusing to build or serve the site. :persevere: ^[Supposedly emoji support is coming to Hugo in the next release. This should be a 'perservering' face. I'm leaving it here until the next release is available. In perseverance.] Putting the images on imgur solved that, but that meant that I was writing code chunks that I was never actually evaluating at "knitting time" (conjures images of grannies sitting at fireplaces), and just linking to the images from the output I had run earlier. Hardly ideal.
+
+Another thing I like to do in my R Markdown html output is to include some custom css, nothing too fancy, just things like background images and different fonts. I actually don't like css much, nor do I like html (I pity web developers, these languages are horrible. And javascript? Sheesh. Still, d3 is **awesome**, so I will learn some javascript.) So naturally I tried to do this on a blog post. It's pretty easy in R Markdown: `custom_css:` just goes in the YAML header, nothing too taxing on this most weary of boys. And I had a funky little system of converting all this to .md, moving around files with `system2()` and so forth. I thought I was rocking. Of course not. Apart from the same problem with file paths, the css just never showed up. So then I modified the layouts and so on. (There are lots of examples of how to do this on the web.) No dice. Or sometimes, like the headers. But for all the posts, not just the one I wanted. Sigh. And remember, I am principally a "data analyst" or some type of "data scientist/researcher". I'm not a web developer and I have very limited patience for messing around with scss variables etc etc. This is not to criticise the theme, it's great, but I want to spend my time writing blog posts that interest me, not messing around with html and css.
+
+### Enter R (pt. 2)
+
+So I had seen the genius Yihui's blogdown package a little while ago, and I thought to myself, 'that's an option for the future'. I had just learned all about jekyll and I wasn't particularly in the mood for diving into the world of Hugo. However, necessity is the mother of doing stuff. So I dived in.
+
+I have to say, blogdown seemed _amazing_. Do practically everything from inside Rstudio? Fantastic. Write all my posts in R Markdown and leave behind all those finicky converting functions? More fantastic. Live preview (remember my jekyll preview of drafts almost never worked)? Still more fantastic. Ok, Hugo works a little differently to jekyll, and involved a bit of a learning curve, but it's actually quite straightforward. And blogdown just makes all of this tremendously easy, so I can get back to writing about stuff that interests in me, in an editor that I like (Rstudio), using a great and simple language (R Markdown, okay, 'language' might a bit much, but I can certainly use a few languages in it). You rock, Yihui, you really do. And Hugo is very fast. Why is this good? When you're previewing your blog post as you write in RStudio, it makes a difference. Ok, let's get to the meat of the post.
+
+## How to set up your own GitHub pages blog and post using blogdown
+
+1: This is not a Git tutorial. [Lots](https://git-scm.com/book/en/v2) of those exist already; here I will be using git commands in Terminal (I write on a macbook) without much explanation.
+
+2: Neither is this a Hugo or R Markdown tutorial. [Those](https://gohugo.io/overview/introduction/) [exist](http://kbroman.org/knitr_knutshell/pages/Rmarkdown.html) already, too.
+
+Ok, let's get started. I'm assuming you have RStudio and all that installed.
+
+### blogdown and Hugo
+
+First, open up RStudio. If you don't have the devtools package installed, install it (`install.packages("devtools")`). Now, using this, we install blogdown (`devtools::install_github('rstudio/blogdown')`).
+
+Next, `library(blogdown)`. We can use blogdown to install Hugo, but if you are using a mac, you may need to install [homebrew](http://brew.sh/) first. It's easy, just paste `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"` into Terminal. If you don't use Terminal or the command line much, now is a good time to start. It can be extremely useful.
+
+Now we can run `install_hugo()`. Next, we need to do some Git things.
+
+### GitHub
+
+If you do not have a GitHub account, you can open one [here](https://github.com/join). Choose a good username, it will be the name of your GitHub pages website, unless you pay for a seperate domain name.
+
+On your GitHub home page, there is a `+` sign with a downward arrow in the upper-right-hand corner. Click this and go to 'New Repository'. This new repo will be the repo for your website. For example, mine is RobertMyles.github.io, since my username is RobertMyles. (So the entire repo address is RobertMyles/RobertMyles.github.io). Click 'Create Repository' and we're good to "clone".
+
+On the page of the repo, there is an option to "Clone or Download" on the right-hand side. Clone with HTTPS by copying the url of the repo to your clipboard. In Terminal, or whatever command line tool you use, type: - `git clone <url>`, where `<url>` is the url you just copied. (By the way, for first time Git use, you need to authenticate your machine. Details [here](https://help.github.com/articles/generating-an-ssh-key/).) - `cd <directory>`, where `<directory>` is the name of the folder that you just copied from GitHub. If you don't know how `cd` works, you will need to be in the _enclosing folder_ for that bit of script to work (`cd` moves the working directory like `setwd()` in R). What we're doing is moving into the new folder that we have just cloned.
+
+This folder may or may not have a "README.md" file, depending on whether you chose that option when you set it up. It will have an invisible `.git` folder. If it does have a "README", delete it, as blogdown needs an empty directory to start. If you do delete this file, you will need to run the following git commands afterwards:
+
+```bash
+git add .
+git commit -m 'delete README.md'
+git push -u origin master
+```
+
+Before we move back to blogdown, you need to create another repository, one that will host all of the hugo/blogdown content. I called this one "website-hugo", but's what it's called isn't important (short and easy to type is better). Like we did with the first repo, clone this one on your computer (a "local" repo, in Git-world).
+
+## Blogdown (again)
+
+In Rstudio, either set your working directory to the _Hugo_ folder that we just cloned, or open an RStudio project in this folder. I don't think it's necessary to open a project, and anyway I keep getting problems trying to shut down [projects](https://support.rstudio.com/hc/en-us/community/posts/223936487-RStudio-won-t-quit-when-closing-Projects-on-Mac-), but remember to set the working directory each time you want to do something on the website (`setwd("path/to/your/folder")`).
+
+Ok, so in the console in RStudio, type `new_site()`. This will create a site for you with a theme adapted by Yihui that you can interactively tinker with. I quite like this theme, but if you fancy using another, there is a list [here](http://themes.gohugo.io/). The relevant function is `install_theme()`. All of the folders of the site should be now in the Hugo folder (_not_ the username.github.io folder). If you're happy with the theme (for now, it's easy to get a new theme), then return to Terminal, `cd` to the Hugo folder if you are not already there (it might be easiest to return to your home folder first, with `cd ~`) and type `rm -rf public`.
+
+### Git Submodules
+
+This is where [Git Submodules](https://github.com/blog/2104-working-with-submodules) come in, and they are really useful. Forget about the other approach using orphaned masters and such, this is the best way to do it (and it's [here](https://gohugo.io/tutorials/github-pages-blog/) on the Hugo website). The idea of a Git submodule is that the repo you want to use can make use of a folder from another repo. Simple. So in our case, our website repo (e.g. RobertMyles.github.io) will use the `public` folder from our Hugo repo as a submodule (that is, a folder inside it). There will be very little in your Hugo folder repo on GitHub, it should say something like "public @ f8fdbff" where the public folder is.
+
+So, the git command to get all this running is:
+
+```bash
+git submodule add -b master git@github.com:<username>/<username>.github.io.git public
+```
+
+where `<username>` is your username.
+
+So now I think it's a good idea to write a little test blog post on your nice new blog. The blogdown command (there is more than one, see `?hugo_cmd`) is `new_post()`. This function has some options for the name of the author and the type of file created (markdown or R Markdown). I didn't want to set these things every time, so I opened up my .Rprofile file (you can create it on your home folder if you don't have one. Use Terminal: `cd ~; touch '.Rprofile'`) and added the following lines to it:
+
+```bash
+## blogdown options:
+options(blogdown.use.rmd = TRUE)
+options(blogdown.author = 'Robert McDonnell')
+```
+
+Now `new_post()` will automatically create an . Rmd and use me as the author. There are a couple of options you can use in the YAML front matter (the stuff between the `---` lines at the top of the post). The ones I used for this post are below, and there is a full list [here](https://gohugo.io/content/front-matter/). I used `draft: true` while I was working on the post (no more `_drafts` crap, yay!), but when you want this to actually appear on your site, delete the line or set it to false.
+
+```
+---
+title: How to make a GitHub pages blog with RStudio and Hugo
+author: Robert McDonnell
+date: '2017-02-01'
+categories:
+  - R
+  - GitHub
+  - Hugo
+tags:
+  - R
+  - GitHub
+description: 'How I produce this blog'
+draft: true
+---
+```
+
+Once you've written something, it's time to go back to our buddy Terminal. There are some suggestions for pushing to GitHub using custom builds in RStudio [here](https://github.com/rstudio/blogdown/issues/39), but I found that this was more effort than it was worth (like I said, knowing the command line is a good thing) and anyway gave errors about permissions (I fully admit this may have been my own fault). The Hugo tutorial I linked to earlier suggests using a small bash script, but since it's so small we can just as easily do it in Terminal. First, we move to the public folder (remember, we are in the Hugo repo folder) and add our changes to be committed:
+
+```bash
+cd public
+git add -A
+```
+
+Next, we commit and push to GitHub (that's not so hard now, is it?)
+
+```bash
+git commit -m 'lovely new site'
+git push origin master
+```
+
+Now go check out your `http://<username>.github.io` website!
+
+Posts are easy, just run the `new_post()` command again. You can preview the page with `serve_site()` (or click on "Live Preview Site" on the Addins button in Rstudio). `build_site()` then builds the site with our pal Hugo, and the git commands above push it all to your repo and to the site.
+
+### Migrating from jekyll
+
+If you already have a jekyll-powered GitHub pages blog, you will have to make a few adjustments for Hugo. First of all, you may need to change any `{% raw %}` Liquid tags you had (I had to ), and secondly (and more importantly), you will have to include `url:` in the YAML to point to the old urls where the webpages currently (or previously, if you've been reckless and already set up your new Hugo blog). For example, I had a blog post at http://robertmyles.github.io/ElectionsBR.html. After setting up this new version of the site with blogdown and Hugo, the blog post was at something like `http://robertmyles.github.io/posts/ElectionsBR.html` (I can't remember exactly). So any links to the original post will now be broken, which is a shame since that post was quite popular on a Brazilian facebook group ("Métodos", full of nice people who are interested in social science methods and stuff like R). So the YAML for the new version of the post now contains:
+
+```
+url: /ElectionsBR.html
+```
+
+Note the leading slash. Perhaps [aliases](https://gohugo.io/extras/aliases/) will be of use, it depends on the structure of your previous site.
+
+To see the exact layout of my two repos, see https://github.com/RobertMyles/website-hugo and
+https://github.com/RobertMyles/RobertMyles.github.io. And please leave a comment or question if you have one. I'm sure I'll customise this [theme](https://github.com/jpescador/hugo-future-imperfect) I've chosen, the comments are too dark in the code sections, for example. But that can wait for another day.

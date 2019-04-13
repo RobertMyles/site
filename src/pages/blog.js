@@ -79,12 +79,12 @@ export const query = graphql`
           id
           frontmatter {
             title
-            date(formatString: "DD MMMM, YYYY")
+            date
           }
           fields {
             slug
           }
-          excerpt
+          excerpt(pruneLength: 280)
         }
       }
     }

@@ -1,0 +1,87 @@
+---
+title: Avoiding the tiresome "training" & "test" data split
+date: "2018-09-03"
+---
+
+I really don't like splitting data into 'train' and 'test'. I don't mean that I'm against the idea of it, though you could say it's a waste of data that could be used to better your model, but I mean that actual assignment in R of 'train' and 'test'. I always liked destructuring in Python, and I like it a lot in 2018 JavaScript, so when I remembered that the [zeallot](https://github.com/r-lib/zeallot/blob/master/vignettes/unpacking-assignment.Rmd) package has it, I thought it would be a good opportunity to see how that could fit in a [tidy modelling](https://github.com/tidymodels) pipeline. Much to my delight, one little helper function later, it works perfectly.
+
+Loading packages and data:
+
+```r
+library(recipes); library(rsample); library(tidyverse); library(zeallot)
+
+# load some data:
+data("credit_data")
+```
+
+Next comes our little helper function:
+
+```r{numberLines: true}
+m_bake <- function(recipe_object, data){
+  cd <- initial_split(credit_data)
+  tr <- training(cd)
+  te <- testing(cd)
+  x1 <- bake(recipe_object, tr)
+  x2 <- bake(recipe_object, te)
+  return(list(x1, x2))
+}
+```
+
+Now you get a nice clean pipeline with a train/test split as a result, using zeallot's great `%->%` operator:
+
+```r
+recipe(Status ~ ., data = credit_data) %>%
+  step_knnimpute(all_predictors()) %>%
+  step_center(all_numeric()) %>%
+  step_dummy(-all_numeric()) %>%
+  prep() %>%
+  m_bake(data = credit_data) %->% c(train, test)
+
+ls()
+```
+
+```
+## [1] "credit_data" "m_bake"      "test"        "train"
+```
+
+```r
+head(train); head(test)
+```
+
+```
+## # A tibble: 6 x 23
+##   Seniority  Time    Age Expenses Income Assets  Debt Amount Price
+##       <dbl> <dbl>  <dbl>    <dbl>  <dbl>  <dbl> <dbl>  <dbl> <dbl>
+## 1      1.01  13.6  -7.08    17.4   -12.6 -5429. -343. -239.  -617.
+## 2      9.01  13.6  20.9     -7.57  -10.6 -5429. -343.  -38.9  195.
+## 3     -7.99  13.6 -13.1      7.43   40.4 -2929. -343. -139.  -138.
+## 4     -7.99 -10.4 -11.1     -9.57  -34.6 -5429. -343. -729.  -553.
+## 5     -6.99  13.6  -1.08    19.4    72.4 -1929. -343. -389.   182.
+## 6     21.0   13.6   6.92    19.4   -16.6  4571. -343.  561.   337.
+## # … with 14 more variables: Home_other <dbl>, Home_owner <dbl>,
+## #   Home_parents <dbl>, Home_priv <dbl>, Home_rent <dbl>,
+## #   Marital_married <dbl>, Marital_separated <dbl>, Marital_single <dbl>,
+## #   Marital_widow <dbl>, Records_yes <dbl>, Job_freelance <dbl>,
+## #   Job_others <dbl>, Job_partime <dbl>, Status_good <dbl>
+```
+
+```
+## # A tibble: 6 x 23
+##   Seniority   Time      Age Expenses Income Assets   Debt Amount  Price
+##       <dbl>  <dbl>    <dbl>    <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+## 1      2.01 -10.4    8.92      34.4   58.4  -2429.  -343.   961.  1522.
+## 2     -1.99   1.56  -3.08       4.43 -16.6  -1429.  -343.   111.   114.
+## 3     25.0  -22.4   30.9        9.43  58.4   -429.  1657.  -439.  -113.
+## 4     -6.99  13.6   -6.08     -20.6   -4.65 -5429.  -343.   211.  -210.
+## 5     -7.99   1.56  -0.0804   -20.6  -23.8  -4629.  -343.   461.   387.
+## 6      6.01 -22.4   13.9       19.4   56.4  -4429.  -343.  -589.  -813.
+## # … with 14 more variables: Home_other <dbl>, Home_owner <dbl>,
+## #   Home_parents <dbl>, Home_priv <dbl>, Home_rent <dbl>,
+## #   Marital_married <dbl>, Marital_separated <dbl>, Marital_single <dbl>,
+## #   Marital_widow <dbl>, Records_yes <dbl>, Job_freelance <dbl>,
+## #   Job_others <dbl>, Job_partime <dbl>, Status_good <dbl>
+```
+
+Lovely.
+
+(Ok, I still had to split it (!!), but once you write this function, you can just call this.)

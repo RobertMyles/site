@@ -3,6 +3,9 @@ import Navbar from "../navbar/Navbar"
 import { styles } from "../../utils"
 import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
+import "katex/dist/katex.min.css"
+import "prismjs/themes/prism-okaidia.css"
+import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 
 export default function BlogLayout({ children }) {
   return (
@@ -31,4 +34,15 @@ export default function BlogLayout({ children }) {
 
 const Postdiv = styled.div`
   font-family: ${styles.bodyFont};
+  h3,
+  h2 {
+    color: ${styles.colors.mainRed};
+  }
+  a {
+    color: ${styles.colors.mainBlue};
+    text-decoration: none;
+  }
+  a:hover {
+    color: ${styles.colors.mainRed};
+  }
 `

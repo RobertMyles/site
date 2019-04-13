@@ -1,12 +1,18 @@
 module.exports = {
   siteMetadata: {
-    title: `Robert Myles McDonnell`,
+    title: `robertmylesmcdonnell.com`,
     author: `Robert Myles McDonnell`,
-    description: `Website of Robert McDonnell`,
+    description: `Robert McDonnell's website`,
   },
   plugins: [
+    {
+      resolve: "gatsby-transformer-remark",
+      options: {
+        plugins: ["gatsby-remark-katex"],
+      },
+    },
     `gatsby-plugin-react-helmet`,
-    `gatsby-transformer-remark`,
+    `gatsby-plugin-favicon`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -16,6 +22,37 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    `gatsby-mdx`
+    "gatsby-plugin-styled-components",
+    {
+      resolve: `gatsby-mdx`,
+      options: {
+        extensions: [".mdx", ".md"],
+        // remarkPlugins: [`remark-katex`],
+        defaultLayouts: {
+          posts: require.resolve("./src/components/layouts/BlogLayout.js"),
+          default: require.resolve("./src/components/layouts/BlogLayout.js"),
+        },
+        gatsbyRemarkPlugins: [
+          // {
+          //   resolve: `gatsby-remark-katex`,
+          // },
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1035,
+              sizeByPixelDensity: true,
+            },
+          },
+          {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              classPrefix: "language-",
+              inlineCodeMarker: null,
+              aliases: {},
+            },
+          },
+        ],
+      },
+    },
   ],
 }

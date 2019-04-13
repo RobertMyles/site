@@ -1,12 +1,11 @@
 ---
 title: Write your thesis or paper in R Markdown!
-author: Robert McDonnell
 date: "2016-04-15"
 ---
 
-There are many reasons why you would want to use some variant of Markdown for writing, and indeed, posts are common on the net as to why you should.<sup id="a1">[1](#fn1)</sup> A simple summary of the reasons are that Markdown is: 1) easy; 2) easy; 3) yup, you guessed it – it’s easy.
+There are many reasons why you would want to use some variant of Markdown for writing, and indeed, posts are common on the net as to why you should.[^1] A simple summary of the reasons are that Markdown is: 1) easy; 2) easy; 3) yup, you guessed it – it’s easy.
 
-One variant of Markdown is R Markdown, developed by the [RStudio](https://www.rstudio.com/) team, and in particular [Yihui Xie](http://yihui.name/knitr/), creator of the `knitr` R package. R Markdown is pretty much like regular Markdown, except you get a whole load of nice extra features, including the ability to run code chunks, produce .pdfs and presentations, and even .docx (if you really, really want to<sup id="a2">[2](#fn2)</sup>). Indeed, the ioslides presentation format lets you use the power of html and css to make browser-based presentations.
+One variant of Markdown is R Markdown, developed by the [RStudio](https://www.rstudio.com/) team, and in particular [Yihui Xie](http://yihui.name/knitr/), creator of the `knitr` R package. R Markdown is pretty much like regular Markdown, except you get a whole load of nice extra features, including the ability to run code chunks, produce .pdfs and presentations, and even .docx (if you really, really want to[^2]). Indeed, the ioslides presentation format lets you use the power of html and css to make browser-based presentations.
 
 But surely academic papers require certain formats, and sometimes mathematical expressions and funny Greek letters? Well, sure. Academic papers, particularly theses, often have set formats that you must adhere to. And since Markdown is quite a simple language, it doesn’t have the advanced power of $\LaTeX$ to position things in specific ways.
 
@@ -57,7 +56,7 @@ Chapters and Headings are laughably simple in any Markdown, and R Markdown is no
 
 ### The YAML block
 
-The YAML block is what makes your R Markdown document possibly really fancy. It’s here that the $\LaTeX$ packages are loaded, and here that you can specify various options that will have an impact on your document. So what the hell _is_ a YAML block, anyway? Well, maybe the easiest way to explain that is to show you mine<sup id="a3">[3](#fn3)</sup> from my PhD
+The YAML block is what makes your R Markdown document possibly really fancy. It’s here that the $\LaTeX$ packages are loaded, and here that you can specify various options that will have an impact on your document. So what the hell _is_ a YAML block, anyway? Well, maybe the easiest way to explain that is to show you mine[^3] from my PhD
 [thesis](%7B%7B%20site.url%20%7D%7D/assets/Explaining%20the%20Determinants%20of%20Foreign%20Policy%20Voting%20Behaviour%20in%20the%20Brazilian%20Houses%20of%20Legislature.pdf). It starts and ends with `---`.
 
     ---
@@ -102,10 +101,8 @@ on$\LaTeX$, maybe you should consider doing it in R Markdown. It has all the eas
 Update:  
 A colleague asked me how I produced the first few pages of my thesis, and I realised that I forgot to mention that you can include other documents, for example tex files, that may need to be part of your thesis. Many theses have strict guidelines for the introductory pages, which can be included in your R Markdown file as part of the YAML header section. The option is `includes`, and it has the sub-options `in_header`, `before_body` and `after body`. Like before, the spacing is meaningful in the YAML header, so these sub-options will need to be indented two spaces. For introductory pages of a thesis, your tex file will go in `before_body`. (I have to admit that this option never worked well for me, I simply merged the .pdf produced from the tex file and the .pdf produced from the R Markdown document with Preview in OS X, but for others, it seems to work fine.) See [here](http://rmarkdown.rstudio.com/markdown_document_format.html) for examples. See [here](https://github.com/danilofreire/kcl-thesis-template-markdown) for a Markdown template for King’s College London’s PhD guidelines, by [Danilo Freire](http://danilofreire.com/).
 
-<b id="fn1">1</b> For example, [this cheatsheet](http://markdown-guide.readthedocs.org/en/latest/basics.html)[↩](#a1)
-
-<b id="fn2">2</b> In my experience, I think you’re just going to end up editing these in Word anyway so I don’t know that it’s worth the bother to do in RStudio. You can if you want, I suppose.[↩](#a2)
-
-<b id="fn3">3</b> I’m including extra things here that I used over the process of making the thesis pdf, but it wasn’t what I used exactly in the end. I had some problems, that I can’t recall right now, with rendering bibliographical items so I switched to the default LaTeX renderer, pdflatex. Using this means you can’t use other fonts, like the Linux Libertine font above.[↩](#a3)
+[^1]: For example, [this cheatsheet](http://markdown-guide.readthedocs.org/en/latest/basics.html)[↩](#a1)
+[^2]: In my experience, I think you’re just going to end up editing these in Word anyway so I don’t know that it’s worth the bother to do in RStudio. You can if you want, I suppose.[↩](#a2)
+[^3]: I’m including extra things here that I used over the process of making the thesis pdf, but it wasn’t what I used exactly in the end. I had some problems, that I can’t recall right now, with rendering bibliographical items so I switched to the default LaTeX renderer, pdflatex. Using this means you can’t use other fonts, like the Linux Libertine font above.[↩](#a3)
 
 <link rel="image_src" href="http://i.imgur.com/vywFhKA.png?1" />

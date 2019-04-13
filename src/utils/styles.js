@@ -1,5 +1,6 @@
 import "typeface-aleo"
 import "typeface-spacegrotesk"
+import "typeface-inconsolata"
 
 export const colors = {
   mainWhite: `#fff`,
@@ -13,6 +14,7 @@ export const colors = {
 
 export const bodyFont = "aleo"
 export const titleFont = "space grotesk"
+export const codeFont = "inconsolata"
 
 export const transDefault = "transition:all 0.5s ease-in-out"
 export const transFunction = (

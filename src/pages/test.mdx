@@ -1,6 +1,6 @@
 ---
-title: Amazing Stuff
-date: "2017-08-10"
+title: test
+date: now
 ---
 
 ### hello!
@@ -8,11 +8,93 @@ date: "2017-08-10"
 Here's a test page. It's got footnotes[^1], and _italics_, **bold**, and even **_bold italics_**.
 We can even make a really long sentence just for the hell of it, because I want to see the spacing - which should be OK, but you never know, eh?
 
+Let's make some equations. Here's an inline one: $x = \alpha_0 + \alpha_1$. And a display mode one:
+$$y_i = \alpha_j + \beta_{ji}$$
+
+$$x \times y \propto z$$
+
+$ x \times y$
+
+$a^2 + b^2 = c^2$
+
+$$
+
+\left( \sum*{k=1}^n a_k b_k \right)^2 \leq \left( \sum*{k=1}^n a*k^2 \right) \left( \sum*{k=1}^n b_k^2 \right)
+
+$$
+
+Here's some code:
+
+```javascript
+x = 5
+text = `I like text! ${x}`
+z === NULL
+```
+
+```js
+x = 5
+text = `I like text! ${x}`
+z === null
+true
+```
+
+```r
+x = 5
+text = `I like text! ${x}`
+z === NULL
+TRUE
+y*5
+```
+
+We can also have some `inline code`.
+
+Let's see if it recognises R:
+
 ```r
 x <- 5:3
-text = "I like text!"
-if(TRUE) NULL
+y = NULL
+# a comment
+x <- function(y, z) {
+  if(x >= 5) {
+    kill()
+  } else {
+    dont()
+  }
+}
 ```
+
+or SQL
+
+```sql
+SELECT * FROM 'TBL'
+```
+
+and...
+
+```
+<--! hello -->
+text
+```
+
+```jsx{1,4-6}
+<React className="idiot">{tyke!}</React>
+render()
+```
+
+and bash:
+
+```bash
+ls -a
+echo -e "\nRemoving \t backslash \t characters\n"
+```
+
+```python
+import pandas as pd
+x = pd.read_csv("this/is/a/file.csv")
+x.columns()
+```
+
+# header 1
 
 ## header 2
 

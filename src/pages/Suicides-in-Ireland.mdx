@@ -1,0 +1,85 @@
+---
+title: Suicides in Ireland
+date: "2016-12-21"
+---
+
+The Irish radio station newstalk published [this video](https://www.facebook.com/newstalkfm/videos/10155656582617907/) the other day, in which director and actor Terry McMahon spoke out against the austerity programme running in Ireland since the aftermath of the financial crisis in 2008. Leaving aside his conflation of any type of business activity with immorality, McMahon claimed that "austerity is murder" and detailed some alarming facts about suicide numbers in Ireland, clearly linking the two (i.e., austerity = more suicide).
+
+Even though I **really** hated the fact that irresponsible banks were socialized for their own recklessness, while the rest of the population suffered tax hikes and cuts to important services, there was something about this video that irritated me. McMahon states that we have let down "the best" of our society, being Padraig Pearse and his comrades of the 1916 Rising (which did not have popular support and took most Irish people by complete surprise). How, exactly? By not sticking to De Valera's impoverishing mercantilism or by not leaving women in their constitutional place, the home? Leaving aside these irritations, I decided to take a closer look at the suicide claims made by McMahon. These data are publicly available, from the [National Suicide Research Foundation](http://nsrf.ie/statistics/suicide/).
+
+We can do all this quite easily in R:
+
+```r
+library(rvest)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+page <- read_html("http://nsrf.ie/statistics/suicide/")
+
+table <- html_nodes(page,
+                    css = "#ac_3163_collapse1 > div > table:nth-child(2)")
+
+table <- html_table(table)[[1]]
+
+colnames(table) <- c("Year", "Total_number", "Total_rate_per_100000",
+                     "Male_number", "Male_rate_per_100000",
+                     "Female", "Female_rate_per_100000")
+
+ggplot(table, aes(x = Year)) +
+  geom_line(aes(y = Male_rate_per_100000), colour = "navy") +
+  geom_line(aes(y = Female_rate_per_100000), colour = "goldenrod2") +
+  scale_x_continuous(breaks = c(2001, 2004, 2007, 2010, 2013, 2015)) +
+  theme_classic() +
+  labs(y = "Suicide Rate per 100,000") +
+  annotate("label", label = "Male", x = 2002, y = 18) +
+  annotate("label", label = "Female", x = 2002, y = 6.5)
+```
+
+![](2016-12-21-Suicides-in-Ireland_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+
+Judging from 2001 onwards, suicide among males has in fact gone down, from highs in 2001 (22.4 per 100,000), 2004 (20.2; both years well before the austerity programme) and 20.2 per 100,000 in 2011, two years after the start of the austerity programme. After 2012, suicide among males thankfully declines by relatively quite a lot.
+
+Another of McMahon's claims is that more people committed suicide in 2016 than died in the Easter Rising of 1916. I'm not quite sure where he got these statistics. The National Suicide Research Foundation has until 2015, while the Central Statistics Office has the first two quarters of 2016 available on its website ([first](http://www.cso.ie/en/releasesandpublications/ep/p-vs/vitalstatisticsfirstquarter2016/) and [second](http://www.cso.ie/en/releasesandpublications/ep/p-vs/vitalstatisticssecondquarter2016/)). According to these figures, there were 91 suicides in the first quarter and 75 in the second, being 166 in total. If we divide this number in two as our best guess for quarter 3, we get 83. People think that suicides go up at Christmas, but according to the website statnews.com, that is not [true](https://www.statnews.com/2015/12/30/suicides-rise-after-christmas/). Well, even allowing for 100 suicides in the 4th quarter, we get 166 + 83 + 100 = 349 (keep in mind this is quite an inflated guess, something more realistic would be 166 + 75 + 75 = 316). According to [Wikipedia](https://en.wikipedia.org/wiki/Easter_Rising), "almost 500 people were killed in the Easter Rising". So McMahon is incorrect on this point.
+
+McMahon also said that during the last eight years of austerity more people have died by suicide in Ireland than died during the thirty-year-long troubles in Northern Ireland. A statistical breakdown of the deaths in the Troubles can be found [here](http://www.wesleyjohnston.com/users/ireland/past/troubles/troubles_stats.html), which puts the total number of deaths at 3466. Using the data we got from the National Suicide Research Foundation:
+
+```r
+library(knitr)
+kable(table[,1:3])
+```
+
+| Year | Total_number | Total_rate_per_100000 |
+| ---: | -----------: | --------------------: |
+| 2001 |          519 |                  13.5 |
+| 2002 |          478 |                  12.2 |
+| 2003 |          497 |                  12.5 |
+| 2004 |          493 |                  12.2 |
+| 2005 |          481 |                  11.6 |
+| 2006 |          460 |                  10.9 |
+| 2007 |          458 |                  10.6 |
+| 2008 |          506 |                  11.4 |
+| 2009 |          552 |                  12.4 |
+| 2010 |          495 |                  11.1 |
+| 2011 |          554 |                  12.1 |
+| 2012 |          541 |                  11.8 |
+| 2013 |          487 |                  10.6 |
+| 2014 |          459 |                  10.0 |
+| 2015 |          451 |                   9.7 |
+
+Summing these numbers for the years 2009 to 2015 (the austerity programme) is straightforward:
+
+```r
+table %>%
+  select(Year, Total_number) %>%
+  filter(Year > 2008, Year <= 2015) %>%
+  summarise(total = sum(Total_number))
+```
+
+```
+##   total
+## 1  3540
+```
+
+Here, McMahon is correct, which is shocking and sad (remember, we didn't include 2016), but to actually tie these suicides to austerity causally, we would need a much more sophisticated approach. (Likewise with the decline since 2001.)
+
+The point of this post is not to argue for the austerity programme (the banks should have paid for their mistakes and should not have been rescued. If they truly were "too big to fail" in terms of the Irish economy, then we could have rescued them and then liquidated them, returning the money to the state.) It is also not to argue for/against NAMA. Occupying a building for a few weeks puts the debate at centre-stage, for which McMahon and co. should be congratulated. But if we are to have a debate about the problems introduced by austerity, we should at least get the numbers right. Suicide for both men and women has declined in recent years in Ireland, and more people died in the Easter Rising than by suicide in 2016. Yes, more people died by suicide since 2009 than in the Troubles, which is tragic. I'll leave McMahon's bizarre eulogies for an Ireland of poets and warriors, opposed to any type of commerce, aside (what finances the arts?). The crony capitalism that flourished in Ireland during the Bertie Ahern years damaged the country, no doubt. But no need to hark back to a simpler, poorer, time: just fix the mess and jail those responsible (including Ahern). But saying "austerity is murder" and evoking the 'heroes' of 1916 is just pretty reckless, in my view.
