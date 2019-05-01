@@ -5,12 +5,6 @@ module.exports = {
     description: `Robert McDonnell's website`,
   },
   plugins: [
-    {
-      resolve: "gatsby-transformer-remark",
-      options: {
-        plugins: ["gatsby-remark-katex"],
-      },
-    },
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-favicon`,
     {
@@ -27,15 +21,11 @@ module.exports = {
       resolve: `gatsby-mdx`,
       options: {
         extensions: [".mdx", ".md"],
-        // remarkPlugins: [`remark-katex`],
         defaultLayouts: {
           posts: require.resolve("./src/components/layouts/BlogLayout.js"),
           default: require.resolve("./src/components/layouts/BlogLayout.js"),
         },
         gatsbyRemarkPlugins: [
-          // {
-          //   resolve: `gatsby-remark-katex`,
-          // },
           {
             resolve: `gatsby-remark-images`,
             options: {

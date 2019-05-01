@@ -5,16 +5,24 @@ import Grid from "@material-ui/core/Grid"
 
 export default function TitleDivs() {
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
-      <Grid container direction="row" justify="center">
-        <Adiv color={styles.colors.mainRed} borderRight={`0px`} width={`280px`}>
-          ROBERT
-        </Adiv>
-        <Adiv color={styles.colors.mainYellow} width={`250px`}>
-          MYLES
-        </Adiv>
-      </Grid>
-      <Adiv color={styles.colors.mainBlue} borderTop={`0px`} width={`400px`}>
+    <Grid container direction="column" justify="left" alignItems="left">
+      <Adiv color={styles.colors.mainRed} width={`280px`} marginLeft={`75px`}>
+        ROBERT
+      </Adiv>
+      <Adiv
+        color={styles.colors.mainYellow}
+        width={`250px`}
+        marginLeft={`90px`}
+        marginTop={`-5px`}
+      >
+        MYLES
+      </Adiv>
+      <Adiv
+        color={styles.colors.mainBlue}
+        width={`400px`}
+        marginLeft={`20px`}
+        marginTop={`-5px`}
+      >
         MCDONNELL
       </Adiv>
     </Grid>
@@ -27,8 +35,8 @@ const Adiv = styled.div`
   font-family: ${styles.titleFont};
   border: 5px solid black;
   padding: 3px;
+  margin-left: ${props => props.marginLeft};
+  margin-top: ${props => props.marginTop};
   text-align: center;
-  border-top: ${props => props.borderTop};
-  border-right: ${props => props.borderRight};
   width: ${props => props.width};
 `

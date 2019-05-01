@@ -55,12 +55,3 @@ const IconWrapper = styled.div`
     justify-content: space-around;
   }
 `
-// .git {
-//   color: ${props => props.icon};
-// }
-// .link {
-//   color: ${props => props.icon};
-// }
-// .twit {
-//   color: ${props => props.icon};
-// }

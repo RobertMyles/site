@@ -5,8 +5,6 @@ import styled from "styled-components"
 export default function Copyright() {
   return (
     <>
-      <br />
-      <br />
       <Pp>
         Designed by Robert Myles McDonnell, inspired by&nbsp;
         <Aa href="https://beAautifulwebtype.com/space-grotesk/">
@@ -34,11 +32,11 @@ const Pp = styled.p`
   color: ${styles.colors.mainBlue};
   font-family: ${styles.bodyFont};
   font-weight: 200;
-  align-text: center;
   display: flex;
   margin: auto;
-  justify-content: center;
   left: 0;
   bottom: 0;
   right: 0;
 `
+// align-text: center;
+// justify-content: center;

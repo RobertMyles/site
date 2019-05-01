@@ -39,10 +39,10 @@ const Postdiv = styled.div`
     color: ${styles.colors.mainRed};
   }
   a {
-    color: ${styles.colors.mainBlue};
+    color: ${styles.colors.mainRed};
     text-decoration: none;
   }
   a:hover {
-    color: ${styles.colors.mainRed};
+    color: ${styles.colors.mainPink};
   }
 `

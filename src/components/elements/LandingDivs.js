@@ -43,7 +43,9 @@ export default function LandingDivs() {
   ]
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div
+      style={{ display: "flex", justifyContent: "left", paddingLeft: "10px" }}
+    >
       {items.map(item => {
         return (
           <DivWrapper

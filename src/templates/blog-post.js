@@ -5,15 +5,18 @@ import "katex/dist/katex.min.css"
 import MDXRenderer from "gatsby-mdx/mdx-renderer"
 import Helmet from "react-helmet"
 import get from "lodash/get"
+import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 
 const PageTemplate = props => {
   const mdx = props.data.mdx
   const siteTitle = get(props, "data.site.siteMetadata.title")
+  const pageTitle = get(props, "data.mdx.frontmatter.title")
+  console.log(props)
   return (
     <>
       <BlogLayout>
         <Helmet title={`${mdx.frontmatter.title} | ${siteTitle}`} />
-        <h1>{mdx.frontmatter.title}</h1>
+        <h1>{pageTitle}</h1>
         <MDXRenderer>{mdx.code.body}</MDXRenderer>
       </BlogLayout>
     </>

@@ -32,15 +32,16 @@ export default function IconWrapper() {
 }
 
 const A = styled.a`
-  padding-right: 12px;
+  padding-right: 62px;
 `
 const DDiv = styled.div`
   font-size: 2.25rem;
   cursor: pointer;
   display: flex;
-  margin: auto;
-  justify-content: center;
+  margin: auto 0;
+  justify-content: left;
   padding: 20px;
+  padding-left: 100px;
   ${styles.transObject({})};
   .git {
     color: ${styles.colors.mainBlue};
