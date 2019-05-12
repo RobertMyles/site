@@ -36,7 +36,7 @@ export default () => (
     <Helmet title="Other| Robert Myles McDonnell">
       <meta charSet="utf-8" />
       <title>Robert Myles McDonnell</title>
-      <link rel="canonical" href="http://robertmylesmcdonnell.com" />
+      <link rel="canonical" href="https://robertmylesmcdonnell.com" />
     </Helmet>
     <Navbar
       color={styles.colors.mainBlack}

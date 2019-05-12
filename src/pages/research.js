@@ -82,7 +82,7 @@ export default () => (
 
           <Ppp>
             <IconContext.Provider value={{ color: styles.colors.mainYellow }}>
-              <a href="http://www.scielo.br/pdf/bpsr/v11n1/1981-3821-bpsr-1981-3821201700010007.pdf">
+              <a href="https://www.scielo.br/pdf/bpsr/v11n1/1981-3821-bpsr-1981-3821201700010007.pdf">
                 <FaFilePdf /> Formally Comparing Legislative Institutions
               </a>
             </IconContext.Provider>
