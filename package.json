@@ -12,7 +12,7 @@
     "atom-language-r": "^1.1.0",
     "atom-syntax-theme-to-highlights-css": "^1.0.2",
     "babel-plugin-styled-components": "^1.10.0",
-    "core-js": "^3.0.1",
+    "core-js": "^2.6.5",
     "d3": "^5.9.2",
     "dompurify": "^1.0.10",
     "gatsby": "^2.4.3",
