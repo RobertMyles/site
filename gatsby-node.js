@@ -3,41 +3,48 @@ const path = require(`path`)
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   const { createNodeField } = actions
-  if (node.internal.type === `Mdx`) {
-    const slug = createFilePath({ node, getNode, basePath: `pages` })
+  if (node.internal.type === "Mdx") {
+    const value = createFilePath({ node, getNode })
     createNodeField({
       node,
-      name: `slug`,
-      value: slug,
+      name: "slug",
+      value: value,
     })
   }
 }
 
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
-  return graphql(`
-    {
-      allMdx {
-        edges {
-          node {
-            id
-            fields {
-              slug
+  return new Promise((resolve, reject) => {
+    resolve(
+      graphql(
+        `
+          {
+            allMdx {
+              edges {
+                node {
+                  id
+                  fields {
+                    slug
+                  }
+                }
+              }
             }
           }
+        `
+      ).then(result => {
+        if (result.errors) {
+          console.error(result.errors)
+          reject(result.errors)
         }
-      }
-    }
-  `).then(result => {
-    result.data.allMdx.edges.forEach(({ node }) => {
-      createPage({
-        path: node.fields.slug,
-        component: path.resolve(`./src/templates/blog-post.js`),
-        context: {
-          slug: node.fields.slug,
-          id: node.id,
-        },
+        result.data.allMdx.edges.forEach(({ node }) => {
+          createPage({
+            path: node.fields.slug,
+            component: path.resolve(`./src/templates/blog-post.js`),
+            context: { id: node.id },
+          })
+        })
       })
-    })
+    )
   })
 }

@@ -3,6 +3,8 @@ title: "Theme-Specific Voting in the European Parliament"
 date: "2016-10-20"
 ---
 
+import { InlineMath, BlockMath } from "react-katex"
+
 Since it's [European Statistics Day](http://ec.europa.eu/eurostat/web/ess/european-statistics-day), I thought I would make a quick post showing how to utilise some of the data that we have on the European Union in R. In particular, I will use European Parliament voting data from Simon Hix's [website](http://personal.lse.ac.uk/hix/HixNouryRolandEPdata.HTM). The data is freely available, so by copying and pasting the code below, you will be able to recreate the analysis I've done here.
 
 We're going to be using [Stan](http://mc-stan.org/) to make theme-specific ideal points for members of the European Parliament. You will need to install Stan and a C++ compiler to replicate the analysis.
@@ -75,9 +77,9 @@ rollcalls <- full_join(EU, theme) %>%
 
 Next, we need to prepare the data for Stan. Our model is a basic [2-parameter Item-Response theory model](https://www.cs.princeton.edu/courses/archive/fall09/cos597A/papers/ClintonJackmanRivers2004.pdf) often used for [creating ideal points](http://robertmyles.github.io/Bayesian-IRT-in-R-and-Stan.html). We write this in the Stan modelling language and save it as a string in R. In mathematical notation, the model is:
 
-$$y_{ijk} = \beta_j \theta_{ik} - \alpha_j,$$
+<BlockMath math="y_{ijk} = \beta_j \theta_{ik} - \alpha_j," />
 
-where _i_ is an index of voters, _j_ an index of votes, and _k_ an index of topics. $\theta_{ik}$ is our main object of interest: the ideal point of MEP _i_ on topic _k_.
+where _i_ is an index of voters, _j_ an index of votes, and _k_ an index of topics. <InlineMath math="\theta_{ik}"/> is our main object of interest: the ideal point of MEP _i_ on topic _k_.
 
 For those not familiar with Stan, the following Stan code has a `data` block, in which we declare what our variables are and their type (these are created in the section after). Then we have a parameters block where we declare our parameters.
 
@@ -137,7 +139,7 @@ stan_data <- list(J=J, N=N, M=M, j=j,
                   m0=m0, M0=M0)
 ```
 
-Next, we run our model with Stan. Here I use Stan's new [ADVI]() feature, but the Stan folks don't recommend this for inference. However, for a blog post it's okay :smile:.
+Next, we run our model with Stan. Here I use Stan's new [ADVI]() feature, but the Stan folks don't recommend this for inference. However, for a blog post it's okay 😊.
 
 ADVI is much faster than the already comparatively fast NUTS sampling that Stan does. Here we have a lot of data, though, so this next part will take **a few hours** to run. If you don't fancy waiting so long, subset the data (maybe choose just one year) and run the Stan code on the smaller dataset.
 
@@ -232,4 +234,4 @@ ggplot(adamou, aes(x = mean, y = topic)) +
 
 And of course you can customise these ggplot figures any way you like.
 
-Happy European Statistics Day! :dancers:
+Happy European Statistics Day! 👯

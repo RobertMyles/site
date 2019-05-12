@@ -49,6 +49,7 @@ export default function LandingDivs() {
       {items.map(item => {
         return (
           <DivWrapper
+            key={item.id}
             style={{
               backgroundColor: item.color,
               width: item.width,

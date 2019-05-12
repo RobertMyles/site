@@ -3,6 +3,8 @@ title: Bayesian IRT in R and Stan
 date: "2016-05-21"
 ---
 
+import { InlineMath, BlockMath } from "react-katex"
+
 **This blog post is a bit outdated -- for newer, cleaner IRT R code, see this [github repo](https://github.com/RobertMyles/IRT) and this [blog post](https://robertmylesmcdonnell.netlify.com/2018/01/05/stan-irt-code/).**
 
 _The code below on Stan is also available as an [`RPub webpage`](http://rpubs.com/RobertMylesMc/Bayesian-IRT-ideal-points-with-Stan-in-R), if you'd rather work through the examples than read all of the post._
@@ -23,9 +25,9 @@ There are some other resources available, but relate to slightly different IRT m
 
 Since there are so few Stan resources for ideal point IRT models, I thought I'd post a few models here. The code is also available as an [RPub webpage](http://rpubs.com/RobertMylesMc/Bayesian-IRT-ideal-points-with-Stan-in-R), as mentioned earlier. The statistical model we'll employ is:
 
-$$y_{ij} = \beta_j\bf{x_i} - \alpha_j,$$
+<BlockMath math="y_{ij} = \beta_j \bf{x_i} - \alpha_j, " />
 
-where ($y_{ij}$ are the votes, in binary form (1 = 'Yes'; 2 = 'No'); the $\bf x_i$ are the ideal points of the legislators; and $\beta_j$ and $\alpha_j$ are the discrimination and difficulty parameters of the model.
+where <InlineMath math="y_{ij}"/> are the votes, in binary form (1 = 'Yes'; 2 = 'No'); the <InlineMath math="\bf x_i"/> are the ideal points of the legislators; and <InlineMath math="\beta_j"/> and <InlineMath math="\alpha_j"/> are the discrimination and difficulty parameters of the model.
 
 Starting from scratch in `R` in a new session (you'll need a C++ compiler if you don't have one, see [here](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)):
 
@@ -34,7 +36,7 @@ install.packages("RStan")
 library("RStan")
 ```
 
-Ideal points are created from a _j_ $\times$ _m_ matrix of voting data (_j_ legislators voting on _m_ votes), coded <bdi style="font-family:courier">1</bdi> for 'yes' and <bdi style="font-family:courier">0</bdi> for 'no' and abstentions. Missing data are <bdi style="font-family:courier">NA</bdi>, and are deleted out before running in Stan. We can easily simulate data for this type of thing, but let's use a real database. This data is from the 53rd legislature of the Brazilian Federal Senate (with thanks to [CEBRAP](http://www.cebrap.org.br/v2/pages/home), who built the original database, this comes from an extended version I created), we'll download it from my Github repo. You'll need to install `readr` if you don't have it. (I also have the bad habit of naming my data as "data"... not generally a great idea. It'll be ok here, though.)
+Ideal points are created from a _j_ <InlineMath math="\times"/> _m_ matrix of voting data (_j_ legislators voting on _m_ votes), coded <bdi style="font-family:courier">1</bdi> for 'yes' and <bdi style="font-family:courier">0</bdi> for 'no' and abstentions. Missing data are <bdi style="font-family:courier">NA</bdi>, and are deleted out before running in Stan. We can easily simulate data for this type of thing, but let's use a real database. This data is from the 53rd legislature of the Brazilian Federal Senate (with thanks to [CEBRAP](http://www.cebrap.org.br/v2/pages/home), who built the original database, this comes from an extended version I created), we'll download it from my Github repo. You'll need to install `readr` if you don't have it. (I also have the bad habit of naming my data as "data"... not generally a great idea. It'll be ok here, though.)
 
 ```r
 library(readr)
@@ -53,7 +55,7 @@ data$Vote <- as.numeric(data$Vote)
 
 &nbsp;
 
-Next, we'll create the 'vote matrix'. This is the _j_ $\times$ _m_ matrix that we will use to create the ideal points with Stan. The rows will be the legislators and the columns the votes. We will also need to deal with the issue of ['constraints'](http://polmeth.wustl.edu/files/polmeth/river03.pdf): we need to identify _d(d + 1)_ legislators in _d_ dimensions and constrain their ideal points in some way. For now, we'll just organise our vote matrix in such a way that the two legislators that will be constrained are placed in rows 1 and 2 of the matrix. For this example, we can use Senators Agripino and Suplicy, who belong to two parties that are generally considered to be on opposite sides of the political 'space' that we will place our ideal points upon. Organizing things in this way is not necessary but makes the Stan model code cleaner later on.
+Next, we'll create the 'vote matrix'. This is the _j_ <InlineMath math="\times"/> _m_ matrix that we will use to create the ideal points with Stan. The rows will be the legislators and the columns the votes. We will also need to deal with the issue of ['constraints'](http://polmeth.wustl.edu/files/polmeth/river03.pdf): we need to identify _d(d + 1)_ legislators in _d_ dimensions and constrain their ideal points in some way. For now, we'll just organise our vote matrix in such a way that the two legislators that will be constrained are placed in rows 1 and 2 of the matrix. For this example, we can use Senators Agripino and Suplicy, who belong to two parties that are generally considered to be on opposite sides of the political 'space' that we will place our ideal points upon. Organizing things in this way is not necessary but makes the Stan model code cleaner later on.
 
 &nbsp;
 

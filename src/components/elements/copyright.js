@@ -38,5 +38,3 @@ const Pp = styled.p`
   bottom: 0;
   right: 0;
 `
-// align-text: center;
-// justify-content: center;

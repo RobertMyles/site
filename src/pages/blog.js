@@ -4,9 +4,15 @@ import Navbar from "../components/navbar/Navbar"
 import { styles } from "../utils"
 import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
+import Helmet from "react-helmet"
 
 export default ({ data }) => (
   <>
+    <Helmet title="Blog | Robert Myles McDonnell">
+      <meta charSet="utf-8" />
+      <title>Robert Myles McDonnell</title>
+      <link rel="canonical" href="http://robertmylesmcdonnell.com" />
+    </Helmet>
     <Navbar
       color={styles.colors.mainPink}
       linkcolor={styles.colors.mainBlue}

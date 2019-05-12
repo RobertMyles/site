@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid"
 
 export default function TitleDivs() {
   return (
-    <Grid container direction="column" justify="left" alignItems="left">
+    <Grid container direction="column" justify="center" alignItems="flex-start">
       <Adiv color={styles.colors.mainRed} width={`280px`} marginLeft={`75px`}>
         ROBERT
       </Adiv>

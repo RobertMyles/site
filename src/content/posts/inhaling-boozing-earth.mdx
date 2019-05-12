@@ -1,13 +1,11 @@
 ---
 title: Inhaling/Boozing Earth
-date: "2016-08-13"
+date: "2016-08-14"
 ---
-
-_This post got lost mysteriously when I transitioned to Netlify -- just reposting. It was originally from June 2017._
 
 After seeing Nadieh Bremer’s great [Breathing Earth](http://www.datasketch.es/april/code/nadieh/) infographic, I thought it would be cool to recreate it in R, as you do. Then I saw that it was made from lots of tif files…hmmm. I did some work with those before, ain’t doin it again voluntarily, no thanks.
 
-So then I started thinking about something else that would be (kind of) similar and interesting. I saw the sf package and its interesting `geom_sf()` recently, and so I thought it would be a nice opportunity to try that out. Given we started with ‘breathing’ Earth, the natural next step was to think of ‘inhaling’ Earth! A quick download of some cannabis data from [here](https://data.unodc.org/?lf=1&lng=en)^[Refresh the page if it doesn't log in automatically. You're looking for "Annual prevalence, adults" > "Cannabis" > "Download as Excel". *Sigh*, just create an API, UN. *AND* these are .xls files. **Grrrr!!!** So you're better off opening it up and saving it as a .csv.] and we’re (almost) ready to go, just some cleaning, tidying and merging with the geometry data from the [rnaturalearth](https://github.com/ropenscilabs/rnaturalearth) package. This takes some tidying, unfortunately.^[I save both of these as gifs and store them on imgur, since they don't render correctly with blogdown for some reason]
+So then I started thinking about something else that would be (kind of) similar and interesting. I saw the sf package and its interesting `geom_sf()` recently, and so I thought it would be a nice opportunity to try that out. Given we started with ‘breathing’ Earth, the natural next step was to think of ‘inhaling’ Earth! A quick download of some cannabis data from [here](https://data.unodc.org/?lf=1&lng=en)[^1] and we’re (almost) ready to go, just some cleaning, tidying and merging with the geometry data from the [rnaturalearth](https://github.com/ropenscilabs/rnaturalearth) package. This takes some tidying, unfortunately.[^2]
 
 ```r
 library(stringi)
@@ -113,6 +111,13 @@ b <- ggplot(booze, aes(frame = year)) + geom_sf(aes(fill = value)) +
 gganimate::gganimate(b, filename = "second.gif", interval = 2, ani.width=800, ani.height=600)
 ```
 
+<br />
+
 ![](https://imgur.com/MS8lSbV.gif)
 
+<br />
+
 That works! Nice. Ok, it’s pretty simple, but given the hellish wrangling involved with some spatial polygon sets and administrative unit geographical data, I’m really impressed with how easy `geom_sf()` was to use. Good work, ggplot & sf folks!
+
+[^1]: Refresh the page if it doesn't log in automatically. You're looking for "Annual prevalence, adults" > "Cannabis" > "Download as Excel". _Sigh_, just create an API, UN. _AND_ these are .xls files. **Grrrr!!!** So you're better off opening it up and saving it as a .csv.
+[^2]: I save both of these as gifs and store them on imgur, since they don't render correctly with blogdown for some reason].

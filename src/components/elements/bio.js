@@ -11,15 +11,14 @@ export default function Bio() {
       </Ppp>
       <br />
       <Ppp>
-        TO DO: fix query on template; code colors if poss; undone pages; check
-        sizes on different machines & browsers; copyright on mobile;;; I am a
-        creative data scientist, currently working as a senior data scientist
-        for <a href="https://www.firstdata.com/en_us/home.html">First Data</a>{" "}
-        in their new Research & Development Center in Nenagh, Ireland. I am
-        helping to create the global Data Strategy for First Data and working on
-        our FraudDetect product. Our team generates insights from the millions
-        of transactions that First Data processes every day, helping to create
-        new products and to improve existing ones.
+        I am a creative data scientist, currently working as a senior data
+        scientist for{" "}
+        <a href="https://www.firstdata.com/en_us/home.html">First Data</a> in
+        their new Research & Development Center in Nenagh, Ireland. I am helping
+        to create the global Data Strategy for First Data and working on our
+        FraudDetect product. Our team generates insights from the millions of
+        transactions that First Data processes every day, helping to create new
+        products and to improve existing ones.
       </Ppp>
 
       <Ppp>

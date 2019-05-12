@@ -1,33 +1,21 @@
 ---
 title: "Peace, Bread and Data!"
 date: "2017-02-19"
-custom_css: sickle.css
-categories:
-  - R
-  - Communism
-  - Political Economy
-tags:
-  - R
-description: ""
-featured: "communist_party.jpg"
-featuredalt: ""
-featuredpath: "/images"
-output:
-  html_document:
-    keep_md: true
 ---
 
-I really like this image by [Tom Burns](https://www.threadless.com/product/383/the_communist_party).^["Peace, Bread and Data!" I take from the Bolsheviks' "Peace, Bread and Land!".] The liberal^[In an old-school [Scottish sense](http://deirdremccloskey.org/academics/index.php)] in me appreciates making cheap fun of people who were horribly mistaken (Lenin; Marx, although I don't mean to slight his contributions to social science), scum like Stalin, and Fidel Castro, who might have started out with a laudable takedown of a corrupt dictator, but who then became...a corrupt dictator, of course. The artist in me just loves the awesome colours. And it's pretty funny.
+![](images/the_communist_party.png)
+
+I really like this image by [Tom Burns](https://www.threadless.com/product/383/the_communist_party).[^1] The liberal[^2] in me appreciates making cheap fun of people who were horribly mistaken (Lenin; Marx, although I don't mean to slight his contributions to social science), scum like Stalin, and Fidel Castro, who might have started out with a laudable takedown of a corrupt dictator, but who then became...a corrupt dictator, of course. The artist in me just loves the awesome colours. And it's pretty funny.
 
 So? Well, since I like making plots in R, and I really like these colours, and I have an interest in the political economic side of it all... let's make some graphs! Maybe we can see how Communist countries compare to the evil West on a series of socio-economic indicators.
 
 The colour scheme in this image is the following:
 
-+------+------------+-----------+------------+---------------+----------+
-| | background | cup | dark red | very dark red | yellow |
-+======+============+===========+============+===============+==========+
-| hex | #cf1f2e | #d32434 | #a20414 | #991014 | #ffda85 |
-+------+------------+-----------+------------+---------------+----------+
+- background: <span style={{color: `#cf1f2e`}}>#cf1f2e</span>
+- cup: <span style={{color: `#d32434`}}>#d32434</span>
+- dark red: <span style={{color: `#a20414`}}>#a20414</span>
+- very dark red: <span style={{color: `#991014`}}>#991014</span>
+- yellow: <span style={{color: `#ffda85`}}>#ffda85</span>
 
 We can use these hex values directly in the `ggplot()` function.
 
@@ -91,7 +79,8 @@ ggplot(wb_l, aes(x = year, y = l_means)) +
 
 ![](images/communism-1.png)
 
-Ah, that font...^[This can be downloaded from [many](https://www.google.com/search?q=kremlin+font&oq=kremlin+font&aqs=chrome.0.69i59.2400j0j7&sourceid=chrome&ie=UTF-8) sources, as you can see from the code, it's called "Kremlin". I think it's great.]  
+Ah, that font...[^3]
+
 Well, everybody's life expectancy is going up, that's good, but there's a massive difference between communist and non-communist countries in Africa and Asia. Former communist countries do slightly better in Eastern Europe, although it's pretty much even. That's quite a notable trend over such a short time period, it's a pity the data doesn't go back further. This might also be nice as a boxplot:
 
 ![](images/communism-2.png)
@@ -123,7 +112,7 @@ wb %>% mutate(year = as.character(year)) %>%
 ```
 
 Well, look at that. With the exception of the USA, and the less-of-an-exception of Algeria and South Sudan, these are all neighbours. Must be fun over there in the Middle East.  
-So what about our <bdi style="font-size: 0.8em; font-family:kremlin;">komrades</bdi>?
+So what about our komrades?
 
 ```
 ## # A tibble: 10 x 2
@@ -176,7 +165,7 @@ How about other, less financial indicators, like adult literacy levels?
 
 Still the pattern we noticed earlier: while there is a notable difference between communist and non-communist countries inside of regions, the regions themselves vary widely.
 
-## East v West Germany: <bdi style="font-family:kremlin;">FINAL BATTLE</bdi>
+## East v West Germany: FINAL BATTLE
 
 Anybody who has been paying attention the "credibility revolution" in economics/political science will have seen it said that the ideal for any comparison is an experiment. "Natural" experiments ('naturally' occurring, i.e. not created by the researcher) are the closest we can get in many social scientific settings. Luckily for us, this topic has at least one A-grade natural experiment: the division of Germany into East and West, the former under Soviet control and the latter a liberal "capitalist" economy.
 
@@ -229,10 +218,16 @@ ggplot(e_w, aes(x = Year)) +
 
 ![](images/communism-6.png)
 
-<bdi style="font-family:kremlin;color:#b22222">VICTORY TO EVIL WEST!!</bdi>
+**VICTORY TO EVIL WEST!!**
 
 As usual, the Economist has some of the best visualizations on the subject. We could [recreate this in R](https://robertmyles.github.io/re-creating-plots-from-the-economist-in-r.html), but let's just use the original. It's from [this](http://www.economist.com/blogs/graphicdetail/2015/10/daily-chart-comparing-eastern-and-western-germany) article.
 
 ![](http://i.imgur.com/lqnmr6y.png)
 
-Well, one thing that we can be sure about is that the commies cracked some great [jokes](http://www.prospectmagazine.co.uk/features/communist-jokes). "Stalin himself cracked them, including this one about a visit from a Georgian delegation: They come, they talk to Stalin, and then they go, heading off down the Kremlin’s corridors. Stalin starts looking for his pipe. He can’t find it. He calls in Beria, the dreaded head of his secret police. 'Go after the delegation, and find out which one took my pipe,' he says. Beria scuttles off down the corridor. Five minutes later Stalin finds his pipe under a pile of papers. He calls Beria -- 'Look, I’ve found my pipe.' 'It’s too late,' Beria says, 'half the delegation admitted they took your pipe, and the other half died during questioning.' :smile: <bdi style="font-family:kremlin;">GOOD TIMES!!</bdi>
+Well, one thing that we can be sure about is that the commies cracked some great [jokes](http://www.prospectmagazine.co.uk/features/communist-jokes).
+
+"Stalin himself cracked them, including this one about a visit from a Georgian delegation: They come, they talk to Stalin, and then they go, heading off down the Kremlin’s corridors. Stalin starts looking for his pipe. He can’t find it. He calls in Beria, the dreaded head of his secret police. 'Go after the delegation, and find out which one took my pipe,' he says. Beria scuttles off down the corridor. Five minutes later Stalin finds his pipe under a pile of papers. He calls Beria -- 'Look, I’ve found my pipe.' 'It’s too late,' Beria says, 'half the delegation admitted they took your pipe, and the other half died during questioning.' 😄
+
+[^1]: "Peace, Bread and Data!" I take from the Bolsheviks' "Peace, Bread and Land!".
+[^2]: In an old-school [Scottish sense](http://deirdremccloskey.org/academics/index.php).
+[^3]: This can be downloaded from [many](https://www.google.com/search?q=kremlin+font&oq=kremlin+font&aqs=chrome.0.69i59.2400j0j7&sourceid=chrome&ie=UTF-8) sources, as you can see from the code, it's called "Kremlin". I think it's great.

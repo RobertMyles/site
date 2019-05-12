@@ -1,11 +1,9 @@
 ---
-title: UK ELECTIONS 2017
+title: UK Elections 2017
 date: "2017-09-27"
 ---
 
-_This post got lost mysteriously when I transitioned to Netlify -- just reposting. It was originally from June 2017._
-
-This post is a quickie to show how we can visualize the UK election results with just a few lines of R code. (Really, very few). ^[I’m using the dev version of ggplot2 here, we need it for `geom_sf()`.]
+This post is a quickie to show how we can visualize the UK election results with just a few lines of R code. (Really, very few). [^1]
 
 We can load in our usual tidyverse tools, along with a handy little data package, [parlitools](https://github.com/EvanOdell/parlitools).
 
@@ -40,3 +38,5 @@ ggplot(res) +
 ![](images/uk.png)
 
 Bam! Easy, quick and lovely 😄.
+
+[^1]: I’m using the dev version of ggplot2 here, we need it for `geom_sf()`.
