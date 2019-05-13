@@ -75,7 +75,7 @@ rollcalls <- full_join(EU, theme) %>%
   filter(!is.na(vote))
 ```
 
-Next, we need to prepare the data for Stan. Our model is a basic [2-parameter Item-Response theory model](https://www.cs.princeton.edu/courses/archive/fall09/cos597A/papers/ClintonJackmanRivers2004.pdf) often used for [creating ideal points](http://robertmyles.github.io/Bayesian-IRT-in-R-and-Stan.html). We write this in the Stan modelling language and save it as a string in R. In mathematical notation, the model is:
+Next, we need to prepare the data for Stan. Our model is a basic [2-parameter Item-Response theory model](https://www.cs.princeton.edu/courses/archive/fall09/cos597A/papers/ClintonJackmanRivers2004.pdf) often used for [creating ideal points](https://www.robertmylesmcdonnell.com/content/posts/Bayesian-IRT-in-R-and-Stan/). We write this in the Stan modelling language and save it as a string in R. In mathematical notation, the model is:
 
 <BlockMath math="y_{ijk} = \beta_j \theta_{ik} - \alpha_j," />
 
@@ -139,7 +139,7 @@ stan_data <- list(J=J, N=N, M=M, j=j,
                   m0=m0, M0=M0)
 ```
 
-Next, we run our model with Stan. Here I use Stan's new [ADVI]() feature, but the Stan folks don't recommend this for inference. However, for a blog post it's okay 😊.
+Next, we run our model with Stan. Here I use Stan's new ADVI feature, but the Stan folks don't recommend this for inference. However, for a blog post it's okay 😊.
 
 ADVI is much faster than the already comparatively fast NUTS sampling that Stan does. Here we have a lot of data, though, so this next part will take **a few hours** to run. If you don't fancy waiting so long, subset the data (maybe choose just one year) and run the Stan code on the smaller dataset.
 

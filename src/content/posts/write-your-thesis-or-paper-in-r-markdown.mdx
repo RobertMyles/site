@@ -3,19 +3,19 @@ title: Write your thesis or paper in R Markdown!
 date: "2016-04-15"
 ---
 
+import { InlineMath, BlockMath } from "react-katex"
+
 There are many reasons why you would want to use some variant of Markdown for writing, and indeed, posts are common on the net as to why you should.[^1] A simple summary of the reasons are that Markdown is: 1) easy; 2) easy; 3) yup, you guessed it – it’s easy.
 
 One variant of Markdown is R Markdown, developed by the [RStudio](https://www.rstudio.com/) team, and in particular [Yihui Xie](http://yihui.name/knitr/), creator of the `knitr` R package. R Markdown is pretty much like regular Markdown, except you get a whole load of nice extra features, including the ability to run code chunks, produce .pdfs and presentations, and even .docx (if you really, really want to[^2]). Indeed, the ioslides presentation format lets you use the power of html and css to make browser-based presentations.
 
-But surely academic papers require certain formats, and sometimes mathematical expressions and funny Greek letters? Well, sure. Academic papers, particularly theses, often have set formats that you must adhere to. And since Markdown is quite a simple language, it doesn’t have the advanced power of $\LaTeX$ to position things in specific ways.
+But surely academic papers require certain formats, and sometimes mathematical expressions and funny Greek letters? Well, sure. Academic papers, particularly theses, often have set formats that you must adhere to. And since Markdown is quite a simple language, it doesn’t have the advanced power of <InlineMath math="\LaTeX"/> to position things in specific ways.
 
-### $\LaTeX$ in R Markdown
+### <InlineMath math="\LaTeX"/> in R Markdown
 
-Enter R Markdown! Although you might (depends on the Markdown) have to do something like `{% raw %}\\(\LaTeX\\){% endraw %}` to get the word $\LaTeX$ in your Markdown, with R Markdown it’s just `$ \LaTeX $`. I used Mathjax characters in my thesis, and all worked fine using this method ([here’s](http://www.onemathematicalcat.org/MathJaxDocumentation/TeXSyntax.htm) a nice link showing all the possible characters you can create with Mathjax). Nice ‘n’ easy, lemon squeezy. Inline $\LaTeX$ expressions get one `$`, centred equations get two: `$$`, and both need the equivalent to finish the expression. For example, in my first [post](http://robertmyles.github.io//post1.html), I had the equation:
+Enter R Markdown! Although you might (depends on the Markdown) have to do something like `{% raw %}\\(\LaTeX\\){% endraw %}` to get the word <InlineMath math="\LaTeX"/> in your Markdown, with R Markdown it’s just `$ \LaTeX $`. I used Mathjax characters in my thesis, and all worked fine using this method ([here’s](http://www.onemathematicalcat.org/MathJaxDocumentation/TeXSyntax.htm) a nice link showing all the possible characters you can create with Mathjax). Nice ‘n’ easy, lemon squeezy. Inline <InlineMath math="\LaTeX"/> expressions get one `$`, centred equations get two: `$$`, and both need the equivalent to finish the expression. For example, in my first [post](https://www.robertmylesmcdonnell.com/content/posts/stan-or-jags-for-bayesian-ideal-point-irt/), I had the equation:
 
-$$
-y_{ij} = \beta_j\bf{x_i} - \alpha_j
-$$
+<BlockMath math="y_{ij} = \beta_j\bf{x_i} - \alpha_j" />
 
 In R Markdown, this is:
 
@@ -27,9 +27,9 @@ So that’s math and funny characters done. What else can we do in R Markdown?
 
 ### Images
 
-Well, all the image-placement power of $\LaTeX$ is also available. So `\begin{figure}` (or subfigure and wrapfigure), `\centering`, `\includegraphics` and `\caption` all work as they should. I found minipage to be particularly helpful. You can use `\` with two spaces after it to organise blank space, or `\newpage` to force a new page.
+Well, all the image-placement power of <InlineMath math="\LaTeX"/> is also available. So `\begin{figure}` (or subfigure and wrapfigure), `\centering`, `\includegraphics` and `\caption` all work as they should. I found minipage to be particularly helpful. You can use `\` with two spaces after it to organise blank space, or `\newpage` to force a new page.
 
-Of course, that supposing that you want to use $\LaTeX$ for images. R Markdown’s own syntax for images is quite simple: `![Caption](file.png)`, where ‘Caption’ is your image caption and ‘file.png’ your image file (you can use other formats, such as .pdf too). However, positioning may become a problem using this image-placing syntax. It’s worth taking the extra time to learn the $\LaTeX$ if you don’t know it.
+Of course, that supposing that you want to use <InlineMath math="\LaTeX"/> for images. R Markdown’s own syntax for images is quite simple: `![Caption](file.png)`, where ‘Caption’ is your image caption and ‘file.png’ your image file (you can use other formats, such as .pdf too). However, positioning may become a problem using this image-placing syntax. It’s worth taking the extra time to learn the <InlineMath math="\LaTeX"/> if you don’t know it.
 
 ### Tables
 
@@ -56,8 +56,8 @@ Chapters and Headings are laughably simple in any Markdown, and R Markdown is no
 
 ### The YAML block
 
-The YAML block is what makes your R Markdown document possibly really fancy. It’s here that the $\LaTeX$ packages are loaded, and here that you can specify various options that will have an impact on your document. So what the hell _is_ a YAML block, anyway? Well, maybe the easiest way to explain that is to show you mine[^3] from my PhD
-[thesis](%7B%7B%20site.url%20%7D%7D/assets/Explaining%20the%20Determinants%20of%20Foreign%20Policy%20Voting%20Behaviour%20in%20the%20Brazilian%20Houses%20of%20Legislature.pdf). It starts and ends with `---`.
+The YAML block is what makes your R Markdown document possibly really fancy. It’s here that the <InlineMath math="\LaTeX"/> packages are loaded, and here that you can specify various options that will have an impact on your document. So what the hell _is_ a YAML block, anyway? Well, maybe the easiest way to explain that is to show you mine[^3] from my PhD
+[thesis](https://www.robertmylesmcdonnell.com/Robert_Myles_McDonnell_thesis.pdf). It starts and ends with `---`.
 
     ---
     title: "Explaining the Determinants..."
@@ -92,17 +92,15 @@ The YAML block is what makes your R Markdown document possibly really fancy. It�
 
 So, that’s quite extended, but maybe you won’t need all these things. One important thing to remember with the YAML block is that indentation _matters_. When you have something like `output:`, then the line `pdf document:` is **two** spaces indented. `fig_caption: yes` is **two more** spaces indented (four in total) and so are the other options to pdf_document. If you get your spacing wrong, it won’t work.
 
-Many of the options are self-explanatory: `linestretch` is line-spacing, for example. One important option is `toc` and its option `toc_depth`. This is the **t**able **o**f **c**ontents. `toc_depth` is telling R Markdown how many levels you’d like: Chapter 4.1, Chapter 4.1.1 etc. More advanced elements can be changed too. For example, this thesis had a `documentclass` of article, but you can write your own document class and therefore produce radically different documents. One example is an R Markdown [version](https://github.com/danielkrizian/resume_template) of Friggeri’s popular CV template. Other examples are rapidly proliferating
-on the web. The RStudio team have a new R package [rticles](https://github.com/rstudio/rticles) that has document templates for various academic journal styles. Load ’em up, and you’ve already got an easy R Markdown template for the journal in question. And for papers, enable the `abstract:` option in the YAML header, write your abstract there, and voilà! You’ve got yourself a nice abstract.
+Many of the options are self-explanatory: `linestretch` is line-spacing, for example. One important option is `toc` and its option `toc_depth`. This is the **t**able **o**f **c**ontents. `toc_depth` is telling R Markdown how many levels you’d like: Chapter 4.1, Chapter 4.1.1 etc. More advanced elements can be changed too. For example, this thesis had a `documentclass` of article, but you can write your own document class and therefore produce radically different documents. One example is an R Markdown [version](https://github.com/danielkrizian/resume_template) of Friggeri’s popular CV template. Other examples are rapidly proliferating on the web. The RStudio team have a new R package [rticles](https://github.com/rstudio/rticles) that has document templates for various academic journal styles. Load ’em up, and you’ve already got an easy R Markdown template for the journal in question. And for papers, enable the `abstract:` option in the YAML header, write your abstract there, and voilà! You’ve got yourself a nice abstract.
 
-So if writing your thesis (or a paper) in Microsoft Word or something similar sounds like an ordeal, and you’re really not such an expert
-on$\LaTeX$, maybe you should consider doing it in R Markdown. It has all the easiness of Markdown, with a couple of nice extras that help you make a quality document. See my thesis if you don’t believe me! :wink:
+So if writing your thesis (or a paper) in Microsoft Word or something similar sounds like an ordeal, and you’re really not such an expert on <InlineMath math="\LaTeX"/>, maybe you should consider doing it in R Markdown. It has all the easiness of Markdown, with a couple of nice extras that help you make a quality document. See my thesis if you don’t believe me! 😉
 
 Update:  
-A colleague asked me how I produced the first few pages of my thesis, and I realised that I forgot to mention that you can include other documents, for example tex files, that may need to be part of your thesis. Many theses have strict guidelines for the introductory pages, which can be included in your R Markdown file as part of the YAML header section. The option is `includes`, and it has the sub-options `in_header`, `before_body` and `after body`. Like before, the spacing is meaningful in the YAML header, so these sub-options will need to be indented two spaces. For introductory pages of a thesis, your tex file will go in `before_body`. (I have to admit that this option never worked well for me, I simply merged the .pdf produced from the tex file and the .pdf produced from the R Markdown document with Preview in OS X, but for others, it seems to work fine.) See [here](http://rmarkdown.rstudio.com/markdown_document_format.html) for examples. See [here](https://github.com/danilofreire/kcl-thesis-template-markdown) for a Markdown template for King’s College London’s PhD guidelines, by [Danilo Freire](http://danilofreire.com/).
+A colleague asked me how I produced the first few pages of my thesis, and I realised that I forgot to mention that you can include other documents, for example tex files, that may need to be part of your thesis. Many theses have strict guidelines for the introductory pages, which can be included in your R Markdown file as part of the YAML header section. The option is `includes`, and it has the sub-options `in_header`, `before_body` and `after body`. Like before, the spacing is meaningful in the YAML header, so these sub-options will need to be indented two spaces. For introductory pages of a thesis, your tex file will go in `before_body`. (I have to admit that this option never worked well for me, I simply merged the .pdf produced from the tex file and the .pdf produced from the R Markdown document with Preview in OS X, but for others, it seems to work fine.) See [here](http://rmarkdown.rstudio.com/markdown_document_format.html) for examples. See [here](https://github.com/danilofreire/kcl-thesis-template-markdown) for a Markdown template for King’s College London’s PhD guidelines, by [Danilo Freire](http://danilofreire.github.io/).
 
-[^1]: For example, [this cheatsheet](http://markdown-guide.readthedocs.org/en/latest/basics.html)[↩](#a1)
-[^2]: In my experience, I think you’re just going to end up editing these in Word anyway so I don’t know that it’s worth the bother to do in RStudio. You can if you want, I suppose.[↩](#a2)
-[^3]: I’m including extra things here that I used over the process of making the thesis pdf, but it wasn’t what I used exactly in the end. I had some problems, that I can’t recall right now, with rendering bibliographical items so I switched to the default LaTeX renderer, pdflatex. Using this means you can’t use other fonts, like the Linux Libertine font above.[↩](#a3)
+[^1]: For example, [this cheatsheet](http://markdown-guide.readthedocs.org/en/latest/basics.html)
+[^2]: In my experience, I think you’re just going to end up editing these in Word anyway so I don’t know that it’s worth the bother to do in RStudio. You can if you want, I suppose.
+[^3]: I’m including extra things here that I used over the process of making the thesis pdf, but it wasn’t what I used exactly in the end. I had some problems, that I can’t recall right now, with rendering bibliographical items so I switched to the default <InlineMath math="\LaTeX"/> renderer, pdflatex. Using this means you can’t use other fonts, like the Linux Libertine font above.
 
 <link rel="image_src" href="http://i.imgur.com/vywFhKA.png?1" />

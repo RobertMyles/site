@@ -3,7 +3,7 @@ title: Analyzing Prison Data in R
 date: "2017-07-28"
 ---
 
-My good friend [Danilo Freire](http://danilofreire.com) and I have just finished a little R data package, called [prisonbrief](http://danilofreire.com/prisonbrief/). We hope that it will be useful for R users, particularly researchers in the area, since this is still a much understudied topic. Why does prison population change? In many countries, it is rising, and has been for some time, and the determinants of this rise are still not well understood. All the data in the package come from the fantastic [World Prison Brief](http://www.prisonstudies.org/) website -- we thank them for making these data available. You can contribute to the project [here](http://www.prisonstudies.org/about-us).
+My good friend [Danilo Freire](http://danilofreiregithub.io) and I have just finished a little R data package, called [prisonbrief](http://danilofreire.com/prisonbrief/). We hope that it will be useful for R users, particularly researchers in the area, since this is still a much understudied topic. Why does prison population change? In many countries, it is rising, and has been for some time, and the determinants of this rise are still not well understood. All the data in the package come from the fantastic [World Prison Brief](http://www.prisonstudies.org/) website -- we thank them for making these data available. You can contribute to the project [here](http://www.prisonstudies.org/about-us).
 
 With that in mind, I thought I'd give a quick introduction to the package here on my blog. This is also the first time I've used netlify & blogdown instead of github pages (the subject of a future post, I'm sure). Anyway, the package is on CRAN, so it's easily installed:
 
@@ -60,7 +60,7 @@ ggplot(we_usa, aes(x = reorder(country, prison_population_rate),
 
 ![](images/prisonbrief-1.png)
 
-Well, so far, quite as expected, apart from the eviltastic number for the topspot 🤘. Let's take a look at female prisoners as a percentage of prisoner population:
+Well, so far, quite as expected, apart from the almost-eviltastic number for the topspot 🤘. Let's take a look at female prisoners as a percentage of prisoner population:
 
 ```r
 ggplot(we_usa, aes(x = reorder(country, `female-prisoners`),
