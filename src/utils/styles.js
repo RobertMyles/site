@@ -2,6 +2,8 @@ import "typeface-aleo"
 import "typeface-spacegrotesk"
 import "typeface-inconsolata"
 
+export const margin = { top: 20, right: 0, bottom: 30, left: 40 }
+
 export const colors = {
   mainWhite: `#fff`,
   mainBlack: `#000000`,
