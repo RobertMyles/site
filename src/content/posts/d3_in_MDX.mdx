@@ -1,0 +1,76 @@
+---
+title: "D3, React and MDX"
+date: "2019-06-03"
+---
+
+import SimpleBarChart from "../graphs/SimpleBarChart.js"
+import data from "../data/divorceTurnout2019.json"
+
+Recently, I moved my blog from making it in R with [blogdown](https://bookdown.org/yihui/blogdown) and RMarkdown. [Hugo](https://gohugo.io/) is the engine that blogdown uses, and while it was fast and _very_ handy to create blog posts from RStudio, I had [problems](https://community.rstudio.com/t/d3-plot-shows-in-rmarkdown-but-not-in-blogdown-generated-webpage/6599) once I tried to put in D3 plots. That in combination with the fact that blogdown **_always_** rebuilt my old posts, even though it's not supposed to. After much protesting to Yihui, the creator of blogdown, and re-installing, following the recommended workflow etc etc etc, I gave up with blogdown. To be honest, I was getting bored with having a layer of something 'magical' in between what I was writing and what ended up on my website. I decided to learn more about the internals of what something like Hugo or blogdown does. (Not blogdown's fault at all, it must have been my fault -- but I've been interested in learning more about the web for ages, and this was a good opportunity.)
+
+## React
+
+[React](https://reactjs.org/) was the JavaScript library that caught my eye. Through [Dave Ceddia's](https://daveceddia.com/) book & blog, and later through [Swizec's](https://swizec.com/blog/) blog & book, I started to learn how React works, and how it's a little tricky to combine with D3. I think React itself is incredibly elegant, and I've been lucky to arrive in React-land just as [Hooks](https://reactjs.org/docs/hooks-intro.html) have started up, and as an amazing ecosystem of React-built libraries pop up (e.g. [Styled Components](https://www.styled-components.com/)). Mike Bostock's clever decision to split D3 out into modules means it's perfect to use a part of a bigger framework, by just using what you need.
+
+The basic idea behind React is that you can divide your code into _components_. The Navbar you see at the top of this page, and on every page on this site, is one such component. It's written once and then called anytime I need it. Here it's called with some arguments that control the colour of the links and background and so on (styles is a separate JS file with these colours in it):
+
+```js
+<Navbar
+  color={styles.colors.mainGreen}
+  linkcolor={styles.colors.mainWhite}
+  linkbackground={styles.colors.mainGreen}
+  linkhover={styles.colors.mainRed}
+  iconcolor={styles.colors.mainWhite}
+  iconhover={styles.colors.mainRed}
+/>
+```
+
+Right here we can see the main attraction. Anytime you want a component, just call it with whatever arguments you need.
+
+## With D3
+
+Obviously the idea of calling an entire D3 graph similarly as a component is very appealing. Combining D3 and React has two schools of thought: either you use D3 as a 'blackbox' inside React, or you let React manipulate the DOM and control updates to the page and use D3 for its scales & maths. The first approach lets you use D3 code as you would find it all over the internet but loses the power of React, the second means more work to write your own code, leaves D3 transitions a little tricky, but gives you the power and cleanliness of React. I must like punishing myself, cos I chose the latter. It's taken me some time.
+
+## With MDX
+
+As I mentioned earlier, one great thing about React is the ecosystem that has sprung up around it. This website is now built using [Gatsby.js](https://www.gatsbyjs.org/), which is like Hugo for React, and takes away all the compiling/webpacking stuff that I don't need or want to know. While I was building the site and learning Gatsby, I came across [MDX](https://mdxjs.com/). Wow! Something like RMarkdown, but for React...and hence for D3. In Rmarkdown I can create a 'code chunk' and run some code (usually with R, but you can use [other languages](https://rmarkdown.rstudio.com/lesson-5.html)). And although it took me a while to get everything working smoothly together (I'm looking at you, Katex 👀 ... you too, emojis), using it is now as easy as it was to use RMarkdown.
+
+## An Example
+
+So why is all this cool? Well, let's use an example of the [Irish Divorce Referendum](https://www.robertmylesmcdonnell.com/content/posts/divorce-ireland/), blogged about recently here. The post linked to contains plots made in R, which are attached as png images. The cool thing about MDX is that we'll place a D3 plot right here in this markdown page. It also contains a line or two of R, to get the data and prep it. Let's go:
+
+```r
+library(readr); library(jsonlite)
+
+df <- read_csv("https://raw.githubusercontent.com/RobertMyles/blogdata/master/divorceRef2019turnout.csv")
+json <- toJSON(df)
+json
+```
+
+This gives us the right format for the data, which I just copied and pasted into a .json file.[^1] Another cool thing is that we can import this straight into the MDX file. At the top of the .mdx file that contains this blog post, I have:
+
+```js
+import SimpleBarChart from "../graphs/SimpleBarChart.js"
+import data from "../data/divorceTurnout2019.json"
+```
+
+It's that easy. The `SimpleBarChart` above is the D3 plot we're going to show. Once it's imported, I can call it where I want it in the text with:
+
+```js
+<SimpleBarChart data={data} height={900} width={1080} />
+```
+
+So here it is. Hover over it, it's got tooltips 😎.
+
+<br />
+
+<SimpleBarChart data={data} height={1000} width={1080} />
+
+<br/>
+<br/>
+
+Proooobably not the best way to plot that data -- there's not much variation and a lot on y. Still, bar charts are a traditional 'Hello, World!'. The actual code for the 'simple' Bar Chart is not so simple. It involves the use of React's Refs and Contexts, so not the simplest piece of React out there. I used Swizec's 'useTooltip' from his post on tooltips [^2] as well as a couple of other tricks from various places around the web, and a whole lot of trial and error, but I got it working.[^3] Yay! Now that I get how it works, I'm looking forward to learning more D3 and blinging up this blog with some serious dataviz! 🚀🚀🚀
+
+[^1]: jsonlite's `write_json()` didn't give me what I wanted, and I wasn't bothered to go looking for a solution for a small dataset.
+[^2]: See [here](https://swizec.com/blog/tooltips-and-state-across-various-d3-charts-in-a-react-dashboard/swizec/8904).
+[^3]: The code is available on the repo for this [site](https://github.com/RobertMyles/site/tree/master/src/content), under 'posts' (MDX post), and 'graphs' (tooltip & bar chart).
