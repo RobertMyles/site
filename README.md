@@ -3,3 +3,5 @@
 Repo for my personal website. 👻
 
 Built with React, MDX, Gatsby.js and styled components.
+
+For use with R and D3 and other good stuff.
