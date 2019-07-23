@@ -1,0 +1,139 @@
+---
+title: "Improving your DataViz"
+author: "Robert McDonnell"
+date: "7/23/2019"
+output: html_document
+---
+import SimpleBarChart from "../graphs/SimpleBarChart.js"
+import data from "../data/divorceTurnout2019.json"
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+A while ago, I [posted](https://www.robertmylesmcdonnell.com/content/posts/d3_in_MDX/) about including D3 charts in MDX documents. I was pretty chuffed at my little D3-React bar chart (with tooltips!), but that was mainly to do with me being technically able to do it, not because it was a beautiful piece of data visualization (it isn't). In `$DAYJOB`, I've been thinking more about dataviz and the science behind it, and along with a talented colleague of mine, I'm preparing a data visualization guide for our data science team. You'd think Data Scientists would be pretty well clued-in on dataviz, but that's not always the case. I thought I'd revisit my own horrific dataviz crime and go through a step-by-step process of ways we could improve it. Good data visualization is always about the **message** you want to convey -- what interests me in these data is the overwhelming [Yes](https://www.robertmylesmcdonnell.com/content/posts/divorce-ireland/) vote, so that's what I'll be concentrating on highlighting. It's also a nice opportunity to highlight mistakes often made, and that I often make when making dataviz without thinking too deeply about it.[^1]
+
+To remind you of what we're talking about, here's the chart I originally posted: 
+
+<SimpleBarChart data={data} height={900} width={1080} />
+
+### So what's wrong with this?
+
+Well, there are a couple of things that are not ideal with this chart. First of all, it's hard to compare exact numbers in the different constituencies, although the tooltips help us to escape that a little bit. Secondly, the bars are very visually dominant and your eye gets drawn to their centre, and not to the right-hand side, which is where the important information that the bars is trying to convey is found. While the wall of bars does kind of convey the 'overwhelming "Yes"' that I was trying to get at, I think there must be better ways, and we could definitely think about the x-axis. Thirdly, although I like the colour scale, it doesn't really add much, if anything, to the chart. 
+
+There are some difficulties involved in plotting this dataset -- mainly that we have a lot of 'categories' (the constituencies, all 40 of them), and that there is very little variation in the other variable of interest, the turnout. To get an idea of what I mean, have a look at the following histogram, showing the spread of values of the turnout across the constituencies:
+
+```{r echo = FALSE}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(glue)
+
+df <- read_csv("https://raw.githubusercontent.com/RobertMyles/blogdata/master/divorceRef2019turnout.csv")
+```
+
+```{r echo = FALSE, fig.align='center'}
+df %>% 
+  mutate(Turnout_labels = glue("{Turnout}%")) %>% 
+  ggplot(aes( x = Turnout)) + 
+  geom_density(fill = "black") + 
+  scale_x_continuous(limits = c(0, 100), labels = c("0%", "25%", "50%", "75%", "100%")) +
+  theme_minimal() + ggtitle("Turnout in the Irish Divorce Ref. 2019") +
+  labs(y = NULL, x = NULL) +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), plot.title = element_text(hjust = 0.5), title = element_text(family = "Georgia"))
+```
+
+I've left in the full x-axis to show the problem clearly -- most of our data falls in a pretty narrow range. The combination of these two things, the thin spread across many categories, means it's a good dataset to explore visually, since the optimal solution is not immediately apparent (to me, at least). 
+
+### Setup 
+
+I'm going to use R and ggplot2 for this exploration. The principles we'll explore are not tied to these tools, I just think they're the best available for what we need to do here. 
+
+Let's get our data and load the libraries we'll use.
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(glue)
+
+df <- read_csv("https://raw.githubusercontent.com/RobertMyles/blogdata/master/divorceRef2019turnout.csv")
+```
+
+This dataset looks like this (first 6 lines): 
+```{r}
+df %>% head() %>% knitr::kable()
+```
+
+### First attempts
+
+So, like I did with D3, I suppose one of the first things you would do with a dataset like this (assuming you want to plot both variables) is to make some type of bar chart. Since we have long names for our categories, the best option is a bar chart with the categories on the y-axis. It's standard practice to order the data for this type of chart, so with all this we can make a simple naive attempt at visualizing this dataset, which basically replicates our previous D3 implementation (except no tooltips `r emo::ji("sad")`.
+
+```{r}
+df %>% 
+  mutate(Constituency = forcats::fct_reorder(Constituency, Turnout)) %>% 
+  ggplot(aes(y = Turnout, x = Constituency)) +
+  geom_col(stat = "identity") +
+  labs(x = NULL, y = "Turnout (%)") +
+  coord_flip() +
+  theme_minimal()
+```
+
+Wall o'bars again. We can reduce this effect by stripping out the bulk of the bars.
+
+```{r}
+df %>% 
+  mutate(Constituency = forcats::fct_reorder(Constituency, Turnout)) %>% 
+  ggplot(aes(y = Turnout, x = Constituency)) +
+  geom_point(stat = "identity") +
+  geom_segment(aes(x = Constituency, xend = Constituency, y = 0, yend = Turnout), linetype = 3) +
+  labs(x = NULL, y = "Turnout (%)") +
+  coord_flip() +
+  theme_minimal()
+```
+
+
+Ok, that solves our problem of a wall of dark-coloured bars. The dots and the underlying grid serve to connect the labels on the left y-axis to the turnout value on the right, so in this sense, this is not a bad basic chart. We get the general message that most constituencies voted 'Yes' at over 60%, and that Wicklow was the highest 'Yes'-voting area. However, comparison between the constituencies is not easy. Even finding them on the y-axis takes work. To facilitate comparison, we could shorten the x-axis.
+
+```{r}
+df %>% 
+  mutate(Constituency = forcats::fct_reorder(Constituency, Turnout)) %>% 
+  ggplot(aes(y = Turnout, x = Constituency)) +
+  geom_point(stat = "identity") +
+  geom_segment(aes(x = Constituency, xend = Constituency, y = 50, yend = Turnout), linetype = 3) +
+  labs(x = NULL, y = "Turnout (%)") +
+  coord_flip() +
+  theme_minimal() +
+  ylim(50, 75)
+```
+
+This gives us a much better handle on the difference between constituencies, but comparing them is still difficult. There are a few strategies we can employ. One very useful one is facetting -- we can group the constituencies by some other variable (here, I'll create and use region) and then plot them on individual plots/facets.
+
+```{r}
+df %>% 
+  mutate(Constituency = forcats::fct_reorder(Constituency, Turnout),
+         Region = case_when(
+           Constituency %in% c("Clare", "Galway West", "Galway East", "Roscommon-Galway",
+                                "Limerick") ~ "West",
+           Constituency %in% c("Mayo", "Sligo-Leitrim", "Donegal") ~ "North-West",
+           Constituency %in% c("Dun Laoghaire", "Dublin Bay North", "Dublin Bay South", "Dublin Central",
+                               "Dublin Fingal", "Dublin Mid-West", "Dublin North-West", "Dublin Rathdown",
+                               "Dublin South-Central", "Dublin South-West", "Dublin West", "Wicklow", "Louth") ~ "East",
+           Constituency %in% c("Wexford", "Waterford") ~ "South-East",
+           Constituency %in% c("Cork North-West", "Kerry", "Cork South-West", "Cork South-Central", 
+                               "Cork North-Central", "Cork East") ~ "South-West",
+           TRUE ~ "Midlands"
+         )) %>% 
+  ggplot(aes(y = Turnout, x = Constituency)) +
+  geom_point(stat = "identity") +
+  geom_segment(aes(x = Constituency, xend = Constituency, y = 0, yend = Turnout), linetype = 3) +
+  labs(x = NULL, y = "Turnout (%)") +
+  coord_flip() +
+  theme_minimal() +
+  facet_grid(~Region)
+```
+
+
+
+As we saw earlier, we end up with a wall of bars. One thing we could try is to reduce the visual overload of all those bars. In this case, lollipop charts can often be a good alternative.
+
+
+[^1]: A good example is the final plot [here](https://www.robertmylesmcdonnell.com/content/posts/divorce-ireland/). I really should have had the bright colours in the gradient as the *low* end of the turnout scale, not the high end. Ah well.
