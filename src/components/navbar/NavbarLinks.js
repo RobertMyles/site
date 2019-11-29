@@ -32,11 +32,11 @@ export default function NavbarLink(props) {
       path: "/other/",
       name: "other",
     },
-    {
-      id: 5,
-      path: "/about/",
-      name: "about",
-    },
+    // {
+    //   id: 5,
+    //   path: "/about/",
+    //   name: "about",
+    // },
   ]
 
   return (

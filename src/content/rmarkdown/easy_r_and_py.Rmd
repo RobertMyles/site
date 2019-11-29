@@ -1,0 +1,60 @@
+---
+title: "Easily Use Python and R together with {reticulate}"
+author: "Robert McDonnell"
+date: "11/27/2019"
+output: html_document
+---
+```{r echo = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+I work in an environment where R and Python are used interchangeably, and most of the data scientists here have some familiarity with both languages. We regularly use one language to call the other and I've been struck by just how easy this is, particularly with RStudio's [`{reticulate}`](https://rstudio.github.io/reticulate/) package (also with Python's `subprocess`). We've tried [rpy2](https://rpy2.readthedocs.io/en/version_2.8.x/index.html), but it's a poor man's reticulate in my opinion. 
+
+Here's a quick example of utilising a Python script in R with the use of reticulate. 
+```{r}
+library(dplyr)
+library(reticulate)
+```
+
+I was working with some data that had a peculiar timestamp, which I could not parse correctly in R. I'm not saying this can't be done in R, just that I couldn't do it and didn't have the time to delve into the complexities of date formats in R. I knew it parsed correctly with Pandas, so that's what I used. 
+
+So here's a tiny fake dataet that illustrates the issue: 
+```{r}
+df <- tibble(
+  random_id = sample(letters, 10),
+  timestamp = c(1537363730375, 1537363680645, 1537363720707, 1537363740836, 1537363740176, 1537363700649, 1537363780495, 1537363730636, 1537363730041, 1537363767311)
+)
+
+df %>% 
+  mutate(date = as.POSIXct(timestamp, origin = "1970-01-01"))
+```
+
+As you can see, the dates are incorrect. Like I said, there's probably a way to fix this in R, but after searching Stack Overflow and other resources, I didn't find a solution so I quickly coded one up in Python: 
+
+```{python}
+import pandas as pd
+
+def format_date(r_df):
+  r_df["timestamp"] = pd.to_datetime(r_df["timestamp"], unit = "ms")
+  return r_df
+```
+
+Pandas' `unit` argument to `to_datetime()` here is what solved it for me. We can just source this script with reticulate and this makes the function available to us in R, which we can use as part of a sequence of regular pipe operations:  
+
+```{r eval = FALSE}
+source_python("/path/to/this/Python/script.py")
+```
+
+```{r echo = FALSE}
+format_date <- py$format_date
+```
+
+```{r}
+df %>% 
+  format_date() %>% # Python function
+  as_tibble() %>% 
+  pull(timestamp) %>% 
+  str()
+```
+
+As you can see, the timestamp is now formatted in a way we can easily use. So. Easy.

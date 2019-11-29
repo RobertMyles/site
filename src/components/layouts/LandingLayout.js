@@ -28,7 +28,7 @@ export default function LandingLayout() {
         justify="flex-start"
         alignItems="flex-start"
       >
-        <Grid item xs={4} sm={8} md={6} lg={4} xl={4}>
+        <Grid item xs={4} sm={8} md={6} lg={6} xl={4}>
           <Image src={circle} height={350} />
           <TitleDivs />
           <br />
@@ -38,7 +38,7 @@ export default function LandingLayout() {
           <IconWrapper />
         </Grid>
         <Hidden only={["xs", "sm"]}>
-          <Grid item md={6} lg={8} xl={8}>
+          <Grid item md={4} lg={6} xl={8}>
             <Bio />
           </Grid>
         </Hidden>

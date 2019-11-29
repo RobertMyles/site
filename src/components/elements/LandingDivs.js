@@ -19,13 +19,13 @@ export default function LandingDivs() {
       color: styles.colors.mainRed,
       width: 40,
     },
-    {
-      name: "ABOUT",
-      path: "/about/",
-      id: 2,
-      color: styles.colors.mainBlue,
-      width: 75,
-    },
+    // {
+    //   name: "ABOUT",
+    //   path: "/about/",
+    //   id: 2,
+    //   color: styles.colors.mainBlue,
+    //   width: 75,
+    // },
     {
       name: "RESEARCH",
       path: "/research/",
@@ -83,6 +83,7 @@ const StyledLink = styled(Link)`
 
 const DivWrapper = styled.div`
   font-family: ${styles.titleFont};
-  padding: 0.2rem;
+  padding-left: 17px;
+  padding-right: 17px;
   cursor: pointer;
 `

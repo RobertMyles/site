@@ -81,8 +81,7 @@ export default () => (
             data science -- figuring out how all the pieces go together, from
             data ingestion, exploration and analysis to modelling pipelines,
             deployment & communication/visualization. I prefer to use R for
-            exploration & analysis, Python for modelling pipelines and
-            deployment (although{" "}
+            exploration & analysis, Python for modelling pipelines (although{" "}
             <a href="https://github.com/tidymodels">tidymodels</a> looks good),
             and I'm a big fan of properly-done data visualization, which I like
             to do in ggplot2 or D3 with React for something online. I'm still
@@ -101,8 +100,8 @@ export default () => (
           <Ppp>
             Modelling of fraud in high-volume real-time settings; member of team
             responsible for First Data's global data strategy; automation of
-            ETL, modelling and deployment of ML pipelines. I've worked on the
-            FraudDetect & Authorization Optimization products.{" "}
+            ETL, modelling and deployment of ML pipelines; automation of client
+            reports with Rmarkdown; tech lead & scrum master.{" "}
           </Ppp>
           <br />
           <h3>Lead Data Scientist, Avanade, São Paulo</h3>

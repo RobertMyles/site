@@ -10,7 +10,10 @@ export default function Copyright() {
         <Aa href="https://beAautifulwebtype.com/space-grotesk/">
           Beautiful Web Type
         </Aa>
-        . Built with&nbsp;<Aa href="https://reactjs.org/">React</Aa>&nbsp;
+        .
+      </Pp>
+      <Pp style={{ paddingLeft: 100 }}>
+        Built with&nbsp;<Aa href="https://reactjs.org/">React</Aa>&nbsp;
         and&nbsp;
         <Aa href="https://www.gatsbyjs.org/">Gatsby.js</Aa>.
       </Pp>
