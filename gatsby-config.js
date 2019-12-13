@@ -84,6 +84,15 @@ module.exports = {
             },
           },
         ],
+        plugins: [
+          "gatsby-remark-images",
+          // {
+          //   resolve: `gatsby-transformer-remark`,
+          //   options: {
+          //     plugins: [`gatsby-remark-copy-linked-files`],
+          //   },
+          // },
+        ],
       },
     },
   ],
