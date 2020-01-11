@@ -1,5 +1,9 @@
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
+const sharp = require(`sharp`)
+// https://florian.ec/blog/gatsby-build-netlify-segmentation-fault
+sharp.cache(false)
+sharp.simd(false)
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   const { createNodeField } = actions

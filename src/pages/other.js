@@ -49,10 +49,7 @@ export default () => (
     <Grid container direction="row" justify="center">
       <Grid item xs={12} sm={12} md={10} lg={8} xl={8} />
       <RDiv>
-        <Ppp>
-          Life's not all work! I like to write and sometimes draw, and I'm a
-          musician.
-        </Ppp>
+        <Ppp>Here's some other stuff I do.</Ppp>
         <h2 style={{ fontFamily: styles.titleFont }}>ONE HAND ON THE BOTTLE</h2>
         <Ppp>
           One Hand on the Bottle was a band I had some years ago, with some

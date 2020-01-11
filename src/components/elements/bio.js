@@ -1,71 +1,78 @@
 import React from "react"
 import { styles } from "../../utils"
 import styled from "styled-components"
+import { StaticQuery, Link, graphql } from "gatsby"
+import circle from "../../images/circle_border.jpeg"
+import GitHubButton from "react-github-btn"
 
-export default function Bio() {
-  return (
-    <BioDiv>
-      <h1>Robert Myles McDonnell</h1>
-      <Ppp>
-        <em>Data Scientist</em>
-      </Ppp>
-      <br />
-      <Ppp style={{ fontWeight: "bolder" }}>
-        I'm Robert McDonnell, welcome to my site.
-      </Ppp>
-      <Ppp>
-        I am a creative data scientist, currently working as a senior data
-        scientist for{" "}
-        <a href="https://www.firstdata.com/en_us/home.html">
-          First Data/Fiserv
-        </a>{" "}
-        in their new Research & Development Center in Nenagh, Ireland, where I
-        work on problems such as fraud detection, report automation and analysis
-        on encrypted data.
-      </Ppp>
-
-      <Ppp>
-        I received my PhD in International Relations from the University of Sao
-        Paulo in Brazil in 2016. I have a Master's in International Relations
-        from Dublin City University, Ireland and my undergraduate degree in in
-        Fine Art from the National College of Art & Design in Dublin. I've been
-        working in data science since 2014, and among the positions I've held,
-        I've been the director of the DIPROJ technical unit in the Sao Paulo
-        City Council and the lead data scientist for Avanade. I'm also an
-        open-source developer and I've produced a number of software packages
-        for the statistical programming language{" "}
-        <a href="https://cran.r-project.org/">R</a>. I'm particularly interested
-        in data visualization and producing something meaningful from data. My
-        other interests include the philosophy of economics, Bayesian modelling
-        and political science.
-      </Ppp>
-
-      <Ppp>
-        I blog (infrequently) about stuff I've learned in R, Python or so on. I
-        like to share it because I learned this way -- from people taking time
-        to post tutorials, snippets of code or to write blog posts. Apart from
-        data science, I like to code in JavaScript, particularly React.js. I
-        made this website using{" "}
-        <a href="https://www.gatsbyjs.org/">Gatsby.js</a>,{" "}
-        <a href="https://mdxjs.com/">MDX</a>,{" "}
-        <a href="https://reactjs.org/">React</a> and{" "}
-        <a href="https://www.styled-components.com/">Styled Components</a>. The
-        code can be seen on the GitHub repo for the site. The design is my own,
-        although inspired by{" "}
-        <a href="https:beautifulwebtype.com/space-grotesk/">
-          Beautiful Web Type.
-        </a>{" "}
-        For the fonts, I used the lovely{" "}
-        <a href="https:alessiolaiso.com/aleo-font">Aleo</a> font by Alessio
-        Laiso, with{" "}
-        <a href="https:fonts.floriankarsten.com/space-grotesk">Space Grotesk</a>{" "}
-        by Florian Karsten for titles, and{" "}
-        <a href="https:fonts.google.com/specimen/Inconsolata">Inconsolata</a>{" "}
-        for code.
-      </Ppp>
-    </BioDiv>
-  )
-}
+export default () => (
+  <StaticQuery
+    query={graphql`
+      {
+        allMdx(sort: { fields: [frontmatter___date], order: DESC }, limit: 5) {
+          totalCount
+          edges {
+            node {
+              id
+              frontmatter {
+                title
+              }
+              fields {
+                slug
+              }
+            }
+          }
+        }
+      }
+    `}
+    render={data => (
+      <BioDiv>
+        <Image src={circle} height={200} />
+        <Ppp style={{ fontWeight: "bolder", fontSize: 35 }}>
+          Hi, I'm Rob, welcome to my site.
+        </Ppp>
+        <Ppp style={{ maxWidth: "500px" }}>
+          I'm a data scientist, currently working for{" "}
+          <a href="https://www.firstdata.com/en_us/home.html">
+            First Data/Fiserv
+          </a>{" "}
+          on problems such as fraud detection, report automation and analysis on
+          encrypted data. I blog on my open-source work and on data science,
+          usually R-related.
+        </Ppp>
+        <div style={{ textAlign: "center" }}>
+          <GitHubButton href="https://github.com/robertmyles" data-size="large">
+            robertmyles
+          </GitHubButton>
+        </div>
+        <Ppp
+          style={{
+            fontFamily: styles.bodyFont,
+            fontSize: 30,
+            fontWeight: "bolder",
+          }}
+        >
+          Latest Posts
+        </Ppp>
+        {data.allMdx.edges.map(({ node }) => (
+          <div key={node.id}>
+            <StyledLink
+              to={node.fields.slug}
+              style={{ textDecoration: "none" }}
+            >
+              <h3 style={{ fontFamily: styles.titleFont }}>
+                {node.frontmatter.title}
+              </h3>
+              {/* <Img
+                fluid={node.frontmatter.featuredImage.childImageSharp.fluid}
+              /> */}
+            </StyledLink>
+          </div>
+        ))}
+      </BioDiv>
+    )}
+  />
+)
 
 const BioDiv = styled.div`
   font-family: ${styles.bodyFont};
@@ -86,4 +93,24 @@ const Ppp = styled.p`
   justify-content: center;
   max-width: 800px;
   font-size: 1.2rem;
+`
+
+const Image = styled.img`
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+`
+// const Datespan = styled.span`
+//   font-family: ${styles.bodyFont};
+//   color: ${styles.colors.mainGreen};
+//   :hover {
+//     color: ${styles.colors.mainBlue};
+//   }
+// `
+const StyledLink = styled(Link)`
+  color: ${styles.colors.mainRed};
+  :hover {
+      color: ${styles.colors.mainBlue};
+    }
+  }
 `

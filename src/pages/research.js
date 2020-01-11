@@ -56,13 +56,15 @@ export default () => (
             <FaRegFile /> Papers
           </h2>
           <Ppp>
-            <FaFileAlt /> congressbr: An R Package for Analyzing Data
-            fromBrazil’s Chamber of Deputies and Federal Senate
+            <a href="https://larrlasa.org/articles/10.25222/larr.447/">
+              <FaFileAlt /> congressbr: An R Package for Analyzing Data
+              fromBrazil’s Chamber of Deputies and Federal Senate
+            </a>
             <br />
             <i>
               {" "}
-              - with Danilo Freire and Guilherme J. Duarte; Forthcoming in the
-              Latin American Research Review, 2019.
+              - with Danilo Freire and Guilherme J. Duarte; Latin American
+              Research Review, 2019.
             </i>
           </Ppp>
 
