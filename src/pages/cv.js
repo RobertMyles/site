@@ -21,8 +21,8 @@ import { DiScala } from "react-icons/di"
 import { styles } from "../utils"
 import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
+import Container from "@material-ui/core/Container"
 import Navbar from "../components/navbar/Navbar"
-import circle from "../images/circle_border.jpeg"
 
 const Image = styled.img`
   margin-left: 0px;
@@ -32,6 +32,7 @@ const Image = styled.img`
 
 const CVDiv = styled.div`
   font-family: ${styles.bodyFont};
+  font-weight: lighter;
   padding-top: 40px;
   padding-left: 0px;
   text-align: left;
@@ -64,32 +65,16 @@ export default () => (
       <link rel="canonical" href="https://robertmylesmcdonnell.com" />
     </Helmet>
     <Navbar
-      color={styles.colors.mainGreen}
+      color={styles.colors.mainBlue}
       linkcolor={styles.colors.mainWhite}
-      linkbackground={styles.colors.mainGreen}
+      linkbackground={styles.colors.mainBlue}
       linkhover={styles.colors.mainRed}
       iconcolor={styles.colors.mainWhite}
       iconhover={styles.colors.mainRed}
     />
-
-    <Grid container direction="row" justify="center">
-      <Image src={circle} height={250} />
+    <Container fixed>
       <Grid item xs={12} sm={12} md={10} lg={8} xl={8}>
         <CVDiv>
-          <Ppp>
-            I'm a creative data scientist with an interest in the big picture of
-            data science -- figuring out how all the pieces go together, from
-            data ingestion, exploration and analysis to modelling pipelines,
-            deployment & communication/visualization. I prefer to use R for
-            exploration & analysis, Python for modelling pipelines (although{" "}
-            <a href="https://github.com/tidymodels">tidymodels</a> looks good),
-            and I'm a big fan of properly-done data visualization, which I like
-            to do in ggplot2 or D3 with React for something online. I'm still
-            learning and trying to figure out what I like for ingestion &
-            deployment, but leaning towards Spark & Scala and Tensorflow
-            Extended.
-          </Ppp>
-          <br />
           <h2>
             <IconContext.Provider value={{ color: styles.colors.mainBlue }}>
               <FaBriefcase /> Work Experience
@@ -116,7 +101,7 @@ export default () => (
           </Ppp>
           <br />
           <h3>
-            Data Science Team Director, Ministry of Finance, São Paulo City
+            Director of Data Science, Ministry of Finance, São Paulo City
             Council
           </h3>
           <Ppp>03/2017 — 07/2017</Ppp>
@@ -169,6 +154,7 @@ export default () => (
           </Ppp>
           <br />
           <br />
+          <hr />
           <h2>
             <FaGraduationCap /> Academic Background
           </h2>
@@ -199,7 +185,7 @@ export default () => (
           <Ppp>2004</Ppp>
           <br />
           <br />
-          <br />
+          <hr />
           <h2>
             <IconContext.Provider value={{ color: styles.colors.mainRed }}>
               <FaCode /> Programming Skills
@@ -237,31 +223,43 @@ export default () => (
             <Ppp>
               <h3>R packages:</h3>
             </Ppp>
+            <Ppp>
+              I've authored or collaborated on various R packages, some of which
+              have had over 20K downloads (tidyRSS) and others which are just
+              for fun.
+            </Ppp>
             <ul>
               <li>
-                <a href="https://github.com/RobertMyles/tidyRSS">tidyRSS</a>
+                <a href="https://github.com/RobertMyles/tidyRSS">tidyRSS</a> -
+                <i>downloads and tidies RSS feeds</i>
               </li>
               <li>
-                <a href="https://github.com/RobertMyles/congressbr">
+                <a href="https://github.com/duarteguilherme/congressbr">
                   congressbr
-                </a>
+                </a>{" "}
+                -<i>fetches Brazilian legislative data</i>
               </li>
               <li>
-                <a href="https://github.com/RobertMyles/cepR">cepR</a>
+                <a href="https://github.com/RobertMyles/cepR">cepR</a> -
+                <i>Brazilian postal code data</i>
               </li>
               <li>
-                <a href="https://github.com/RobertMyles/flagfillr">flagfillr</a>
+                <a href="https://github.com/RobertMyles/flagfillr">flagfillr</a>{" "}
+                -<i>use flags as 'fill's with ggplot2</i>
               </li>
               <li>
                 <a href="https://github.com/danilofreire/prisonbrief">
                   prisonBrief
-                </a>
+                </a>{" "}
+                -<i>World Prison Brief data</i>
               </li>
               <li>
-                <a href="https://github.com/RobertMyles/rugger">rugger</a>
+                <a href="https://github.com/RobertMyles/rugger">rugger</a> -
+                <i>an R package for rugby fans</i>
               </li>
               <li>
-                <a href="https://github.com/RobertMyles/XKCDdata">XKCDdata</a>
+                <a href="https://github.com/RobertMyles/XKCDdata">XKCDdata</a> -
+                <i>data from the XKCD api</i>
               </li>
               <li>
                 <a href="https://github.com/RobertMyles/ibge">ibge</a>
@@ -275,61 +273,65 @@ export default () => (
             </ul>
           </Ppp>
           <br />
-          <br />
+          <hr />
           <h2>Contact</h2>
           <Ppp>
-            <ul>
-              <li>
-                <FaPhone /> +353 87 667 5328{" "}
-              </li>
-              <li>
-                <a href="mailto:robertmylesmcdonnell@gmail.com">
-                  <FaEnvelope /> robertmylesmcdonnell@protonmail.com
-                </a>
-              </li>
-              <li>
-                <IconContext.Provider
-                  value={{ color: styles.colors.mainBlue, size: `1.2em` }}
-                >
-                  <a href="https://www.linkedin.com/in/robert-mcdonnell-7475b320/">
-                    <FaLinkedin />
+            <div style={{ display: "block" }}>
+              <ul>
+                <li>
+                  <FaPhone /> +353 87 667 5328{" "}
+                </li>
+                <li>
+                  <a href="mailto:robertmylesmcdonnell@gmail.com">
+                    <FaEnvelope /> robertmylesmcdonnell@protonmail.com
                   </a>
-                </IconContext.Provider>
-              </li>
-              <li>
-                <IconContext.Provider
-                  value={{ color: styles.colors.mainYellow, size: `1.2em` }}
-                >
-                  <a href="https://stackoverflow.com/users/4296028/robertmyles">
-                    <FaStackOverflow />
-                  </a>
-                </IconContext.Provider>
-              </li>
-              <li>
-                <IconContext.Provider
-                  value={{ color: styles.colors.mainBlack, size: `1.2em` }}
-                >
-                  <a href="https://github.com/RobertMyles">
-                    <FaGithub />
-                  </a>
-                </IconContext.Provider>
-              </li>
-              <li>
-                <IconContext.Provider
-                  value={{ color: styles.colors.mainBlue, size: `1.2em` }}
-                >
-                  <a href="https://twitter.com/RobertMylesMc">
-                    <FaTwitter />
-                  </a>
-                </IconContext.Provider>
-              </li>
-            </ul>
+                </li>
+                <li>
+                  <IconContext.Provider
+                    value={{ color: styles.colors.mainBlue, size: `1.2em` }}
+                  >
+                    <a href="https://www.linkedin.com/in/robert-mcdonnell-7475b320/">
+                      <FaLinkedin />
+                    </a>
+                  </IconContext.Provider>
+                </li>
+                <li>
+                  <IconContext.Provider
+                    value={{ color: styles.colors.mainYellow, size: `1.2em` }}
+                  >
+                    <a href="https://stackoverflow.com/users/4296028/robertmyles">
+                      <FaStackOverflow />
+                    </a>
+                  </IconContext.Provider>
+                </li>
+                <li>
+                  <IconContext.Provider
+                    value={{ color: styles.colors.mainBlack, size: `1.2em` }}
+                  >
+                    <a href="https://github.com/RobertMyles">
+                      <FaGithub />
+                    </a>
+                  </IconContext.Provider>
+                </li>
+                <li>
+                  <IconContext.Provider
+                    value={{ color: styles.colors.mainBlue, size: `1.2em` }}
+                  >
+                    <a href="https://twitter.com/RobertMylesMc">
+                      <FaTwitter />
+                    </a>
+                  </IconContext.Provider>
+                </li>
+              </ul>
+            </div>
           </Ppp>
+          <br />
+          <br />
           <br />
           <br />
         </CVDiv>
       </Grid>
-    </Grid>
+    </Container>
   </>
 )
 

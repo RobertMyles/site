@@ -39,17 +39,17 @@ export default () => (
       <link rel="canonical" href="https://robertmylesmcdonnell.com" />
     </Helmet>
     <Navbar
-      color={styles.colors.mainBlack}
+      color={styles.colors.mainBlue}
       linkcolor={styles.colors.mainWhite}
-      linkbackground={styles.colors.mainBlack}
-      linkhover={styles.colors.mainYellow}
+      linkbackground={styles.colors.mainBlue}
+      linkhover={styles.colors.mainRed}
       iconcolor={styles.colors.mainWhite}
-      iconhover={styles.colors.mainYellow}
+      iconhover={styles.colors.mainRed}
     />
     <Grid container direction="row" justify="center">
       <Grid item xs={12} sm={12} md={10} lg={8} xl={8} />
       <RDiv>
-        <Ppp>Here's some other stuff I do.</Ppp>
+        <Ppp>Here's some other stuff I like to do.</Ppp>
         <h2 style={{ fontFamily: styles.titleFont }}>ONE HAND ON THE BOTTLE</h2>
         <Ppp>
           One Hand on the Bottle was a band I had some years ago, with some

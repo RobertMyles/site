@@ -11,6 +11,7 @@ import {
   FaUniversity,
 } from "react-icons/fa"
 import Grid from "@material-ui/core/Grid"
+import Container from "@material-ui/core/Container"
 import Navbar from "../components/navbar/Navbar"
 import { IconContext } from "react-icons"
 
@@ -42,14 +43,14 @@ const Ppp = styled.p`
 export default () => (
   <>
     <Navbar
-      color={styles.colors.mainYellow}
+      color={styles.colors.mainBlue}
       linkcolor={styles.colors.mainWhite}
-      linkbackground={styles.colors.mainYellow}
-      linkhover={styles.colors.mainBlack}
+      linkbackground={styles.colors.mainBlue}
+      linkhover={styles.colors.mainRed}
       iconcolor={styles.colors.mainWhite}
-      iconhover={styles.colors.mainBlack}
+      iconhover={styles.colors.mainRed}
     />
-    <Grid container direction="row" justify="center">
+    <Container maxWidth="md">
       <Grid item xs={12} sm={12} md={10} lg={8} xl={8}>
         <RDiv>
           <h2>
@@ -57,14 +58,16 @@ export default () => (
           </h2>
           <Ppp>
             <a href="https://larrlasa.org/articles/10.25222/larr.447/">
-              <FaFileAlt /> congressbr: An R Package for Analyzing Data
-              fromBrazil’s Chamber of Deputies and Federal Senate
+              <FaFileAlt /> congressbr: An R Package for Analyzing Data from
+              Brazil’s Chamber of Deputies and Federal Senate
             </a>
             <br />
             <i>
               {" "}
-              - with Danilo Freire and Guilherme J. Duarte; Latin American
-              Research Review, 2019.
+              <p style={{ fontWeight: `lighter` }}>
+                - with Danilo Freire and Guilherme J. Duarte; Latin American
+                Research Review, 2019.
+              </p>
             </i>
           </Ppp>
 
@@ -77,8 +80,10 @@ export default () => (
             </IconContext.Provider>
             <br />
             <i>
-              - with Danilo Freire; The Journal of Open Source Software,
-              February 2018.
+              <p style={{ fontWeight: `lighter` }}>
+                - with Danilo Freire; The Journal of Open Source Software,
+                February 2018.
+              </p>
             </i>
           </Ppp>
 
@@ -89,16 +94,21 @@ export default () => (
               </a>
             </IconContext.Provider>
             <br />
-            <i>Brazilian Political Science Review, Issue 1, 2017.</i>
+            <p style={{ fontWeight: `lighter` }}>
+              <i>Brazilian Political Science Review, Issue 1, 2017.</i>
+            </p>
           </Ppp>
 
           <Ppp>
             <FaFile /> Measuring the effect of group-based voting in the United
             Nations General Assembly
             <br />
-            <i>- with Danilo Freire, working paper.</i>
+            <p style={{ fontWeight: `lighter` }}>
+              <i>- with Danilo Freire, working paper.</i>
+            </p>
           </Ppp>
           <br />
+          <hr />
           <h2>
             <FaBook /> Books
           </h2>
@@ -110,13 +120,16 @@ export default () => (
             </IconContext.Provider>
             <br />
             <i>
-              - with Paulo de Oliveira and Saulo Guerra; published by IBPAD,
-              June 2018. (In Portuguese.)
+              <p style={{ fontWeight: `lighter` }}>
+                - with Paulo de Oliveira and Saulo Guerra; published by IBPAD,
+                June 2018. (In Portuguese.)
+              </p>
             </i>
           </Ppp>
           <br />
+          <hr />
           <h2>
-            <FaUniversity /> Theses
+            <FaUniversity /> Thesis
           </h2>
           <Ppp>
             <IconContext.Provider value={{ color: styles.colors.mainBlue }}>
@@ -132,13 +145,17 @@ export default () => (
             </IconContext.Provider>
             <br />
             <i>
-              My PhD thesis, defended at the University of São Paulo in June
-              2016.
+              <p style={{ fontWeight: `lighter` }}>
+                My PhD thesis, defended at the University of São Paulo in June
+                2016.
+              </p>
             </i>
+            <br />
+            <br />
           </Ppp>
         </RDiv>
       </Grid>
-    </Grid>
+    </Container>
   </>
 )
 

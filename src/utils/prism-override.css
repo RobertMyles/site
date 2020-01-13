@@ -20,6 +20,7 @@
     */
 pre[class*="language-"] {
   background-color: transparent;
+  font-size: 0.98rem;
   margin: 0;
   padding: 0;
   overflow: initial;
@@ -30,6 +31,10 @@ pre[class*="language-"] {
 :not(pre) > code[class*="language-"] {
   padding: 0.05em;
   border-radius: 0.15em;
+  font-size: 0.95rem;
+  background-color: #8888;
+  color: black;
+  text-shadow: none;
 }
 .gatsby-highlight-code-line {
   background-color: #455a64;

@@ -14,12 +14,12 @@ export default ({ data }) => (
       <link rel="canonical" href="https://robertmylesmcdonnell.com" />
     </Helmet>
     <Navbar
-      color={styles.colors.mainPink}
-      linkcolor={styles.colors.mainBlue}
-      linkhover={styles.colors.mainWhite}
-      linkbackground={styles.colors.mainPink}
-      iconcolor={styles.colors.mainBlue}
-      iconhover={styles.colors.mainWhite}
+      color={styles.colors.mainBlue}
+      linkcolor={styles.colors.mainWhite}
+      linkbackground={styles.colors.mainBlue}
+      linkhover={styles.colors.mainRed}
+      iconcolor={styles.colors.mainWhite}
+      iconhover={styles.colors.mainRed}
     />
     <Grid
       container

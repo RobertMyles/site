@@ -12,9 +12,9 @@ export default function BlogLayout({ children }) {
   return (
     <>
       <Navbar
-        color={styles.colors.mainGreen}
+        color={styles.colors.mainBlue}
         linkcolor={styles.colors.mainWhite}
-        linkbackground={styles.colors.mainGreen}
+        linkbackground={styles.colors.mainBlue}
         linkhover={styles.colors.mainRed}
         iconcolor={styles.colors.mainWhite}
         iconhover={styles.colors.mainRed}
@@ -35,6 +35,7 @@ export default function BlogLayout({ children }) {
 
 const Postdiv = styled.div`
   font-family: ${styles.bodyFont};
+  font-size: 1.1rem;
   h3,
   h2 {
     color: ${styles.colors.mainRed};
