@@ -24,7 +24,7 @@ I'll also use the paletteer package for something later on, but it's not require
 There is a pretty decent website for Open Irish Data at [https://data.gov.ie/dataset](https://data.gov.ie/dataset), which I've just discovered and can't wait to explore! They have some datasets of Irish political constituencies that we can use. We can get these like so:
 
 ```r
-constituencies <- read_sf("http://data-osi.opendata.arcgis.com/datasets/ef0c0924d5ea4a0d875b5407d39eea03_0.geojson") %>%
+constituencies <- read_sf("https://data-osi.opendata.arcgis.com/datasets/ef0c0924d5ea4a0d875b5407d39eea03_0.geojson") %>%
   select(Constituency = MAX_CON_NA, geometry)
 ```
 

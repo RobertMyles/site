@@ -20,7 +20,7 @@ The colour scheme in this image is the following:
 
 We can use these hex values directly in the `ggplot()` function.
 
-[This](http://www.infoplease.com/ipa/A0933874.html) page has a list of former and currently communist countries (no way China is a communist country now, but anyway), and the World Bank [data catalog](http://data.worldbank.org/data-catalog) has a whole load of indicators we can use; the ones I use are available from [this](https://github.com/RobertMyles/Various_R-Scripts/tree/master/data/Communist_data) GitHub repo.^[You can download the data and read it into R, or read directly from the "raw" version of the github page (i.e., `https://raw.githubusercontent.com/RobertMyles/Various_R-Scripts/`). I use `readr` from the `tidyverse` package for this, since it can read straight from an url of a csv with `read_csv`.]
+[This](https://www.infoplease.com/ipa/A0933874.html) page has a list of former and currently communist countries (no way China is a communist country now, but anyway), and the World Bank [data catalog](https://data.worldbank.org/data-catalog) has a whole load of indicators we can use; the ones I use are available from [this](https://github.com/RobertMyles/Various_R-Scripts/tree/master/data/Communist_data) GitHub repo.^[You can download the data and read it into R, or read directly from the "raw" version of the github page (i.e., `https://raw.githubusercontent.com/RobertMyles/Various_R-Scripts/`). I use `readr` from the `tidyverse` package for this, since it can read straight from an url of a csv with `read_csv`.]
 
 ```r
 library(stringr)
@@ -221,14 +221,14 @@ ggplot(e_w, aes(x = Year)) +
 
 **VICTORY TO EVIL WEST!!**
 
-As usual, the Economist has some of the best visualizations on the subject. We could [recreate this in R](https://www.robertmylesmcdonnell.com/content/posts/re-creating-plots-from-the-economist-in-r/), but let's just use the original. It's from [this](http://www.economist.com/blogs/graphicdetail/2015/10/daily-chart-comparing-eastern-and-western-germany) article.
+As usual, the Economist has some of the best visualizations on the subject. We could [recreate this in R](https://www.robertmylesmcdonnell.com/content/posts/re-creating-plots-from-the-economist-in-r/), but let's just use the original. It's from [this](https://www.economist.com/blogs/graphicdetail/2015/10/daily-chart-comparing-eastern-and-western-germany) article.
 
-![](http://i.imgur.com/lqnmr6y.png)
+![](images/east-west.png)
 
-Well, one thing that we can be sure about is that the commies cracked some great [jokes](http://www.prospectmagazine.co.uk/features/communist-jokes).
+Well, one thing that we can be sure about is that the commies cracked some great [jokes](https://www.prospectmagazine.co.uk/features/communist-jokes).
 
 "Stalin himself cracked them, including this one about a visit from a Georgian delegation: They come, they talk to Stalin, and then they go, heading off down the Kremlin’s corridors. Stalin starts looking for his pipe. He can’t find it. He calls in Beria, the dreaded head of his secret police. 'Go after the delegation, and find out which one took my pipe,' he says. Beria scuttles off down the corridor. Five minutes later Stalin finds his pipe under a pile of papers. He calls Beria -- 'Look, I’ve found my pipe.' 'It’s too late,' Beria says, 'half the delegation admitted they took your pipe, and the other half died during questioning.' 😄
 
 [^1]: "Peace, Bread and Data!" I take from the Bolsheviks' "Peace, Bread and Land!".
-[^2]: In an old-school [Scottish sense](http://deirdremccloskey.org/academics/index.php).
+[^2]: In an old-school [Scottish sense](https://deirdremccloskey.org/academics/index.php).
 [^3]: This can be downloaded from [many](https://www.google.com/search?q=kremlin+font&oq=kremlin+font&aqs=chrome.0.69i59.2400j0j7&sourceid=chrome&ie=UTF-8) sources, as you can see from the code, it's called "Kremlin". I think it's great.

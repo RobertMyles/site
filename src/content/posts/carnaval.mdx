@@ -7,9 +7,9 @@ featuredImage: "images/carnaval.png"
 I've been getting more and more interested in web graphics, particularly [d3](https://d3js.org/). All of this of course depends on javascript, a language I don't know very well. As a way to start learning it, I thought I'd give [Shiny](https://shiny.rstudio.com/) a go, as a bridge between R and javascript (I've since started a javascript course proper). I've been surprised by how simple and powerful Shiny is, although the problems I ran into I wasn't able to solve.  
 Anyway, given that it is Carnaval time here in São Paulo, I thought I would make an app that shows the route of each 'bloco' (parade) in the city. You can see the finished app [here](https://robertmyles.shinyapps.io/carnaval_2017/). Here's a screenshot:
 
-![](http://i.imgur.com/xbcZDe6.png)
+![](images/carnaval.png)
 
-It's _almost_ what I wanted, but I couldn't get the map to show the routes as I wanted (I asked for help [here](http://stackoverflow.com/questions/42316144/leafletproxy-cant-find-reactive-data) on Stack Overflow). Anyway, the whole project was interesting, since it involved scraping the data from a pdf that the city council made available with info on the blocos, and then some (serious) work cleaning it up and geocoding the locations with the fantastic [Mapzen](https://mapzen.com/), through an R package, [rmapzen](https://tarakc02.github.io/rmapzen/). The code for getting the data ready is below, and the code for the Shiny app can be accessed on the app page.
+It's _almost_ what I wanted, but I couldn't get the map to show the routes as I wanted (I asked for help [here](https://stackoverflow.com/questions/42316144/leafletproxy-cant-find-reactive-data) on Stack Overflow). Anyway, the whole project was interesting, since it involved scraping the data from a pdf that the city council made available with info on the blocos, and then some (serious) work cleaning it up and geocoding the locations with the fantastic [Mapzen](https://mapzen.com/), through an R package, [rmapzen](https://tarakc02.github.io/rmapzen/). The code for getting the data ready is below, and the code for the Shiny app can be accessed on the app page.
 
 ```r
 library(tabulizer)
@@ -19,7 +19,7 @@ library(lubridate)
 '%ni%' <- Negate('%in%')
 
 
-blocos <- extract_tables("http://carnavalderua.prefeitura.sp.gov.br/wp-content/uploads/2017/02/Blocos-Carnaval-de-Rua-de-SP_08022017_por-prefeitura-regional_site.pdf")
+blocos <- extract_tables("https://carnavalderua.prefeitura.sp.gov.br/wp-content/uploads/2017/02/Blocos-Carnaval-de-Rua-de-SP_08022017_por-prefeitura-regional_site.pdf")
 
 
 carnaval <- do.call(rbind, blocos)

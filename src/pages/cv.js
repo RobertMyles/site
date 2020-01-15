@@ -77,20 +77,19 @@ export default () => (
           <h3>Senior Data Scientist, First Data Corporation</h3>
           <Ppp>08/2018 — Present</Ppp>
           <Ppp>
-            Modelling of fraud in high-volume real-time settings; member of team
-            responsible for First Data's global data strategy; automation of
-            ETL, modelling and deployment of ML pipelines; automation of client
-            reports with Rmarkdown; tech lead & scrum master.{" "}
+            Modelling of fraud in high-volume real-time settings; machine
+            learning, deployment of ML models; automation of client reports with
+            R, Rmarkdown, Python & SQL; tech lead & scrum master roles.{" "}
           </Ppp>
           <br />
           <h3>Lead Data Scientist, Avanade, São Paulo</h3>
           <Ppp>08/2017 — 07/2018</Ppp>
           <Ppp>
-            Brought data science into Avanade Brazil, working on various
+            Tasked with bringing data science into Avanade Brazil, working on various
             problems for different clients. This work included fraud modelling
             using deep learning & h2o, sentiment analysis, audio analysis, BI,
             data visualization and data tidying. I gave a course on{" "}
-            <a href="http://vita.had.co.nz/papers/tidy-data.pdf">tidy data</a>{" "}
+            <a href="https://vita.had.co.nz/papers/tidy-data.pdf">tidy data</a>{" "}
             and several tutorials on the R language to staff across the company.
           </Ppp>
           <br />

@@ -6,9 +6,9 @@ featuredImage: "images/meps.png"
 
 import { InlineMath, BlockMath } from "react-katex"
 
-Since it's [European Statistics Day](http://ec.europa.eu/eurostat/web/ess/european-statistics-day), I thought I would make a quick post showing how to utilise some of the data that we have on the European Union in R. In particular, I will use European Parliament voting data from Simon Hix's [website](http://personal.lse.ac.uk/hix/HixNouryRolandEPdata.HTM). The data is freely available, so by copying and pasting the code below, you will be able to recreate the analysis I've done here.
+Since it's [European Statistics Day](https://ec.europa.eu/eurostat/web/ess/european-statistics-day), I thought I would make a quick post showing how to utilise some of the data that we have on the European Union in R. In particular, I will use European Parliament voting data from Simon Hix's [website](https://personal.lse.ac.uk/hix/HixNouryRolandEPdata.HTM). The data is freely available, so by copying and pasting the code below, you will be able to recreate the analysis I've done here.
 
-We're going to be using [Stan](http://mc-stan.org/) to make theme-specific ideal points for members of the European Parliament. You will need to install Stan and a C++ compiler to replicate the analysis.
+We're going to be using [Stan](https://mc-stan.org/) to make theme-specific ideal points for members of the European Parliament. You will need to install Stan and a C++ compiler to replicate the analysis.
 
 First, let's load the R packages that we're going to use. If you don't have any of these, you will need to install them first, using either `install.packages("name of package")` or by means of the 'install' button on the Packages window of the RStudio IDE.
 
@@ -191,7 +191,7 @@ ggplot(adamou, aes(x = mean, y = topic)) +
   geom_vline(xintercept = 0, linetype = "dashed")
 ```
 
-<img src="http://i.imgur.com/C4zpATc.png" />
+<img src="images/meps1.png" />
 
 ```r
 adwent <- mep_summary %>% filter(voters=="ADWENT, Filip")
@@ -209,7 +209,7 @@ ggplot(adwent, aes(x = mean, y = topic)) +
   geom_vline(xintercept = 0, linetype = "dashed")
 ```
 
-<img src="http://i.imgur.com/gKFgL5L.png" />
+<img src="images/meps2.png" />
 
 We can put these two together and see how they compare:
 
@@ -231,7 +231,7 @@ ggplot(adamou, aes(x = mean, y = topic)) +
   geom_vline(xintercept = 0, linetype = "dashed")
 ```
 
-<img src="http://i.imgur.com/kBq6WGv.png" />
+<img src="images/combinedmeps.png" />
 
 And of course you can customise these ggplot figures any way you like.
 

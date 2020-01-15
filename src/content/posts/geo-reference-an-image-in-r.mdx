@@ -4,8 +4,8 @@ date: "2016-08-13"
 featuredImage: "images/georef.png"
 ---
 
-R is actually great for working with spatial data (for example, see [here](http://spatial.ly/2012/03/mapped-british-shipping-1750-1800/) and [here](https://pakillo.github.io/R-GIS-tutorial/#gmap) for fantastic graphs and maps made with R), however, you often need data that is _actually spatial_ to get started! What do you do if you have an image, a map, let's say, that is not geo-referenced in any way?  
-The regular answer to this problem is to use software such as [QGIS](http://www.qgis.com/) to manually enter GPS coordinates, with the [help](http://www.gps-coordinates.net/) of Google Maps or something similar. But R can be used for this too, and it's quite easy to do.
+R is actually great for working with spatial data (for example, see [here](https://spatial.ly/2012/03/mapped-british-shipping-1750-1800/) and [here](https://pakillo.github.io/R-GIS-tutorial/#gmap) for fantastic graphs and maps made with R), however, you often need data that is _actually spatial_ to get started! What do you do if you have an image, a map, let's say, that is not geo-referenced in any way?  
+The regular answer to this problem is to use software such as [QGIS](https://www.qgis.com/) to manually enter GPS coordinates, with the [help](https://www.gps-coordinates.net/) of Google Maps or something similar. But R can be used for this too, and it's quite easy to do.
 
 First, we load some necessary packages. Here, I'm working with `.tiff` files that I will change into Geo-tiffs. For other formats, you will need some other packages (such as `png`, for example).
 
@@ -24,7 +24,7 @@ map2 <- crop(Map, drawExtent(show = TRUE, col = "red"))
 plot(map2)
 ```
 
-Now we can enter in the maximal points of the image, xmin/xmax and ymin/ymax, respectively. These coordinates refer to an area of São Paulo, Brazil. The x-axis is longitude, the y-axis latitude. You can get the coordinates from [www.gps-coordinates.net](http://www.gps-coordinates.net/) for the area you need. We also need to tell R what type of map projection we are going to write into the image. Here we'll use `"+proj=longlat +datum=WGS84"`.
+Now we can enter in the maximal points of the image, xmin/xmax and ymin/ymax, respectively. These coordinates refer to an area of São Paulo, Brazil. The x-axis is longitude, the y-axis latitude. You can get the coordinates from [www.gps-coordinates.net](https://www.gps-coordinates.net/) for the area you need. We also need to tell R what type of map projection we are going to write into the image. Here we'll use `"+proj=longlat +datum=WGS84"`.
 
 ```r
 xmin(map2) <- -46.67449772357941

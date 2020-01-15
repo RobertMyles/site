@@ -4,7 +4,7 @@ date: "2016-08-14"
 featuredImage: "images/boozingearth.png"
 ---
 
-After seeing Nadieh Bremer’s great [Breathing Earth](http://www.datasketch.es/april/code/nadieh/) infographic, I thought it would be cool to recreate it in R, as you do. Then I saw that it was made from lots of tif files…hmmm. I did some work with those before, ain’t doin it again voluntarily, no thanks.
+After seeing Nadieh Bremer’s great [Breathing Earth](https://www.datasketch.es/april/code/nadieh/) infographic, I thought it would be cool to recreate it in R, as you do. Then I saw that it was made from lots of tif files…hmmm. I did some work with those before, ain’t doin it again voluntarily, no thanks.
 
 So then I started thinking about something else that would be (kind of) similar and interesting. I saw the sf package and its interesting `geom_sf()` recently, and so I thought it would be a nice opportunity to try that out. Given we started with ‘breathing’ Earth, the natural next step was to think of ‘inhaling’ Earth! A quick download of some cannabis data from [here](https://data.unodc.org/?lf=1&lng=en)[^1] and we’re (almost) ready to go, just some cleaning, tidying and merging with the geometry data from the [rnaturalearth](https://github.com/ropenscilabs/rnaturalearth) package. This takes some tidying, unfortunately.[^2]
 
@@ -57,7 +57,7 @@ gganimate::gganimate(pp, interval = 3, "first.gif")
 
 Hmm, not a good candidate for animations... Look at all that missing data.
 
-How about booze? We can get some data from [here](http://apps.who.int/gho/data/node.main.A1022?lang=en), (filtered for 'All Types'), join the years available (three tables) and tidy it all up:
+How about booze? We can get some data from [here](https://apps.who.int/gho/data/node.main.A1022?lang=en), (filtered for 'All Types'), join the years available (three tables) and tidy it all up:
 
 ```r
 library(magrittr)

@@ -4,7 +4,7 @@ date: "2016-10-09"
 featuredImage: "images/mapmaking.png"
 ---
 
-For those interested in Brazilian politics, there's a great new package called `electionsBR` (those who understand Portuguese can find a post on it [here](http://fmeireles.com/blog/rstats/electionsbr-um-pacote-para-baixar-dados-eleitorais-do-tse)). This package takes data from the _Tribunal Superior Eleitoral_ and makes it available in a tidy format for users of R. Given my recent obsession with [map-making](http://localhost:8000/content/posts/re-creating-plots-from-the-economist-in-r/), I think it's only natural I'd want to make maps of Brazil with this package.
+For those interested in Brazilian politics, there's a great new package called `electionsBR` (those who understand Portuguese can find a post on it [here](https://fmeireles.com/blog/rstats/electionsbr-um-pacote-para-baixar-dados-eleitorais-do-tse)). This package takes data from the _Tribunal Superior Eleitoral_ and makes it available in a tidy format for users of R. Given my recent obsession with [map-making](https://www.robertmylesmcdonnell.com/content/posts/re-creating-plots-from-the-economist-in-r/), I think it's only natural I'd want to make maps of Brazil with this package.
 
 So, what can we do with it? Well, how about a map of how Brazilians voted in the general election of 2014? To do this, we can use `electionsBR` to get the election data, and a mixture of `tidyverse` and some mapping and plotting packages:
 
@@ -34,7 +34,7 @@ Mun <- Mun %>%
   mutate(NOME_MUNICIPIO = stri_trans_general(NOME_MUNICIPIO, "Latin-ASCII"))
 ```
 
-One interesting thing we could do with this dataset is map the percentage of the electorate that voted for Dilma. We'll need shapefiles for Brazil, which you can get from [gadm.org](http://www.gadm.org/country).
+One interesting thing we could do with this dataset is map the percentage of the electorate that voted for Dilma. We'll need shapefiles for Brazil, which you can get from [gadm.org](https://www.gadm.org/country).
 
 We'll also need to isolate the vote for Dilma and then calculate the proportion in each municipality that voted for her. There were also two rounds of voting, so we can show each one. The code below does this for the first round, to do the same thing for the second round, we just change the first call to `filter` to `NUM_TURNO == 2`.
 
@@ -215,7 +215,7 @@ ggplot() +
   coord_map()
 ```
 
-<img src="http://i.imgur.com/xYMEQrk.jpg" style="width:800px;height:800px;" />
+<img src="images/dilma2014.png" style="width:800px;height:800px;" />
 
 We can see that even in 2014, Dilma's support in the South-east of the country was not overwhelming.
 
@@ -235,12 +235,12 @@ ggplot() +
   coord_map()
 ```
 
-<img src="http://i.imgur.com/jXKjZgG.jpg" style="width:800px;height:800px;" />
+<img src="images/comm2014.png" style="width:800px;height:800px;" />
 
 Not a very Communist country, by the looks of things.
 
 Well, that's a brief look at `electionsBR`. Data for other years and elections is available, as well as data at other administrative levels, and not just the President and Federal Deputies. The TSE also holds data on the background of the candidates and their campaign spending, all of which can be utilized with `electionsBR`. And if you fancy combining all this information with legislative behaviour from inside the Chamber of Deputies, just load the `bRasilLegis` package and you have a wealth of data on Brazilian Federal Deputies at your fingertips. Indeed, I'm proud to be involved in both packages. It's great to help to make the access to these data easier for those interested in Brazilian politics.
 
-P.s. This blog post was written using [`R Notebooks`](http://rmarkdown.rstudio.com/r_notebooks.html). I'd have to say that I really like `R Notebooks` so far, especially the preview. Try it out.
+P.s. This blog post was written using [`R Notebooks`](https://rmarkdown.rstudio.com/r_notebooks.html). I'd have to say that I really like `R Notebooks` so far, especially the preview. Try it out.
 
 Update: it seems that some folks might be running into problems running the scripts above, with **R** spitting out: `Error: isTRUE(gpclibPermitStatus()) is not TRUE`. The solution to this is to make sure you have rgdal or rgeos or a similar mapping package installed.

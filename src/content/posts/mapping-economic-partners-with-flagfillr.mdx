@@ -6,11 +6,11 @@ featuredImage: "images/flagfillr.png"
 
 🇨🇨 🇨🇽 🇵🇹 🇩🇴 🇫🇲 🇰🇷
 
-Recently I wrote a little package for R called flagfillr (you can read more details [here](https://github.com/RobertMyles/flagfillr)). One of the main reasons I made this is because I had seen a few maps of economic partners, for example this one, from [here](http://drunkeynesian.blogspot.com.br/2017/11/o-que-os-estados-brasileiros-exportam.html):
+Recently I wrote a little package for R called flagfillr (you can read more details [here](https://github.com/RobertMyles/flagfillr)). One of the main reasons I made this is because I had seen a few maps of economic partners, for example this one, from [here](https://drunkeynesian.blogspot.com.br/2017/11/o-que-os-estados-brasileiros-exportam.html):
 
 ![](https://i.imgur.com/6aL6KI9.png)
 
-These types of maps (some more [here](http://www.businessinsider.com/us-state-import-export-international-trade-partner-map-2017-11), of the US) are interesting visual summaries, but they look a little _Excel_ to me (sorry, whoever made it!). I thought I could spice them up with flags, cos hey, who doesn't like cool flags (like Bhutan, 🇧🇹, awesome!)
+These types of maps (some more [here](https://www.businessinsider.com/us-state-import-export-international-trade-partner-map-2017-11), of the US) are interesting visual summaries, but they look a little _Excel_ to me (sorry, whoever made it!). I thought I could spice them up with flags, cos hey, who doesn't like cool flags (like Bhutan, 🇧🇹, awesome!)
 
 ## Enter `flagfillr`
 
@@ -27,7 +27,7 @@ Which, if your data corresponds to the map above, will give you this:
 
 ## Mapping Economic Partners
 
-So how can you do this for another country? Let's take the example of Australia, from data available [here](http://dfat.gov.au/trade/resources/trade-at-a-glance/Pages/goods-by-state.aspx). First of all, we'll need to put our data into a dataframe, preferably with columns named `country`, `state` and `partner`, just to keep things simple. Simple is good. I'll use `dplyr` here (don't forget you'll have to install flagfillr, see [here](https://github.com/RobertMyles/flagfillr)). Since Australia's main trade partners by state are basically China and Japan, let's choose the _third_ biggest trade partner by state, just to keep things interesting.
+So how can you do this for another country? Let's take the example of Australia, from data available [here](https://dfat.gov.au/trade/resources/trade-at-a-glance/Pages/goods-by-state.aspx). First of all, we'll need to put our data into a dataframe, preferably with columns named `country`, `state` and `partner`, just to keep things simple. Simple is good. I'll use `dplyr` here (don't forget you'll have to install flagfillr, see [here](https://github.com/RobertMyles/flagfillr)). Since Australia's main trade partners by state are basically China and Japan, let's choose the _third_ biggest trade partner by state, just to keep things interesting.
 
 ```r
 library(dplyr)
@@ -49,7 +49,7 @@ flag_fillr_data(oz, country = "Australia", type = "state", size = "250",
 
 ![](images/flagfillr-1.png)
 
-It's not surprising that we see these countries here (the principal partners are China, Japan and India). Indeed, for many countries, the main economic partners are not a surprise. Let's take a look at the mainland United States. We can recreate these plots with flagfillr (for more detailed data see [here](https://www.census.gov/foreign-trade/statistics/state/data/index.html)), and make them a little prettier (they come from [here](http://www.businessinsider.com/us-state-import-export-international-trade-partner-map-2017-11)).
+It's not surprising that we see these countries here (the principal partners are China, Japan and India). Indeed, for many countries, the main economic partners are not a surprise. Let's take a look at the mainland United States. We can recreate these plots with flagfillr (for more detailed data see [here](https://www.census.gov/foreign-trade/statistics/state/data/index.html)), and make them a little prettier (they come from [here](https://www.businessinsider.com/us-state-import-export-international-trade-partner-map-2017-11)).
 
 ![](https://i.imgur.com/6D6PJD4.png)
 

@@ -6,7 +6,7 @@ featuredImage: "images/copypaste.png"
 
 From time to time, you might need to copy and paste something into R and turn it into a character string. Maybe it's something from the output of an error message, or from someone else's malformed data, or something copied from a document or the internet. If it's something small, then it's usually OK to just manually insert `""` around the strings and `,` between them. For something large, that's just a nightmare.
 
-For example, I ran into the [global variables](http://stackoverflow.com/questions/9439256/how-can-i-handle-r-cmd-check-no-visible-binding-for-global-variable-notes-when) problem (again) recently with a package I was making. Only this time, it wasn't the `"."` from a dplyr-style pipe chain that was giving me trouble, it was a ton of variables (You can see the mess [here](https://github.com/RobertMyles/congressbr/blob/master/R/util.R)). Here's a snippet of what I had to copy and paste:
+For example, I ran into the [global variables](https://stackoverflow.com/questions/9439256/how-can-i-handle-r-cmd-check-no-visible-binding-for-global-variable-notes-when) problem (again) recently with a package I was making. Only this time, it wasn't the `"."` from a dplyr-style pipe chain that was giving me trouble, it was a ton of variables (You can see the mess [here](https://github.com/RobertMyles/congressbr/blob/master/R/util.R)). Here's a snippet of what I had to copy and paste:
 
 ```r
 senator_bills_details senator_commissions_date_joined
@@ -59,7 +59,7 @@ Ok, almost there. We could use `print(x)` and copy-and-paste the result into our
 cat(x, sep = '", "')
 ```
 
-```
+```r
 ## senator_bills_details", "senator_commissions_date_joined", "senator_commissions_name", "senator_date_of_birth", "senator_name", "senator_office_address", "senator_party_date_joined", "senator_party_namesenator_positions_commission_date_start", "senator_suplente_namesenator_titular_name", "senator_vote", "session_date", "session_descriptionsession_number", "session_type", "sigla", "sit_description", "situation_datesituation_place", "sponsor_abbr", "sponsor_name", "sponsor_party", "topic_generaltopic_specific", "unit_name", "update_date", "vote_date", "vote_secretcountry_of_birth", "event_description", "event_type", "head", "id_rollcall
 ```
 
