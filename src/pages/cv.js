@@ -24,12 +24,6 @@ import Grid from "@material-ui/core/Grid"
 import Container from "@material-ui/core/Container"
 import Navbar from "../components/navbar/Navbar"
 
-const Image = styled.img`
-  margin-left: 0px;
-  margin-right: 20px;
-  margin-top: 20px;
-`
-
 const CVDiv = styled.div`
   font-family: ${styles.bodyFont};
   font-weight: lighter;

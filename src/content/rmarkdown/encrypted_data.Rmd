@@ -1,0 +1,232 @@
+---
+title: "Operating on _tidy_ Encrypted Data in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+This blog post taks about _Homormorphic Encryption_, a type of encryption that allows you to perform some mathematical operations on encrypted data. There's a brief explanation of what Homomorphic Encryption is and how it works, and then we go through how you can use this technology in R for data analysis. Enjoy `r emo::ji("nerd_face")`  
+As 'data' increasingly enters the daily language of normal _volk_ around the world, people are becoming more knowledgeable about how their privacy relates to data and its storage. Politicians, eager as always to pre-solve problems, have introduced legislation that makes working with PII data (Personally Identifiable Information) quite tricky, such as [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation) in the EU and the [CCPA](https://en.wikipedia.org/wiki/California_Consumer_Privacy_Act) in Californy. Never fear, however, wherever there are walls and fences, there are tunnels, ladders and wire-cutters. Names, addresses and so on can be hashed or tokenized. And for numbers, we have [_Homomorphic Encryption_](https://en.wikipedia.org/wiki/Homomorphic_encryption) (HE). Well, for integers, but I'll get back to that.  
+HE as an idea goes back some time, but its current implementations flow from a 2009 paper by [Craig Gentry](https://dl.acm.org/doi/10.1145/1536414.1536440). Basically, HE can take encrypted data, perform some mathematical operations on it, and upon decryption, the results will be the same as they would be on unencrypted data. Amazeballs! The encryption and decryption work through the use of a private key, and the mathematical operations are made possible by transforming the original message (the data) into polynomial equations ([this post](https://blog.n1analytics.com/homomorphic-encryption-illustrated-primer/) has a great walkthrough of the Fan and Vercauteren scheme). Adding a bit of stastistical noise makes decrypting without the secret key extremely hard, depending on certain parameters chosen. 
+
+So how does look in code? Well, there are a few implementations out there, including Microsoft's [SEAL](https://github.com/microsoft/SEAL) library and [NufHe](https://github.com/nucypher/nufhe). For R, we have the [HomomorphicEncryption](http://www.louisaslett.com/HomomorphicEncryption/) library by Louis Aslett, which, apart from being in R, has the added bonus that it is very easy to use `r emo::ji("heart_eyes")`.  
+
+Following Louis' instructions, you can install HomomorphicEncryption quite simply. For the Mac, he writes:
+
+>Installation on the Mac is the easiest as a binary package is provided. Run R and first ensure that the required dependencies are installed:  
+`install.packages(c("Rcpp", "RcppParallel", "gmp"))`  
+Then simply run:  
+`install.packages("http://www.louisaslett.com/HomomorphicEncryption/dl/HomomorphicEncryption_0.3.5.tgz", repos=NULL)`
+
+It's available for Linux too, although not for Windows. **This also only works for R 3.5**, so you may want to use something like [RSwitch](https://github.com/hrbrmstr/RSwitch) by Bob Rudis if you've been using a newer version of R. Which you probably have.   
+
+Here's a simple example of how we can use it. We create some parameters (using the default values here) and then use these to generate cryptographic keys for our encryption & decryption. 
+
+```{r}
+library(HomomorphicEncryption)
+
+p <- pars("FandV")
+k <- keygen(p)
+```
+
+So what are these things? Well, `p` we can print out: 
+
+```{r}
+p
+```
+
+...but I wouldn't print out `k` unless you want to see a console full of polynomials. Which is actually kind of cool, so go ahead, but if you've an older computer and it freezes, not my fault.  
+
+Anyway, to get an idea, here's the first few lines from `k$sk` (the secret key): 
+
+```
+> k
+$sk
+Fan and Vercauteren private key
+s = x⁴⁰⁹⁵+x⁴⁰⁹³+x⁴⁰⁹²+x⁴⁰⁸⁶+x⁴⁰⁸⁵+x⁴⁰⁸¹+x⁴⁰⁸⁰+x⁴⁰⁷¹+x⁴⁰⁶⁹+x⁴⁰⁶⁸+x⁴⁰⁶⁷+x⁴⁰⁶⁵+x⁴⁰⁶²+x⁴⁰⁶¹+x⁴⁰⁵⁶+x⁴⁰⁵⁵+x⁴⁰⁵⁴+x⁴⁰⁵³+x⁴⁰⁵¹+x⁴⁰⁵⁰+x⁴⁰⁴⁹+x⁴⁰⁴⁵+x⁴⁰⁴³+x⁴⁰⁴¹+x⁴⁰³⁸+x⁴⁰³⁵+x⁴⁰³⁴+x⁴⁰³²+x⁴⁰³⁰+x⁴⁰²⁹+x⁴⁰²⁷+x⁴⁰²⁵+x⁴⁰²²+x⁴⁰¹⁷+x⁴⁰¹⁶+x⁴⁰¹⁵+x⁴⁰¹⁴+x⁴⁰⁰⁹+x⁴⁰⁰⁸+x⁴⁰⁰⁷+x⁴⁰⁰⁶+x⁴⁰⁰⁴+x⁴⁰⁰³+x⁴⁰⁰²+x⁴⁰⁰⁰+x³⁹⁹⁵+x³⁹⁹³+x³⁹⁹²+x³⁹⁹⁰+x³⁹⁸⁹+x³⁹⁸⁷+x³⁹⁸⁶+x³⁹⁸⁴+x³⁹⁸³+x³⁹⁸⁰+x³⁹⁷⁹+x³⁹⁷⁷+x³⁹⁷⁶+x³⁹⁷⁵+x³⁹⁷³+x³⁹⁷²+x³⁹⁷⁰+x³⁹⁶⁸+x³⁹⁶⁵+x³⁹⁶⁴+x³⁹⁶³+x³⁹⁶²+x³⁹⁶¹+x³⁹⁶⁰+x³⁹⁵⁹+ ...
+```
+
+...and `k$pk` (the public key): 
+
+```
+$pk
+Fan and Vercauteren public key
+( p₀ = -97684989222021807951514330561245306806x⁴⁰⁹⁵+130658493226125274833789448883700647416x⁴⁰⁹⁴+124058010792919820469384771031600922644x⁴⁰⁹³-95898394860428427945027485246646540731x⁴⁰⁹²+110495179918323449796060882272323918047x⁴⁰⁹¹-149443380519731630920680163827552472268x⁴⁰⁹⁰-7074252754972094862574418736253262063x⁴⁰⁸⁹+ ...
+```
+
+So these can be used as follows. Imagine we have a simple equation: 
+$$7 + 3 = 10$$
+
+The idea with HE is that we want to be able to encrypt 7 and 3, add them together _in their encrypted form_ and get 10 back when we decrypt. Does it work? Of course it does: 
+
+```{r}
+seven <- enc(k$pk, 7) # encrypt using public key
+three <- enc(k$pk, 3)
+ten <- seven + three
+dec(k$sk, ten) # decrypt using secret key
+```
+
+Ok, _very_ nice. Although this is a simple example, it doesn't take much of an imagination to think about the potential of this technology. But let's get back to how we could incorporate this into regular data anlysis in R.  
+
+Most of us using R for data science will probably at some stage work with the _tidyverse_, or at least some packages from it. How can we shoehorn these types of data structures into tibbles and data.frames? I mean, `seven`, `three` and `ten` are exactly what you, perceptive reader, are thinking they are: 
+
+```
+> seven
+Fan and Vercauteren cipher text
+( c₀ = -83305480461827406575995399617178181021x⁴⁰⁹⁵+165764275711425994959077743093695531493x⁴⁰⁹⁴-93344133138850408161878598828479917745x⁴⁰⁹³+ ...
+```
+
+For a realistic setting, we probably also want to encrypt IDs and names and so on. Ok, let's get to work. First, load the libraries we'll use (I use [xfun](https://cran.r-project.org/web/packages/xfun/index.html) for this) and make some data. Imagine it's a small database of customers and their spending in a wonderful, magical shop that we own. Go on, imagine, you can do it.  
+
+```{r}
+set.seed(1234)
+xfun::pkg_attach(c("glue", "tidyr", "dplyr", "purrr", "rlang", 
+                   "sodium", "lubridate", "charlatan", "randNames"))
+N <- 10
+pii_data <- rand_names(N) %>% 
+  mutate(
+    id = glue("{sample(letters, N)}-{sample(1:10, N)}-{sample(letters, N)}"),
+    credit_card = ch_credit_card_number(n = N),
+    cvv = ch_credit_card_security_code(10)
+    ) %>% 
+  select(id, starts_with("name"), email, gender, phone, 
+         starts_with("location"), dob.date,
+         credit_card, cvv) %>% 
+  mutate_all(as.character) %>% 
+  mutate(spend = rnorm(N, 15, 5) %>% abs() %>% round(2))
+pii_data
+```
+
+O.M.G. We totes shouldn't have this data on our personal computer `r emo::ji("fearful")` (amazing variety of nationalities in our small shop, though). We should endeavour to encrypt it, post-haste!  
+
+We have two types of encryption to perform. First, all the names and addresses can be encrypted using the [sodium](https://cran.r-project.org/web/packages/sodium/vignettes/intro.html) library. Here's an example of how we'll proceed:  
+```{r}
+Nonce <- random(24)
+quay <- sha256(charToRaw("super-secret"))
+name <- "Andrea"
+x <- data_encrypt(charToRaw(name), quay, Nonce)
+y <- data_decrypt(x, quay, Nonce) %>% rawToChar()
+```
+```{r}
+x
+```
+```{r}
+y
+```
+
+As you can see, `x` is encrypted and its meaning masked, and `y` has been decrypted correctly to reveal 'Andrea', which is what `x` was originally encrypting (`name`, above).
+
+You may also notice that we need to use the 'raw' data types (bytes) for encryption. Let's make a convenience function that vectorises this, since `charToRaw()` doesn't and gets annoying. I got this lovely function from [here](https://stackoverflow.com/a/57282929/4296028). 
+
+```{r}
+# vectorized version of charToRaw, needed for hashing
+Rcpp::cppFunction('List charToRaw_cpp(CharacterVector x) {
+  int n = x.size();
+  List l = List(n);
+
+  for (int i = 0; i < n; ++i) {
+    int nc = LENGTH(x[i]);
+    RawVector ans = RawVector(nc);
+    memcpy(RAW(ans), CHAR(x[i]), nc);
+    l[i] = ans;
+  }
+  return l;
+}')
+
+```
+
+Now we can take our awfully sensitive PII data, helpfully named `pii_data` (otherwise I'd be lost by now), and encrypt it. We'll take the character columns and apply our vectorised `charToRaw()` to it, encrypting the result using sodium. We'll also multiply `spend` by 100, since HE only works with integers (said I'd get back to that), and then we'll encrypt this using Homomorphic Encryption, with the key from earlier. We'll need list-columns for all this malarkey. Given that some columns are still quite identifiable (i.e. `gender`, since it has only two lengths of values, 4 and 6...not very progressive), we should probably change the column names. But I won't do that here. We'll group these data by gender so that we can make summaries (by gender) later on. The initial `nest`ing and `unnest`ing is for that (and masks the actual values). 
+
+```{r}
+pii_data %>% 
+  group_by(gender) %>% 
+  nest() %>% 
+  mutate(genX = map_chr(gender, ~{
+    glue("{sample(letters, 1)}-{random()}-{sample(letters, 1)}")
+    })) %>% 
+  unnest(cols = c(data)) %>% 
+  ungroup() %>% 
+  group_by(genX) %>% 
+  mutate_if(is.character, charToRaw_cpp) %>%
+  mutate_if(is.raw, ~{
+    data_encrypt(.x, key = quay, nonce = Nonce)
+  }) %>%
+  ungroup() %>% 
+  mutate(spend = spend * 100) %>% 
+  mutate(
+    spend = map(spend, ~{.x}),
+    spend = map(spend, ~{
+      enc(k$pk, .x)
+      })
+    ) %>% 
+  select(genX, everything()) -> pii_encrypted
+```
+
+So what's this look like?
+```{r}
+pii_encrypted
+```
+
+Oh. `r emo::ji("monocle")`    
+
+And the HE-encrypted column? 
+```{r}
+pii_encrypted %>% select(spend)
+```
+
+
+Kewl. ("FV" of "Fan and Vercauteren" fame, see `?pars`.)  
+Ok, so all of this is squirreled away in tidy list columns. They are encrypted, trust me. So what can we do with these? Well, let's add up the spend by gender. Remember that the actual `spend` values are encrypted! 
+
+Ok, let's get our encrypted sum on. First we'll create a placeholder numeric list. 
+```{r}
+pii_encrypted <- pii_encrypted %>% 
+  group_by(genX) %>% 
+  nest() %>% 
+  mutate(sum_enc = list(rep(0, 1)))
+```
+
+Then, with astoundingly ugly code, we'll sum the encrypted spend and put the results in this list. We use a for-loop (I know), cos that's how I'm rolling right now. 
+```{r}
+for(i in 1:nrow(pii_encrypted)) {
+  # take existing value for length-1 vectors:
+  if (attributes(pii_encrypted$spend[[i]])$class[1] == "Rcpp_FandV_ct") {
+    pii_encrypted$sum_enc[[i]] <- dec(k$sk, pii_encrypted$spend[[i]])
+    pii_encrypted$sum_enc[[i]] <- pii_encrypted$spend[[i]]
+    } else {
+      # sum up longer vectors:
+      pii_encrypted$sum_enc[[i]] <- dec(k$sk, sum(pii_encrypted$spend[[i]]))
+      pii_encrypted$sum_enc[[i]] <- sum(pii_encrypted$spend[[i]])
+    }
+  }
+```
+
+
+```{r}
+pii_encrypted %>% 
+  mutate(
+    spend_decrypted = map_dbl(sum_enc, ~{
+      dec(k$sk, .x)
+      }),
+    spend_decrypted = spend_decrypted/100
+  )
+    #   merch_name_decrypted = map(merch_name_list, ~{
+    #     data_decrypt(.x, key_c)
+    #   }),
+    #   merch_name = map_chr(merch_name_decrypted, rawToChar),
+    #   total_revenue_decrypted = map_dbl(sum_enc, ~{
+    #     dec(key$sk, .x)
+    #     }),
+    #   total_revenue_decrypted = total_revenue_decrypted/100
+    #   ) %>% 
+    # ungroup() %>% 
+    # select(-c(merch_name_decrypted, txn_amount_enc, sum_enc, merch_name_list, 
+    #           merch_names_enc, contactless, card_type, network, txn_date)) %>% 
+    # distinct() %>% 
+    # select(merch_name, date, total_revenue_decrypted)
+
+```
+
+
+

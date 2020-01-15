@@ -1,6 +1,7 @@
 ---
 title: Avoiding the tiresome training & test data split
 date: "2018-09-03"
+featuredImage: "images/traintest.png"
 ---
 
 I really don't like splitting data into 'train' and 'test'. I don't mean that I'm against the idea of it, though you could say it's a waste of data that could be used to better your model, but I mean that actual assignment in R of 'train' and 'test'. I always liked destructuring in Python, and I like it a lot in 2018 JavaScript, so when I remembered that the [zeallot](https://github.com/r-lib/zeallot/blob/master/vignettes/unpacking-assignment.Rmd) package has it, I thought it would be a good opportunity to see how that could fit in a [tidy modelling](https://github.com/tidymodels) pipeline. Much to my delight, one little helper function later, it works perfectly.

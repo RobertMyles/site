@@ -1,6 +1,7 @@
 ---
 title: Web Navigation in R with RSelenium
 date: "2016-04-27"
+featuredImage: "images/webscraping.png"
 ---
 
 It goes almost without saying that the internet itself is the richest database available to us. From a 2014 [blog post](http://aci.info/2014/07/12/the-data-explosion-in-2014-minute-by-minute-infographic/), it was claimed that _every minute_ :
@@ -140,7 +141,7 @@ elemxml <- htmlTreeParse(elemtxt, asText=TRUE, encoding="UTF-8", useInternalNode
 Text <- html_text(elemxml, trim=TRUE)
 ```
 
-And then you have the text from the webpage stored as data in R. Magic! :metal:
+And then you have the text from the webpage stored as data in R. Magic! 🤟
 
 [^1]: It is often argued that R is not the best for this application, with Python often offered as a better alternative. In my experience, I’ve found R to be pretty good for this sort of thing, with delays being caused more by the browser/net speed than R. The scripts can be ugly, but using Selenium in Python looks pretty similar anyway. [This question](http://stackoverflow.com/questions/17540971/how-to-use-selenium-with-python) on Stack Overflow gives some instructions.
 [^2]: See [this](https://github.com/ropensci/RSelenium/issues/54) discussion.

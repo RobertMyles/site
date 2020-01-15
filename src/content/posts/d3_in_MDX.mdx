@@ -1,6 +1,7 @@
 ---
 title: "D3, React and MDX"
 date: "2019-06-03"
+featuredImage: "images/mdx.png"
 ---
 
 import SimpleBarChart from "../graphs/SimpleBarChart.js"
@@ -63,11 +64,9 @@ It's that easy. The `SimpleBarChart` above is the D3 plot we're going to show. O
 So here it is. Hover over it, it's got tooltips 😎.
 
 <br />
-
 <SimpleBarChart data={data} height={1000} width={1080} />
-
-<br/>
-<br/>
+<br />
+<br />
 
 Proooobably not the best way to plot that data -- there's not much variation and a lot on y. Still, bar charts are a traditional 'Hello, World!'. The actual code for the 'simple' Bar Chart is not so simple. It involves the use of React's Refs and Contexts, so not the simplest piece of React out there. I used Swizec's 'useTooltip' from his post on tooltips [^2] as well as a couple of other tricks from various places around the web, and a whole lot of trial and error, but I got it working.[^3] Yay! Now that I get how it works, I'm looking forward to learning more D3 and blinging up this blog with some serious dataviz! 🚀🚀🚀
 

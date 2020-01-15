@@ -5,6 +5,7 @@ import { styles } from "../utils"
 import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
 import Helmet from "react-helmet"
+import Img from "gatsby-image"
 
 export default ({ data }) => (
   <>
@@ -36,11 +37,14 @@ export default ({ data }) => (
           {data.allMdx.totalCount} Posts
         </h3>
         {data.allMdx.edges.map(({ node }) => (
-          <div key={node.id}>
+          <div key={node.id} style={{ display: "inline-block" }}>
             <StyledLink
               to={node.fields.slug}
               style={{ textDecoration: "none" }}
             >
+              <Img
+                fixed={node.frontmatter.featuredImage.childImageSharp.fixed}
+              />
               <h2 style={{ fontFamily: styles.titleFont }}>
                 {node.frontmatter.title}{" "}
                 <span style={{ color: styles.colors.mainBlue }}> --- </span>
@@ -70,6 +74,7 @@ const Datespan = styled.span`
 `
 const StyledLink = styled(Link)`
   color: ${styles.colors.mainRed};
+  display: inline-block;
   :hover {
       color: ${styles.colors.mainBlue};
     }
@@ -86,6 +91,13 @@ export const query = graphql`
           frontmatter {
             title
             date
+            featuredImage {
+              childImageSharp {
+                fixed(width: 100, height: 100) {
+                  ...GatsbyImageSharpFixed
+                }
+              }
+            }
           }
           fields {
             slug

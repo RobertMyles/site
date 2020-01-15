@@ -1,6 +1,7 @@
 ---
 title: "Taking RStudio's renv for a spin"
 date: "2019-08-17"
+featuredImage: "images/renv.png"
 ---
 
 I’ve been working on a project recently where we’ve been building a data
@@ -20,8 +21,7 @@ in JavaScript projects – to the user, just a lockfile detailing what
 packages are used and what versions, and very easy to maintain. renv is
 designed this way and I can really see myself using it regularly.
 
-So how does renv work?
-----------------------
+## So how does renv work?
 
 Basically, you can use the R-projects style that is already easy to do
 from RStudio. Either create a new project or associate a new project
@@ -50,18 +50,18 @@ console:
 * Copying packages into the cache ... * Querying repositories for available source packages ... Done!
 
 The following package(s) will be added to the lockfile:
-                _           
-  askpass         [1.1]     
-  assertthat      [0.2.1]   
-  backports       [1.1.4]   
+                _
+  askpass         [1.1]
+  assertthat      [0.2.1]
+  backports       [1.1.4]
   BH              [1.69.0-1]
-  brew            [1.0-6]   
-  callr           [3.3.1]   
-  checkmate       [1.9.4]   
-  cli             [1.1.0] 
-  
+  brew            [1.0-6]
+  callr           [3.3.1]
+  checkmate       [1.9.4]
+  cli             [1.1.0]
+
   ...
-  
+
 * Lockfile written to '~/renv_proj/renv.lock'.
 * Project '~/renv_proj' loaded. [renv 0.6.0-113]
 
@@ -69,6 +69,7 @@ Restarting R session...
 
 * Project '~/renv_proj' loaded. [renv 0.6.0-113]
 ```
+
 The packages that have been installed are recorded in a lockfile, which
 is a JSON file that looks like this (depending on what you’ve
 installed):
@@ -139,15 +140,17 @@ Installing knitr [1.24] from CRAN ...
 It’s pretty easy to see package dependencies with renv (not as easy as
 showpackage 😜). We can see what dependencies come from our .R files, for
 example, which is a nice feature:
+
 ```r
 library(dplyr)
 library(stringr)
 
 renv::dependencies(".") %>% filter(str_detect(Source, "\\.R")) %>% pull(Package)
 # Finding R package dependencies ... Done!
-#  [1] "data.table"    "dplyr"         "utils"         "datavalidator" "dplyr"         "lubridate"     "readr"        
-#  [8] "strex"         "datavalidator" "testthat" 
+#  [1] "data.table"    "dplyr"         "utils"         "datavalidator" "dplyr"         "lubridate"     "readr"
+#  [8] "strex"         "datavalidator" "testthat"
 ```
+
 All in all, renv is a nice, well-designed package that is easy to use.
 I’ve already used starting using it, and once it gets to CRAN, I’ll be
 using it ‘in production’. Nice job, RStudio 👍
