@@ -42,22 +42,33 @@ export default ({ data }) => (
               to={node.fields.slug}
               style={{ textDecoration: "none" }}
             >
-              <Img
-                fixed={node.frontmatter.featuredImage.childImageSharp.fixed}
-              />
               <h2 style={{ fontFamily: styles.titleFont }}>
                 {node.frontmatter.title}{" "}
                 <span style={{ color: styles.colors.mainBlue }}> --- </span>
                 <Datespan>{node.frontmatter.date}</Datespan>
               </h2>
-              <p
+              <span
                 style={{
+                  display: "inline-block",
                   color: styles.colors.mainBlue,
                   fontFamily: styles.bodyFont,
                 }}
               >
-                {node.excerpt}
-              </p>
+                <Img
+                  style={{ float: `left` }}
+                  fixed={node.frontmatter.featuredImage.childImageSharp.fixed}
+                />
+                <p
+                  style={{
+                    left: `25px`,
+                    position: "relative",
+                    top: `12px`,
+                    textAlign: "left",
+                  }}
+                >
+                  {node.excerpt}
+                </p>
+              </span>
             </StyledLink>
           </div>
         ))}

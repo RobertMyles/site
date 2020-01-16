@@ -7,6 +7,8 @@ module.exports = {
     description: `Robert McDonnell's website`,
   },
   plugins: [
+    `babel-plugin-styled-components`,
+    `gatsby-plugin-material-ui`,
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-favicon`,
     {

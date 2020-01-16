@@ -6,12 +6,12 @@
   "author": "Robert Myles McDonnell <robertmylesmcdonnell@gmail.com>",
   "dependencies": {
     "@material-ui/core": "^4.0.0-rc.0",
+    "@material-ui/styles": "^4.8.2",
     "@mdx-js/mdx": "^1.5.3",
     "@mdx-js/react": "^1.5.3",
     "@mdx-js/tag": "^0.20.3",
     "atom-language-r": "^1.1.0",
     "atom-syntax-theme-to-highlights-css": "^1.0.2",
-    "babel-plugin-styled-components": "^1.10.6",
     "core-js": "^2.6.11",
     "d3": "^5.15.0",
     "gatsby": "^2.18.21",
@@ -21,6 +21,7 @@
     "gatsby-plugin-draft": "0.0.4",
     "gatsby-plugin-favicon": "^3.1.6",
     "gatsby-plugin-manifest": "^2.2.37",
+    "gatsby-plugin-material-ui": "^2.1.6",
     "gatsby-plugin-offline": "^2.2.10",
     "gatsby-plugin-page-creator": "^2.1.38",
     "gatsby-plugin-react-helmet": "^3.1.21",
@@ -65,6 +66,7 @@
     "unist-util-visit": "^1.4.1"
   },
   "devDependencies": {
+    "babel-plugin-styled-components": "^1.10.6",
     "prettier": "^1.19.1"
   },
   "keywords": [
