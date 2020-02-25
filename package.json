@@ -45,6 +45,7 @@
     "prismjs-tomorrow-theme": "0.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
+    "react-device-detect": "^1.11.14",
     "react-dom": "^16.12.0",
     "react-github-btn": "^1.1.1",
     "react-helmet": "^5.2.1",
@@ -67,6 +68,7 @@
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.10.6",
+    "gatsby-plugin-just-comments": "^0.2.4",
     "prettier": "^1.19.1"
   },
   "keywords": [

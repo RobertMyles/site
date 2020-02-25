@@ -7,6 +7,7 @@ import "katex/dist/katex.min.css"
 import "prismjs/themes/prism-tomorrow.css"
 import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 import "../../utils/prism-override.css"
+import JustComments from "gatsby-plugin-just-comments"
 
 export default function BlogLayout({ children }) {
   return (
@@ -28,6 +29,7 @@ export default function BlogLayout({ children }) {
         <Grid item xs={12} sm={12} md={10} lg={8} xl={8}>
           <Postdiv>{children}</Postdiv>
         </Grid>
+        <JustComments apikey="c18a79a5-be08-4f3a-ba12-e8edab434ad4" />
       </Grid>
     </>
   )
