@@ -30,7 +30,9 @@ export default function LandingLayout() {
           </Grid>
         </Container>
       </BrowserView>
-
+      <br />
+      <br />
+      <br />
       <MobileView>
         <Container maxWidth="md">
           <Grid
