@@ -51,6 +51,13 @@ const Ppp = styled.p`
   max-width: 1200px;
   font-size: 1.2rem;
 `
+const StyledLink = styled(Link)`
+  color: ${styles.colors.mainRed};
+  :hover {
+      color: ${styles.colors.mainBlue};
+    }
+  }
+`
 
 export default () => (
   <>

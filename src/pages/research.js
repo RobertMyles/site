@@ -1,5 +1,6 @@
 import React from "react"
 import { styles } from "../utils"
+import { Link } from "gatsby"
 import { graphql, withPrefix } from "gatsby"
 import styled from "styled-components"
 import {
@@ -183,6 +184,14 @@ export const query = graphql`
       siteMetadata {
         title
       }
+    }
+  }
+`
+
+const StyledLink = styled(Link)`
+  color: ${styles.colors.mainRed};
+  :hover {
+      color: ${styles.colors.mainBlue};
     }
   }
 `

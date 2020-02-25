@@ -1,5 +1,6 @@
 import React from "react"
 import Navbar from "../navbar/Navbar"
+import { Link as GatsbyLink } from "gatsby"
 import { styles } from "../../utils"
 import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
@@ -66,5 +67,12 @@ const Postdiv = styled.div`
   }
   a:hover {
     color: ${styles.colors.mainPink};
+  }
+`
+const StyledLink = styled(GatsbyLink)`
+  color: ${styles.colors.mainRed};
+  :hover {
+      color: ${styles.colors.mainBlue};
+    }
   }
 `

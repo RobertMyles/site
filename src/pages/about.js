@@ -1,5 +1,5 @@
 import React from "react"
-import { graphql } from "gatsby"
+import { graphql, Link } from "gatsby"
 import Helmet from "react-helmet"
 import { styles } from "../utils"
 import styled from "styled-components"
@@ -139,5 +139,12 @@ const DDiv = styled.div`
   }
   a:hover {
     color: ${styles.colors.mainPink};
+  }
+`
+const StyledLink = styled(Link)`
+  color: ${styles.colors.mainRed};
+  :hover {
+      color: ${styles.colors.mainBlue};
+    }
   }
 `

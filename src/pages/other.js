@@ -1,5 +1,6 @@
 import React from "react"
 import { styles } from "../utils"
+import { Link as GatsbyLink } from "gatsby"
 import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
 import Navbar from "../components/navbar/Navbar"
@@ -30,6 +31,13 @@ const Ppp = styled.p`
   justify-content: center;
   max-width: 1200px;
   font-size: 1.2rem;
+`
+const StyledLink = styled(GatsbyLink)`
+  color: ${styles.colors.mainRed};
+  :hover {
+      color: ${styles.colors.mainBlue};
+    }
+  }
 `
 
 export default () => (

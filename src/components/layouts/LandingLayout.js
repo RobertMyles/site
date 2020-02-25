@@ -1,7 +1,6 @@
 import React from "react"
 import Grid from "@material-ui/core/Grid"
 import Container from "@material-ui/core/Container"
-import { Link } from "gatsby"
 import Bio from "../elements/bio.js"
 import Navbar from "../navbar/Navbar"
 import { styles } from "../../utils"
