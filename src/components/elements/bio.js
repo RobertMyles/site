@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { StaticQuery, Link, graphql } from "gatsby"
 import circle from "../../images/circle_border.jpeg"
 import GitHubButton from "react-github-btn"
+import { MobileView } from "react-device-detect"
 
 export default () => (
   <StaticQuery
@@ -63,12 +64,26 @@ export default () => (
               <h3 style={{ fontFamily: styles.titleFont }}>
                 {node.frontmatter.title}
               </h3>
-              {/* <Img
-                fluid={node.frontmatter.featuredImage.childImageSharp.fluid}
-              /> */}
             </StyledLink>
           </div>
         ))}
+        <MobileView>
+          <li>
+            <StyledLink to="/blog">Blog</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/cv">CV</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/research">Research</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/other">Other</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/about">About</StyledLink>
+          </li>
+        </MobileView>
       </BioDiv>
     )}
   />

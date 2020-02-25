@@ -8,6 +8,7 @@ import "prismjs/themes/prism-tomorrow.css"
 import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 import "../../utils/prism-override.css"
 import JustComments from "gatsby-plugin-just-comments"
+import { MobileView } from "react-device-detect"
 
 export default function BlogLayout({ children }) {
   return (
@@ -29,6 +30,23 @@ export default function BlogLayout({ children }) {
         <Grid item xs={12} sm={12} md={10} lg={8} xl={8}>
           <Postdiv>{children}</Postdiv>
         </Grid>
+        <MobileView>
+          <li>
+            <StyledLink to="/blog">Blog</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/cv">CV</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/research">Research</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/other">Other</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/about">About</StyledLink>
+          </li>
+        </MobileView>
         <JustComments apikey="c18a79a5-be08-4f3a-ba12-e8edab434ad4" />
       </Grid>
     </>

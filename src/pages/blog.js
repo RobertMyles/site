@@ -6,6 +6,7 @@ import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
 import Helmet from "react-helmet"
 import Img from "gatsby-image"
+import { MobileView } from "react-device-detect"
 
 export default ({ data }) => (
   <>
@@ -73,6 +74,23 @@ export default ({ data }) => (
           </div>
         ))}
       </Grid>
+      <MobileView>
+        <li>
+          <StyledLink to="/blog">Blog</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/cv">CV</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/research">Research</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/other">Other</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/about">About</StyledLink>
+        </li>
+      </MobileView>
     </Grid>
   </>
 )

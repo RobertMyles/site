@@ -14,6 +14,7 @@ import Grid from "@material-ui/core/Grid"
 import Container from "@material-ui/core/Container"
 import Navbar from "../components/navbar/Navbar"
 import { IconContext } from "react-icons"
+import { MobileView } from "react-device-detect"
 
 const RDiv = styled.div`
   font-family: ${styles.bodyFont};
@@ -154,6 +155,23 @@ export default () => (
             <br />
           </Ppp>
         </RDiv>
+        <MobileView>
+          <li>
+            <StyledLink to="/blog">Blog</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/cv">CV</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/research">Research</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/other">Other</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/about">About</StyledLink>
+          </li>
+        </MobileView>
       </Grid>
     </Container>
   </>

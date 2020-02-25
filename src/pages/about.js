@@ -6,6 +6,7 @@ import styled from "styled-components"
 import Navbar from "../components/navbar/Navbar"
 import Grid from "@material-ui/core/Grid"
 import Container from "@material-ui/core/Container"
+import { MobileView } from "react-device-detect"
 
 export default () => (
   <>
@@ -82,6 +83,23 @@ export default () => (
             for code.
           </Ppp>
         </DDiv>
+        <MobileView>
+          <li>
+            <StyledLink to="/blog">Blog</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/cv">CV</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/research">Research</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/other">Other</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/about">About</StyledLink>
+          </li>
+        </MobileView>
       </Grid>
     </Container>
   </>

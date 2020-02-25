@@ -23,6 +23,7 @@ import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
 import Container from "@material-ui/core/Container"
 import Navbar from "../components/navbar/Navbar"
+import { MobileView } from "react-device-detect"
 
 const CVDiv = styled.div`
   font-family: ${styles.bodyFont};
@@ -85,10 +86,11 @@ export default () => (
           <h3>Lead Data Scientist, Avanade, São Paulo</h3>
           <Ppp>08/2017 — 07/2018</Ppp>
           <Ppp>
-            Tasked with bringing data science into Avanade Brazil, working on various
-            problems for different clients. This work included fraud modelling
-            using deep learning & h2o, sentiment analysis, audio analysis, BI,
-            data visualization and data tidying. I gave a course on{" "}
+            Tasked with bringing data science into Avanade Brazil, working on
+            various problems for different clients. This work included fraud
+            modelling using deep learning & h2o, sentiment analysis, audio
+            analysis, BI, data visualization and data tidying. I gave a course
+            on{" "}
             <a href="https://vita.had.co.nz/papers/tidy-data.pdf">tidy data</a>{" "}
             and several tutorials on the R language to staff across the company.
           </Ppp>
@@ -323,6 +325,23 @@ export default () => (
           <br />
           <br />
         </CVDiv>
+        <MobileView>
+          <li>
+            <StyledLink to="/blog">Blog</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/cv">CV</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/research">Research</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/other">Other</StyledLink>
+          </li>
+          <li>
+            <StyledLink to="/about">About</StyledLink>
+          </li>
+        </MobileView>
       </Grid>
     </Container>
   </>

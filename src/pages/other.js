@@ -4,6 +4,7 @@ import styled from "styled-components"
 import Grid from "@material-ui/core/Grid"
 import Navbar from "../components/navbar/Navbar"
 import Helmet from "react-helmet"
+import { MobileView } from "react-device-detect"
 
 const RDiv = styled.div`
   font-family: ${styles.bodyFont};
@@ -72,6 +73,23 @@ export default () => (
           style={{ justifyContent: "center" }}
         />
       </RDiv>
+      <MobileView>
+        <li>
+          <StyledLink to="/blog">Blog</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/cv">CV</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/research">Research</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/other">Other</StyledLink>
+        </li>
+        <li>
+          <StyledLink to="/about">About</StyledLink>
+        </li>
+      </MobileView>
     </Grid>
   </>
 )
