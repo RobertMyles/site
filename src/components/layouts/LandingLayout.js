@@ -19,19 +19,46 @@ export default function LandingLayout() {
           iconcolor={styles.colors.mainWhite}
           iconhover={styles.colors.mainRed}
         />
+        <Container maxWidth="md">
+          <Grid
+            container
+            direction="row"
+            alignContent="center"
+            justify="center"
+          >
+            <Bio />
+          </Grid>
+        </Container>
       </BrowserView>
 
-      <Container maxWidth="md">
-        <Grid container direction="row" alignContent="center" justify="center">
-          <Bio />
-        </Grid>
-      </Container>
       <MobileView>
-        <Link to="/">Home</Link>
-        <Link to="/blog">Blog</Link>
-        <Link to="/cv">CV</Link>
-        <Link to="/research">Research</Link>
-        <Link to="/other">Other</Link>
+        <Container maxWidth="md">
+          <Grid
+            container
+            direction="row"
+            alignContent="center"
+            justify="center"
+          >
+            <Bio />
+          </Grid>
+        </Container>
+        <Container maxWidth="md">
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/blog">Blog</Link>
+          </li>
+          <li>
+            <Link to="/cv">CV</Link>
+          </li>
+          <li>
+            <Link to="/research">Research</Link>
+          </li>
+          <li>
+            <Link to="/other">Other</Link>
+          </li>
+        </Container>
       </MobileView>
     </>
   )
