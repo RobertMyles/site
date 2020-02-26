@@ -1,0 +1,67 @@
+---
+title: "Images as column headers in R"
+author: "Robert McDonnell"
+date: "2020-03-01"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+Have you ever wanted to include an image as a column header in a data frame? Of course you have! 
+
+All joking aside, this is actually surprisingly common in corporate environments, where tables may have the company logo in the header, probably as the first 'column'. You can actually do this in Rmarkdown, with a little help from [rlang](https://rlang.r-lib.org/), [tibble](https://tibble.tidyverse.org/) [knitr](https://yihui.org/knitr/) and [pander](https://www.r-project.org/nosvn/pandoc/pander.html). Here's how.  
+
+I'm going to use Google's logo cos I'm sure they wouldn't mind. First, load libraries and read in the image with pander:  
+
+```{r}
+library(pander)
+library(knitr)
+library(rlang)
+library(tibble)
+library(magrittr) # fo' da pipe
+
+img <- "google_logo.png" %>% pander::pandoc.image.return()
+```
+
+You'll notice this is just markdown: `img` is `"![](google_logo.png)"`. Ok, rlang, pander and knitr magic coming up. The code we'll use is the following:
+
+```{r eval = FALSE}
+tibble(
+  {{ img }} := c("Metric One", "Metric Two"),
+  `Segment One` = c(100, 250),
+  `Segment Two` = c(20, 12)
+  ) %>%
+  pandoc.table(
+    justify = c("left", "right", "right"),
+    keep.line.breaks = TRUE
+  )
+```
+
+Where `{{ img }}` uses [curly-curly](https://www.tidyverse.org/blog/2019/06/rlang-0-4-0/) and the [walrus](https://rlang.r-lib.org/reference/quasiquotation.html#forcing-names) operator to access the image variable we've created. It gets rendered as markdown thanks to pander's `pandoc.table()` and knitr helps with code chunk options. Importantly, these need to include `results = 'asis'`. So it'll look like this, minus the `#`:  
+
+```{r}
+#```{r results='asis'}
+#```
+```
+
+So, putting all this together, we get: 
+
+```{r results='asis'}
+tibble(
+  {{ img }} := c("Metric One", "Metric Two"),
+  `Segment One` = c(100, 250),
+  `Segment Two` = c(20, 12),
+  `Total for Segments` = c(120, 262)
+  ) %>%
+  pandoc.table(
+    justify = c("left", "right", "right", "right"),
+    keep.line.breaks = TRUE
+  )
+```
+
+Now that's a nice table. And so easy! 
+
