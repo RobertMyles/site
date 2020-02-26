@@ -1,0 +1,34 @@
+---
+title: "tidyRSS v2.0.0"
+author: "Robert McDonnell"
+date: "2020-03-07"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyRSS)
+```
+
+[tidyRSS](https://github.com/RobertMyles/tidyRSS) was my first R package published to CRAN, successfully submitted some 3 years ago. In hindsight, there were so many things I did wrong that it's just kind of hilarious. But that's how you learn, and I have learned a _lot_ from tidyRSS. I've made quite a few other R packages since and none have come close in terms of the hassle and stress of tidyRSS, which is partly down to XML feeds themselves -- wild, untamed things.  
+
+I've been meaning to upgrade to a new version for some time now, to clean up the code, introduce better testing and to separate out the [Simple Features](https://github.com/r-spatial/sf/) functionality into another package. (It's [here](https://github.com/RobertMyles/tidygeoRSS), have a look). It was going to be version 1.3.0, but there are so many little changes and one big breaking change, so I've gone for version 2.0.0. ([Why the numbers??](https://semver.org/)) 
+
+I probably should have soft-deprecated the functionality I'm removing, but since it took me so long to get a space in my schedule to do this, I decided to just do it all at once. Sorry if it broke anyone's code, sincerely. But I think this is a positive change, and with tidygeoRSS, all the previous functionality is there, just present in two packages and not one.  
+
+So what's tidyRSS for? Well, if you'd like to use RSS, Atom & JSON feeds as data, tidyRSS is for thee. This data is returned as a [_tibble_](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) and are as 'tidy' as possible, meaning that they are easy to use downstream in your work. Depending on the feed itself, this can be a rich source of interesting data, particularly the geo-feeds. [Here's](https://towardsdatascience.com/collecting-news-articles-through-rss-atom-feeds-using-python-7d9a65b06f70) an example of collecting news with Python from RSS feeds, for example. And [here's](https://rss.com/blog/popular-rss-feeds/) a list of popular feeds from rss.com. Let's take one of these as an example to work with.  
+
+You can install tidyRSS with: 
+
+```{r eval = FALSE}
+install.packages("tidyRSS")
+```
+
+And load it with `library(tidyRSS)`. Now let's have alook at one of the feeds from rss.com. I've chosen the New York Times, specifically the Americas section. The feed url is: [https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml](https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml). We just need to pass this url to `tidyfeed()`, the main function in tidyRSS:  
+
+```{r}
+nyt <- tidyfeed("https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml")
+```
+
