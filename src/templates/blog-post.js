@@ -2,7 +2,7 @@ import React from "react"
 import { graphql } from "gatsby"
 import BlogLayout from "../components/layouts/BlogLayout"
 import "katex/dist/katex.min.css"
-import MDXRenderer from "gatsby-mdx/mdx-renderer"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 import Helmet from "react-helmet"
 import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 
@@ -17,14 +17,14 @@ function PageTemplate({ data: { mdx } }) {
         </Helmet>
         <h1>{mdx.frontmatter.title}</h1>
         <h4>{mdx.frontmatter.date}</h4>
-        <MDXRenderer>{mdx.code.body}</MDXRenderer>
+        <MDXRenderer>{mdx.body}</MDXRenderer>
       </BlogLayout>
     </>
   )
 }
 
 export const pageQuery = graphql`
-  query BlogPostQuery($id: String) {
+  query MDXQuery($id: String!) {
     mdx(id: { eq: $id }) {
       id
       frontmatter {
