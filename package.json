@@ -12,7 +12,7 @@
     "@mdx-js/tag": "^0.20.3",
     "atom-language-r": "^1.1.0",
     "atom-syntax-theme-to-highlights-css": "^1.0.2",
-    "core-js": "^2.6.11",
+    "core-js": "^3.6.4",
     "d3": "^5.15.0",
     "gatsby": "^2.18.21",
     "gatsby-cli": "^2.8.26",
