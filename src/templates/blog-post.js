@@ -31,9 +31,7 @@ export const pageQuery = graphql`
         title
         date
       }
-      code {
-        body
-      }
+      body
     }
   }
 `
