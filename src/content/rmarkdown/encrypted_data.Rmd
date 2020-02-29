@@ -138,7 +138,7 @@ Rcpp::cppFunction('List charToRaw_cpp(CharacterVector x) {
 
 Now we can take our awfully sensitive PII data, helpfully named `pii_data` (otherwise I'd be lost by now), and encrypt it. We'll take the character columns and apply our vectorised `charToRaw()` to it, encrypting the result using sodium. We'll also multiply `spend` by 100, since HE only works with integers (said I'd get back to that), and then we'll encrypt this using Homomorphic Encryption, with the key from earlier. We'll need list-columns for all this malarkey. Given that some columns are still quite identifiable (i.e. `gender`, since it has only two lengths of values, 4 and 6...not very progressive), we should probably change the column names. But I won't do that here. We'll group these data by gender so that we can make summaries (by gender) later on. The initial `nest`ing and `unnest`ing is for that (and masks the actual values). 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 pii_data %>% 
   group_by(gender) %>% 
   nest() %>% 
@@ -183,23 +183,46 @@ Ok, let's get our encrypted sum on. First we'll create a placeholder numeric lis
 ```{r}
 pii_encrypted <- pii_encrypted %>% 
   group_by(genX) %>% 
-  nest() %>% 
+  nest() %>%
   mutate(sum_enc = list(rep(0, 1)))
 ```
 
-Then, with astoundingly ugly code, we'll sum the encrypted spend and put the results in this list. We use a for-loop (I know), cos that's how I'm rolling right now. 
+Then, with astoundingly ugly code, we'll sum the encrypted spend and put the results in this list. We use a for-loop, cos that's how I'm rolling right now. Actually, it's a _nested_ for-loop, take that! I haven't written one of those since my [JAGS](https://www.robertmylesmcdonnell.com/content/posts/stan-or-jags-for-bayesian-ideal-point-irt/) days. Ah, JAGS. Miss you.  
+
 ```{r}
-for(i in 1:nrow(pii_encrypted)) {
-  # take existing value for length-1 vectors:
-  if (attributes(pii_encrypted$spend[[i]])$class[1] == "Rcpp_FandV_ct") {
-    pii_encrypted$sum_enc[[i]] <- dec(k$sk, pii_encrypted$spend[[i]])
-    pii_encrypted$sum_enc[[i]] <- pii_encrypted$spend[[i]]
-    } else {
-      # sum up longer vectors:
-      pii_encrypted$sum_enc[[i]] <- dec(k$sk, sum(pii_encrypted$spend[[i]]))
-      pii_encrypted$sum_enc[[i]] <- sum(pii_encrypted$spend[[i]])
-    }
-  }
+
+## SOMETHING WRONG: spend is only length-1 vector
+# 
+# map(pii_encrypted$data, ~{
+#   map_chr(.x$spend, ~{print(class(.)[1])})
+# })
+# 
+# for (i in seq_along(1:nrow(pii_encrypted))) {
+#   for (j in seq_along(1:nrow(pii_encrypted$data[[i]]))) {
+#     pii_encrypted$sum_enc[[i]] <- dec(k$sk, pii_encrypted$data[[i]]$spend[[j]])
+#   }
+# }
+
+
+#attributes(pii_encrypted$data[[1]]$spend[[1]])$class[1]
+# pii_encrypted$data %>% slider::slide(~{
+#     ifelse(
+#       attributes(.x$spend)$class[1] == "Rcpp_FandV_ct",
+#       print("yup"), print("nope")
+#       )
+#   })
+# 
+# for(i in 1:nrow(pii_encrypted)) {
+#   # take existing value for length-1 vectors:
+#   if (attributes(pii_encrypted$data$spend[[i]])$class[1] == "Rcpp_FandV_ct") {
+#     pii_encrypted$sum_enc[[i]] <- dec(k$sk, pii_encrypted$spend[[i]])
+#     pii_encrypted$sum_enc[[i]] <- pii_encrypted$spend[[i]]
+#     } else {
+#       # sum up longer vectors:
+#       pii_encrypted$sum_enc[[i]] <- dec(k$sk, sum(pii_encrypted$spend[[i]]))
+#       pii_encrypted$sum_enc[[i]] <- sum(pii_encrypted$spend[[i]])
+#     }
+#   }
 ```
 
 
