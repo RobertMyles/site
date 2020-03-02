@@ -54,7 +54,7 @@
     "react-icons": "^3.9.0",
     "react-iframe": "^1.8.0",
     "react-katex": "^2.0.2",
-    "react-syntax-highlighter": "^10.3.5",
+    "react-syntax-highlighter": "^12.2.1",
     "rehype-stringify": "^5.0.0",
     "remark": "^10.0.1",
     "remark-highlights": "^1.0.0",
