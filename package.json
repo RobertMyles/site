@@ -56,7 +56,7 @@
     "react-katex": "^2.0.2",
     "react-syntax-highlighter": "^10.3.5",
     "rehype-stringify": "^5.0.0",
-    "remark": "^10.0.1",
+    "remark": "^11.0.2",
     "remark-highlights": "^1.0.0",
     "remark-math": "^1.0.6",
     "remark-rehype": "^4.0.1",
