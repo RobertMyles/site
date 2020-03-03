@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "Robert Myles McDonnell <robertmylesmcdonnell@gmail.com>",
   "dependencies": {
-    "@material-ui/core": "^4.9.4",
+    "@material-ui/core": "^4.9.5",
     "@material-ui/styles": "^4.9.0",
     "@mdx-js/mdx": "^1.5.7",
     "@mdx-js/react": "^1.5.7",
