@@ -61,7 +61,7 @@
     "remark-math": "^1.0.6",
     "remark-rehype": "^4.0.1",
     "sharp": "^0.24.1",
-    "styled-components": "^4.4.1",
+    "styled-components": "^5.0.1",
     "topojson-client": "^3.1.0",
     "typeface-aleo": "0.0.69",
     "typeface-inconsolata": "0.0.72",
