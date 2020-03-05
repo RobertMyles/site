@@ -6,13 +6,44 @@ featuredImage: "images/rtogatsbysmall.png"
 
 import { InlineMath, BlockMath } from "react-katex"
 
-This post details how I use [Gatsby.js](https://www.gatsbyjs.org/) to blog about R stuff. If you're an R user and you have a blog, there's a fair chance you use [blogdown](https://bookdown.org/yihui/blogdown/). I used to, it's very handy. (I'm not suggesting ditching blogdown btw, I think it's fantastic. If that works for you, great.)
+![](images/rtogatsby.png)
 
-A few years ago, I started to take more interest in JavaScript, in particular [D3](https://d3js.org/) and [React](https://reactjs.org/). I also wanted to understand more of how websites were built, so I decided to rebuild mine with Gatsby. Gatsby is pretty easy to get started with, and I've found the docs quite good and the community helpful. The nice thing is that you have a lot of control over how your website looks and behaves. It utilises Facebook's [GraphQL](https://graphql.org/) to source data. The 'data' here are elements of your site -- making it really useful to render items, internal links etc by querying the data of the site. (If that last sentence makes no sense, see [here](https://www.gatsbyjs.org/docs/why-gatsby-uses-graphql/). It is quite badly worded, now that I read it...anywayz.) For example, the list of my blog posts found [here](https://www.robertmylesmcdonnell.com/blog/) is done dynamically by querying the data of the site using GraphQL.
+This post details how I use [Gatsby.js](https://www.gatsbyjs.org/) to blog about R stuff. My site is deployed by [Netlify](https://www.netlify.com/), which builds it after any merges into the master branch repo on [GitHub](https://github.com/RobertMyles/site). I use a little tool I wrote called [writeMDX](https://github.com/RobertMyles/writeMDX) to help me out.
 
-So the world of Gatsby websites is exciting and interesting, but what if you want to blog about R things still? The great thing about blogdown is that it fits so snugly into the RStudio ecosystem. So that's not going to be the same with Gatsby. There are a few things that you do gain, however, including some _really_ nice tools.
+The workflow is quite simple: write something -> commit, upload to GiHub -> Netlify builds and deploys. This post is about when that _'write something'_ part is about R and written in [RMarkdown](https://rmarkdown.rstudio.com/). Let's go! 🦔
 
-First of all, I use [VS Code](https://code.visualstudio.com/) to work on any non-RMarkdown stuff for the site. VS Code for R is not great in my opinion, at least it doesn't compare to RStudio. But for JavaScript, it's _fantastic_.
+<hr />
+
+If you're an R user and you have a blog, there's a fair chance you use [blogdown](https://bookdown.org/yihui/blogdown/). I used to, it's very handy. (I'm not suggesting ditching blogdown btw, I think it's fantastic. If that works for you, great.) What if you want to continue to write about R, use RMarkdown etc., but build your site using something like Gatsby?
+
+Well, Gatsby itself is pretty easy to get started with, and I've found the [docs](https://www.gatsbyjs.org/tutorial/) quite good and the community helpful (have a look [here](https://github.com/RobertMyles/site/issues/1) to see how helpful people can be). The nice thing is that you have a lot of control over how your website looks and behaves.
+
+Gatsby also utilises Facebook's [GraphQL](https://graphql.org/) to source data. The 'data' here are elements of your site -- making it really useful to render items, internal links and so on by querying the data of the site. (If that last sentence makes no sense, see [here](https://www.gatsbyjs.org/docs/why-gatsby-uses-graphql/).) For example, the list of my blog posts found [here](https://www.robertmylesmcdonnell.com/blog/) is done dynamically by querying the data of the site using GraphQL.
+
+The actual query looks like this:
+
+```JavaScript
+export const pageQuery = graphql`
+  query MDXQuery($id: String!) {
+    mdx(id: { eq: $id }) {
+      id
+      frontmatter {
+        title
+        date
+      }
+      body
+    }
+  }
+`
+```
+
+So it allows us to get all the MDX files and use them as data -- we extract the title and date and an extract and that's what goes in the blog listing place. Pretty cool, eh?
+
+<hr />
+
+So the world of Gatsby websites is exciting and interesting, but what if you want to blog about R things still? The great thing about blogdown is that it fits so snugly into the RStudio ecosystem. So that's just not going to be the same with Gatsby.
+
+However, there are some other benefits. First of all, I use [VS Code](https://code.visualstudio.com/) to work on any non-RMarkdown stuff for the site. VS Code for R is not great in my opinion, at least it doesn't compare to RStudio. But for JavaScript, it's fantastic.
 
 Secondly, since there is such a ginormous JS/web developer community, there are lots of little tools to help with developing sites. For example, I use [Merge Schedule](https://github.com/marketplace/actions/merge-schedule) to automatically merge Pull Requests into the master branch of my site (although not particularly a JS-specific tool). This allows me to schedule blog posts, as I simply create a branch, write whatever I'm going to post, and push to the branch on GitHub. Using `schedule /<YEAR>-<MONTH>-<DAY>` in the PR description schedules it for merging. I've only been using this for a short while, but it's working well. This helps me to blog when I'm feeling productive and not have to do it when I'm not, so I hope to have a more regular blog schedule now, in terms of when the post appear on the site. Another one is [Dependabot](https://dependabot.com/), which updates my JS packages for me. (While I'm here, using [NPM](https://www.npmjs.com/) has highlighted the amazingness of [CRAN](https://cran.r-project.org/) -- often I've been left with something breaking because of a package -- that doesn't happen often with R. Goooo CRAN! 🥳)
 
@@ -157,4 +188,4 @@ Which gives:
 
 Like I mentioned above, you might need to change the paths to any images, depending on your setup. Images created from code chunks have a specific way of being in organised in RMarkdown. I source images in blog posts from a subfolder named, surprisingly, `images/`. So if I make something with ggplot2 in a code chunk, this will need to go into `images/` so the .mdx will find it.
 
-So that's how you can use Gatsby for writing about R-related stuff if you're interested. I haven't written about the actual Gatsby/React/JS side of things and how it was for a data scientist to learn all that...maybe some other day.
+So that's how you can use Gatsby for writing about R-related stuff if you're interested. I haven't written about the actual Gatsby/React/JS side of things and how it was for a data scientist to learn all that, but I might do that in the future.
