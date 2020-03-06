@@ -14,7 +14,7 @@
     "atom-syntax-theme-to-highlights-css": "^1.0.2",
     "core-js": "^3.6.4",
     "d3": "^5.15.0",
-    "gatsby": "^2.19.22",
+    "gatsby": "^2.19.29",
     "gatsby-cli": "^2.10.0",
     "gatsby-image": "^2.2.41",
     "gatsby-mdx": "^1.0.0",
