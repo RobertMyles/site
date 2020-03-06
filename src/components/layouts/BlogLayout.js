@@ -10,8 +10,9 @@ import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 import "../../utils/prism-override.css"
 import JustComments from "gatsby-plugin-just-comments"
 import { MobileView } from "react-device-detect"
+import withUtterances from "with-utterances"
 
-export default function BlogLayout({ children }) {
+export function BlogLayout({ children }) {
   return (
     <>
       <Navbar
@@ -76,3 +77,9 @@ const StyledLink = styled(GatsbyLink)`
     }
   }
 `
+export default withUtterances(
+  BlogLayout,
+  "robertmyles/blog-comments",
+  "github-light",
+  "og:title"
+)
