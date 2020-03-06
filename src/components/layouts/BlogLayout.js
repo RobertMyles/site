@@ -8,7 +8,6 @@ import "katex/dist/katex.min.css"
 import "prismjs/themes/prism-tomorrow.css"
 import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 import "../../utils/prism-override.css"
-import JustComments from "gatsby-plugin-just-comments"
 import { MobileView } from "react-device-detect"
 import withUtterances from "with-utterances"
 
@@ -49,7 +48,6 @@ export function BlogLayout({ children }) {
             <StyledLink to="/about">About</StyledLink>
           </li>
         </MobileView>
-        <JustComments apikey="c18a79a5-be08-4f3a-ba12-e8edab434ad4" />
       </Grid>
     </>
   )
