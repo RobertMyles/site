@@ -58,7 +58,7 @@
     "rehype-stringify": "^5.0.0",
     "remark": "^11.0.2",
     "remark-highlights": "^1.0.0",
-    "remark-math": "^1.0.6",
+    "remark-math": "^2.0.0",
     "remark-rehype": "^5.0.0",
     "sharp": "^0.24.1",
     "styled-components": "^5.0.1",
