@@ -66,7 +66,7 @@
     "typeface-aleo": "0.0.69",
     "typeface-inconsolata": "0.0.72",
     "typeface-spacegrotesk": "0.0.66",
-    "unist-util-visit": "^1.4.1",
+    "unist-util-visit": "^2.0.2",
     "with-utterances": "^1.5.0"
   },
   "devDependencies": {
