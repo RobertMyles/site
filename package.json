@@ -25,7 +25,7 @@
     "gatsby-plugin-material-ui": "^2.1.6",
     "gatsby-plugin-mdx": "^1.0.74",
     "gatsby-plugin-offline": "^3.0.35",
-    "gatsby-plugin-page-creator": "^2.1.40",
+    "gatsby-plugin-page-creator": "^2.1.42",
     "gatsby-plugin-react-helmet": "^3.1.22",
     "gatsby-plugin-root-import": "^2.0.5",
     "gatsby-plugin-sass": "^2.1.29",
