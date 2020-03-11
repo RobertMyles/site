@@ -1,6 +1,6 @@
 ---
 title: From R to Gatsby
-date: "2020-03-07"
+date: "2020-03-12"
 featuredImage: "images/rtogatsbysmall.png"
 ---
 
@@ -20,24 +20,39 @@ Well, Gatsby itself is pretty easy to get started with, and I've found the [docs
 
 Gatsby also utilises Facebook's [GraphQL](https://graphql.org/) to source data. The 'data' here are elements of your site -- making it really useful to render items, internal links and so on by querying the data of the site. (If that last sentence makes no sense, see [here](https://www.gatsbyjs.org/docs/why-gatsby-uses-graphql/).) For example, the list of my blog posts found [here](https://www.robertmylesmcdonnell.com/blog/) is done dynamically by querying the data of the site using GraphQL.
 
-The actual query looks like this:
+The actual query for the 'blog list' page of my site looks like this:
 
 ```JavaScript
-export const pageQuery = graphql`
-  query MDXQuery($id: String!) {
-    mdx(id: { eq: $id }) {
-      id
-      frontmatter {
-        title
-        date
+export const query = graphql`
+  query {
+    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
+      totalCount
+      edges {
+        node {
+          id
+          frontmatter {
+            title
+            date
+            featuredImage {
+              childImageSharp {
+                fixed(width: 100, height: 100) {
+                  ...GatsbyImageSharpFixed
+                }
+              }
+            }
+          }
+          fields {
+            slug
+          }
+          excerpt(pruneLength: 280)
+        }
       }
-      body
     }
   }
 `
 ```
 
-So it allows us to get all the MDX files and use them as data -- we extract the title and date and an extract and that's what goes in the blog listing place. Pretty cool, eh?
+For a data scientist, that's quite interesting -- it's like a SQL query to get all the MDX files, count them, extract some fields and an excerpt. Pretty cool, eh?
 
 <hr />
 
@@ -49,7 +64,7 @@ Secondly, since there is such a ginormous JS/web developer community, there are 
 
 Thirdly, I use [MDX](https://mdxjs.com/) for a flavour of Markdown that allows you to embed React components in the Markdown. This is quite similar to how you can run R code in RMarkdown. Where this gets useful is when you create a D3 chart as a React component. It can then be used whenever you like in your MDX-Markdown posts, by importing it at the top of the post, under the YAML header. I've written about this [before](https://www.robertmylesmcdonnell.com/content/posts/d3_in_MDX/), it's a nice way to do such things.
 
-So ok, all nice JS-associated things, but what about blogging about R, especially if you've code examples? Well, my workflow is quite simple:
+So ok, all nice JS-associated things, but what about blogging about R, especially if you've got R code examples? Well, my workflow is quite simple:
 
 - I open up a new RMarkdown document in RStudio;
 - I write whatever I'm going to write;
@@ -166,7 +181,7 @@ print(head(mtcars))
 
 ```
 
-There's usually some fix-up with code, indentations and so on, and a couple of other things, but normally not a lot (maybe placing images in the right place...writeMDX might take of things in future).
+There's usually some fix-up with code, indentations and so on, and a couple of other things, but normally not a lot (maybe placing images in the right place...writeMDX might take of these things in future. Now it's quite minimal.).
 
 So it's really quite simple to include R in a Gatsby site. You can write RMarkdown as you would regularly, run whatever code you normally would and then just transform the result to mdx. (You can also just use regular markdown if you don't want to use MDX.)
 
