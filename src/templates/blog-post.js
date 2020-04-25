@@ -22,7 +22,9 @@ function PageTemplate({ data }) {
         <h1>{data.mdx.frontmatter.title}</h1>
         <h4>{data.mdx.frontmatter.date}</h4>
         <MDXRenderer>{data.mdx.body}</MDXRenderer>
-        <Utterances repository={data.site.siteMetadata.utterances}></Utterances>
+        <div>
+          <Utterances repository="RobertMyles/site" />
+        </div>
       </BlogLayout>
     </>
   )
@@ -37,11 +39,6 @@ export const pageQuery = graphql`
         date
       }
       body
-    }
-    site {
-      siteMetadata {
-        utterances
-      }
     }
   }
 `

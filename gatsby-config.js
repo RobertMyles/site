@@ -4,7 +4,6 @@ module.exports = {
   siteMetadata: {
     title: `robertmylesmcdonnell.com`,
     author: `Robert Myles McDonnell`,
-    utterances: `https://github.com/RobertMyles/site`,
     description: `Robert McDonnell's website`,
   },
   plugins: [
@@ -98,15 +97,7 @@ module.exports = {
             },
           },
         ],
-        plugins: [
-          "gatsby-remark-images",
-          // {
-          //   resolve: `gatsby-transformer-remark`,
-          //   options: {
-          //     plugins: [`gatsby-remark-copy-linked-files`],
-          //   },
-          // },
-        ],
+        plugins: ["gatsby-remark-images"],
       },
     },
   ],

@@ -65,12 +65,10 @@
     "typeface-aleo": "0.0.69",
     "typeface-inconsolata": "0.0.72",
     "typeface-spacegrotesk": "0.0.66",
-    "unist-util-visit": "^1.4.1",
-    "with-utterances": "^1.5.0"
+    "unist-util-visit": "^1.4.1"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.10.7",
-    "gatsby-plugin-just-comments": "^0.2.4",
     "prettier": "^1.19.1"
   },
   "keywords": [
