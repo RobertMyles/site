@@ -1,0 +1,10 @@
+.utterances {
+  text-align: center;
+  &.loading::before {
+    content: "Loading comments...";
+  }
+  &.fail::before {
+    color: red;
+    content: "⚠️ Failed loading comments (no internet?) ⚠️";
+  }
+}
