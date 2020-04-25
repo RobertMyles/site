@@ -5,19 +5,24 @@ import "katex/dist/katex.min.css"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import Helmet from "react-helmet"
 import "prismjs/plugins/line-numbers/prism-line-numbers.css"
+import Utterances from "../components/Utterances"
 
-function PageTemplate({ data: { mdx } }) {
+function PageTemplate({ data }) {
+  //{data: { mdx }
   return (
     <>
       <BlogLayout>
-        <Helmet title={`${mdx.frontmatter.title} | Robert Myles McDonnell`}>
+        <Helmet
+          title={`${data.mdx.frontmatter.title} | Robert Myles McDonnell`}
+        >
           <meta charSet="utf-8" />
           <title>Robert Myles McDonnell</title>
           <link rel="canonical" href="http://robertmylesmcdonnell.com" />
         </Helmet>
-        <h1>{mdx.frontmatter.title}</h1>
-        <h4>{mdx.frontmatter.date}</h4>
-        <MDXRenderer>{mdx.body}</MDXRenderer>
+        <h1>{data.mdx.frontmatter.title}</h1>
+        <h4>{data.mdx.frontmatter.date}</h4>
+        <MDXRenderer>{data.mdx.body}</MDXRenderer>
+        <Utterances repository={data.site.siteMetadata.utterances}></Utterances>
       </BlogLayout>
     </>
   )
@@ -32,6 +37,11 @@ export const pageQuery = graphql`
         date
       }
       body
+    }
+    site {
+      siteMetadata {
+        utterances
+      }
     }
   }
 `

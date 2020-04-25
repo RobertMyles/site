@@ -9,9 +9,8 @@ import "prismjs/themes/prism-tomorrow.css"
 import "prismjs/plugins/line-numbers/prism-line-numbers.css"
 import "../../utils/prism-override.css"
 import { MobileView } from "react-device-detect"
-import withUtterances from "with-utterances"
 
-export function BlogLayout({ children }) {
+function BlogLayout({ children }) {
   return (
     <>
       <Navbar
@@ -75,9 +74,4 @@ const StyledLink = styled(GatsbyLink)`
     }
   }
 `
-export default withUtterances(
-  BlogLayout,
-  "robertmyles/blog-comments",
-  "github-light",
-  "og:title"
-)
+export default BlogLayout
