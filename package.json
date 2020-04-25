@@ -15,7 +15,6 @@
     "core-js": "^3.6.4",
     "d3": "^5.15.0",
     "gatsby": "^2.19.32",
-    "gatsby-cli": "^2.11.21",
     "gatsby-image": "^2.2.43",
     "gatsby-mdx": "^1.0.0",
     "gatsby-plugin-draft": "0.0.5",
