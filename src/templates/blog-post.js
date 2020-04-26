@@ -22,9 +22,7 @@ function PageTemplate({ data }) {
         <h1>{data.mdx.frontmatter.title}</h1>
         <h4>{data.mdx.frontmatter.date}</h4>
         <MDXRenderer>{data.mdx.body}</MDXRenderer>
-        <div>
-          <Utterances repository="RobertMyles/site" />
-        </div>
+        <Utterances repository="RobertMyles/site" />
       </BlogLayout>
     </>
   )
