@@ -5,6 +5,7 @@ module.exports = {
     title: `robertmylesmcdonnell.com`,
     author: `Robert Myles McDonnell`,
     description: `Robert McDonnell's website`,
+    siteUrl: `https://www.robertmylesmcdonnell.com`,
   },
   plugins: [
     {
@@ -19,6 +20,62 @@ module.exports = {
       },
     },
     `babel-plugin-styled-components`,
+    {
+      resolve: `gatsby-plugin-feed-mdx`,
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                title
+                description
+                siteUrl
+                site_url: siteUrl
+              }
+            }
+          }
+        `,
+        feeds: [
+          {
+            serialize: ({ query: { site, allMdx } }) => {
+              return allMdx.edges.map(edge => {
+                return Object.assign({}, edge.node.frontmatter, {
+                  description: edge.node.excerpt,
+                  date: edge.node.frontmatter.date,
+                  url:
+                    site.siteMetadata.siteUrl + "/blog" + edge.node.fields.slug,
+                  guid:
+                    site.siteMetadata.siteUrl + "/blog" + edge.node.fields.slug,
+                  custom_elements: [{ "content:encoded": edge.node.html }],
+                })
+              })
+            },
+            query: `
+              {
+                allMdx(
+                  sort: { order: DESC, fields: [frontmatter___date] },
+                ) {
+                  edges {
+                    node {
+                      excerpt
+                      html
+                      fields { slug }
+                      frontmatter {
+                        title
+                        date
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            output: "/rss.xml",
+            title: "Robert McDonnell's RSS Feed",
+            match: "^/blog/",
+          },
+        ],
+      },
+    },
     `gatsby-plugin-material-ui`,
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-favicon`,
