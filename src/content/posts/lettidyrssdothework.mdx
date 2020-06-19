@@ -1,0 +1,99 @@
+---
+title: "Let tidyRSS work for you!"
+author: "Robert McDonnell"
+date: "2020-06-16"
+featuredImage: "images/rsslogo.png"
+---
+
+[tidyRSS](https://github.com/RobertMyles/tidyRSS) is an R package of mine that's been around for a little while. Recently, version 2.0.2 made its way to CRAN. After some missteps, I think the package is at a stage now where it can handle most, if not almost all, types of RSS/Atom/JSON feeds (you'd think they'd be standardised, but...).  
+These types of feeds lend themselves to real-time updates, so I thought I'd explore ways that we could get tidyRSS and some other great tools to do the work for you. The basic idea is that we will schedule checks from tidyRSS and use R to notify us if we find a new post. Quite simple, but there are myriad ways of doing of doing it. I've chosen some examples using [Pusher](), [BitBar]() and Amazon [Lambda](), but you could just as easily use [cron]() or [taskScheduler](), an email notification like [gmailr](), or even something like [beepr]() if your computer is open and on all the time.
+
+So here's the basic R script we're going to use to check for new posts on a certain feed. (I just happened to see this the other day and thought I'd like to learn more about the subject.) So first, some setup: you'll need to open a free account on [Pusher]() and go to Apps & Plugins > Create a New Application. There you can name your 'app' and give it a description. You'll get a user key and an API key, which I've saved using the [keyring]() package. The code below will allow you to access these securely for your account without having to share secrets.
+
+```r
+library(tidyRSS)
+library(pushoverr)
+library(glue)
+library(dplyr)
+library(qs)
+
+rss <- "https://www.alt-m.org/feed/"
+u_key <- keyring::key_get("pushover_user")
+api_key <- keyring::key_get("pushover_api")
+```
+
+So we ideally want to save the data that's coming back from tidyRSS and use this to check for new feeds. We can do this by getting the data once and saving it in a `data/` folder. Here I use [qs]() because these data frames can contain list-columns.
+
+```r
+df <- tidyfeed(rss)
+qsave(df, "data/myrssfeed.qs")
+```
+
+Ok, so now we have a data frame of info from this feed. If you want to be able to check against your feed straight away, just take the first row off this data (i.e. `df <- slice(df, -1)`) and save it back out (the first row is the most recent post). Next, we just check against our 'old' data and see if we have newer posts when we do a fresh `tidyfeed()` call.
+
+```r
+old <- qread("data/myrssfeed.qs")
+old_date <- old$item_pub_date[[1]]
+
+df <- tidyfeed(rss)
+new_date <- df$item_pub_date[[1]]
+```
+
+Ok, pretty simple so far. Now we just check the dates and get pusherr to send us a notification if we've got a new post:
+
+```r
+if (new_date > old_date) {
+    new <- bind_rows(df, old) %>% distinct()
+    link <- new$item_link[[1]]
+    msg <- glue("New post @ Ideas for an Alternative Monetary Future! {link}")
+    qsave(new, "data/myrssfeed.qs")
+    pushover(message = msg, user = u_key, app = api_key)
+}
+```
+
+Ok, lovely. So, assuming we do actually have a new post, when we run this, we'll get a notification from Pusher. On my Android-powered phone, it looks like this:
+
+# IMAGE -- on main phone screen and unlocked
+
+The great thing about this is that the link is already formatted as a hyperlink, so you can click on it straight away and get readin'.
+
+Fore reference, the complete script is:
+
+```r
+library(tidyRSS)
+library(pushoverr)
+library(glue)
+library(dplyr)
+library(qs)
+
+rss <- "https://www.alt-m.org/feed/"
+u_key <- keyring::key_get("pushover_user")
+api_key <- keyring::key_get("pushover_api")
+# assuming you already have this data:
+old <- qread("data/myrssfeed.qs")
+old_date <- old$item_pub_date[[1]]
+df <- tidyfeed(rss)
+new_date <- df$item_pub_date[[1]]
+if (new_date > old_date) {
+    new <- bind_rows(df, old) %>% distinct()
+    link <- new$item_link[[1]]
+    msg <- glue("New post @ Ideas for an Alternative Monetary Future! {link}")
+    qsave(new, "data/myrssfeed.qs")
+    pushover(message = msg, user = u_key, app = api_key)
+}
+```
+
+Ok, great, that works fine! But we obviously don't want to have to run this script every time we want to check for a new post. We want R to work for us, remember?
+
+So if you're on Windows, you could the aforementioned taskScheduler to set up a check every day. (Or whenever you like. Depends how productive you think your blogger is.) I'm on a Mac, and I saw the interesting [BitBar](https://github.com/matryer/bitbar) project a while ago, so I thought I'd try that out. BitBar let's you use any executable script from your Menu Bar on Mac OS. We can use our previous script, with a few modifications:
+
+# copy from script; don't forget .data
+
+```r
+#! /usr/local/bin/Rscript
+#
+```
+
+We can save this script in a dedicated folder (mine's `~/BitBarPlugins`). We'll need to use `.data/` and not `data/` for our data folder, as ButBar will search for anything in this folder and try to run it, so we'll hide it with the dot.
+
+So thst works great, and now we don't need to manually check for new updates. However, we still need our local computer to be operational so that BitBar can check for us. Still nto ideal -- we want this to happen with minimal effort on our part! Open and turn on a computer just to check for a feed? Pfff.
