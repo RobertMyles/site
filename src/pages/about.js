@@ -38,9 +38,7 @@ export default () => (
           </Ppp>
           <Ppp>
             I've been working in data science since 2014, and among the
-            positions I've held, I've been the director of the DIPROJ technical
-            unit in the Sao Paulo City Council and the lead data scientist for
-            Avanade.
+            positions I've held, I've been a director of a data science team, a data science team manager, a principal data scientist and a senior data scientist.
           </Ppp>
           <Ppp>
             I'm also an open-source developer and I've produced a number of

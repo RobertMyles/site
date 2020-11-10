@@ -82,6 +82,12 @@ export default () => (
               <FaBriefcase /> Work Experience
             </IconContext.Provider>
           </h2>
+          <h3>Data Science Manager, ACI Worldwide</h3>
+          <Ppp>09/2020 — Present</Ppp>
+          <Ppp>
+            Remote & non-remote management of multinational data science team, focused on automation of modelling and data ingestion pipelines.{" "}
+          </Ppp>
+          <br />
           <h3>Senior Data Scientist, First Data Corporation</h3>
           <Ppp>08/2018 — Present</Ppp>
           <Ppp>

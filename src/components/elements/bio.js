@@ -33,13 +33,8 @@ export default () => (
           Hi, I'm Rob, welcome to my site.
         </Ppp>
         <Ppp style={{ maxWidth: "500px" }}>
-          I'm a data scientist, currently working for{" "}
-          <a href="https://www.firstdata.com/en_us/home.html">
-            First Data/Fiserv
-          </a>{" "}
-          on problems such as fraud detection, report automation and analysis on
-          encrypted data. I blog on my open-source work and on data science,
-          usually R-related.
+          I'm a data science manager, currently working in the finance industry
+          on problems such as fraud detection, recommender models and MLOps. I blog on my open-source work and on data science, usually R and dataviz related.
         </Ppp>
         <div style={{ textAlign: "center" }}>
           <GitHubButton href="https://github.com/robertmyles" data-size="large">
