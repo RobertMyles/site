@@ -51,13 +51,17 @@ if (new_date > old_date) {
 }
 ```
 
-Ok, lovely. So, assuming we do actually have a new post, when we run this, we'll get a notification from Pusher. On my Android-powered phone, it looks like this:
+Ok, lovely. So, assuming we do actually have a new post, when we run this, we'll get a notification from Pusher. On my Android-powered phone, it looks like this:[^1]
 
-# IMAGE -- on main phone screen and unlocked
+![](images/pushernotif.png)
 
-The great thing about this is that the link is already formatted as a hyperlink, so you can click on it straight away and get readin'.
+[^1]: You'll notice different times on these, 'cos I was working my way through understand BitBar :-) . It also took me quite a while to get around to finishing this post, which is why these screenshots are from a few weeks ago.
 
-Fore reference, the complete script is:
+Awesome! The great thing about this is that the link is already formatted as a hyperlink, so when you open it up, you can click on it straight away and get readin'.
+
+![](images/pusher.png)
+
+For reference, the complete script is:
 
 ```r
 library(tidyRSS)
@@ -87,13 +91,106 @@ Ok, great, that works fine! But we obviously don't want to have to run this scri
 
 So if you're on Windows, you could the aforementioned taskScheduler to set up a check every day. (Or whenever you like. Depends how productive you think your blogger is.) I'm on a Mac, and I saw the interesting [BitBar](https://github.com/matryer/bitbar) project a while ago, so I thought I'd try that out. BitBar let's you use any executable script from your Menu Bar on Mac OS. We can use our previous script, with a few modifications:
 
-# copy from script; don't forget .data
-
 ```r
 #! /usr/local/bin/Rscript
 #
+# <bitbar.title>RSS Updates</bitbar.title>
+# <bitbar.version>v3.0</bitbar.version>
+# <bitbar.author>Robert McDonnell</bitbar.author>
+# <bitbar.author.github>RobertMyles</bitbar.author.github>
+# <bitbar.desc>Get updates on an RSS feed using R</bitbar.desc>
+# <bitbar.image>https://imgur.com/a/e9qCVne</bitbar.image>
+# <bitbar.dependencies>R</bitbar.dependencies>
+
+# setup -------------------------------------------------------------------
+suppressPackageStartupMessages({
+	library(tidyRSS)
+	library(pushoverr)
+	library(glue)
+	library(dplyr)
+	library(qs)
+})
+
+rss <- "https://www.alt-m.org/feed/"
+u_key <- keyring::key_get("pushover_user")
+api_key <- keyring::key_get("pushover_api")
+
+# old data ----------------------------------------------------------------
+
+old <- qread("~/BitBarPlugins/.data/myrssfeed.qs")
+old_date <- old$item_pub_date[[1]]
+
+# new data ----------------------------------------------------------------
+
+df <- suppressWarnings(suppressMessages(tidyfeed(rss)))
+new_date <- df$item_pub_date[[1]]
+
+# update if new -----------------------------------------------------------
+
+if (new_date > old_date) {
+	new <- bind_rows(df, old) %>% distinct()
+	link <- new$item_link[[1]]
+	msg <- glue(
+		"New post @ Ideas for an Alternative Monetary Future! {link}"
+		)
+	msg2 <- glue("New post @ Ideas for an Alternative Monetary Future!
+							---
+							{link}|color='A30000'|href={link}")
+	qsave(new, "~/BitBarPlugins/.data/myrssfeed.qs")
+	pushover(message = msg, user = u_key, app = api_key)
+	cat(msg2)
+} else {
+	cat("No updates at this time.")
+}
+
 ```
 
-We can save this script in a dedicated folder (mine's `~/BitBarPlugins`). We'll need to use `.data/` and not `data/` for our data folder, as ButBar will search for anything in this folder and try to run it, so we'll hide it with the dot.
+We can save this script in a dedicated folder (mine's `~/BitBarPlugins`). We'll need to use `.data/` and not `data/` for our data folder, as ButBar will search for anything in this folder and try to run it, so we'll hide it with the dot. The name convention for BitBar-aware files is `{descriptive name}.{time period}.{extension}`, so for this, I called it `get_update.1d.R`. BitBar will use the `1d` to run the script every 24 hours.  
+So what else has changed here? Well, we've silenced some output from R, changed some paths and the message printed to the Menu Bar (`---` will make a subsection). When it executes, I see this in my Menu Bar:
 
-So thst works great, and now we don't need to manually check for new updates. However, we still need our local computer to be operational so that BitBar can check for us. Still nto ideal -- we want this to happen with minimal effort on our part! Open and turn on a computer just to check for a feed? Pfff.
+![](images/bitbar1.png)
+
+When I click on it, I see the section below the `---` in the glue message:
+
+![](images/bitbar2.png)
+
+Which still isn't perfect because it's not clickable. And for when there are no new posts, we have:
+
+![](images/bitbar3.png)
+
+So that works great, and now we don't need to manually check for new updates. However, we still need our local computer to be operational so that BitBar can check for us. Still not ideal -- we want this to happen with minimal effort on our part! Open and turn on a computer just to check for a feed? Pfff.
+
+Ok, so there are _many_ options for how you could automate the update we're running, so I refer you to any one of the gazillion articles on how to run scripts on AWS, Google Cloud, etc. etc. etc. For this post, I thought I'd [revisit]() [renv]() and use AWS Lambda.
+
+So to get this up and running, the best thing is to start a new RStudio Project. Once you've done that, let's initialise renv and install what we need to install. I'm going to use the [paws]() package for dealing with AWS, but the [cloudyr]() project has libraries for this too.
+
+```r
+renv::init()
+install.packages(c("tidyRSS", "glue", "pushoverr", "paws"))
+```
+
+We can create a `data/` folder and put our data into it. Here, I've changed to csv, because it's easier to work with on AWS. (So the data file is now `myrssfeed.csv`. You could also run `tidyfeed()` and get and save it like we did earlier, except now as csv.)
+
+To use AWS, you'll obviously need an AWS account with billing set up for whatever services you're going to use. There are a gazillion examples of how to do this on the net, so I won't go through it here. What we'll do is simply set our credentials in a `.aws/` folder in our project, create a bucket for our data in S3 and use AWS Lambda to run our function and save the results back into our S3 bucket.
+
+## Set up AWS credentials
+
+In the `.aws/` folder, I have two files: `config` and `credentials`. The config file has the following:
+
+```
+[default]
+region=eu-west-1
+```
+
+For those who've worked with ODBC connections, you'll recognise the ini-style format. This my default region, set yours to whatever yours is.
+
+The credential file has the following, where the access keys are your keys:
+
+```
+[default]
+aws_access_key_id=XXX
+aws_secret_access_key=XXXXX
+```
+
+create bucket in s3
+pusher creds (ini) in .pusher
