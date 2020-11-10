@@ -89,7 +89,7 @@ export default () => (
           </Ppp>
           <br />
           <h3>Senior Data Scientist, First Data Corporation</h3>
-          <Ppp>08/2018 — Present</Ppp>
+          <Ppp>08/2018 — 08/2020</Ppp>
           <Ppp>
             Modelling of fraud in high-volume real-time settings; machine
             learning, deployment of ML models; automation of client reports with
