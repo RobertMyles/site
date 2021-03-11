@@ -12,13 +12,13 @@ export default function LandingDivs() {
       color: styles.colors.mainYellow,
       width: 60,
     },
-    {
-      name: "CV",
-      path: "/cv/",
-      id: 1,
-      color: styles.colors.mainRed,
-      width: 40,
-    },
+    // {
+    //   name: "CV",
+    //   path: "/cv/",
+    //   id: 1,
+    //   color: styles.colors.mainRed,
+    //   width: 40,
+    // },
     // {
     //   name: "ABOUT",
     //   path: "/about/",
