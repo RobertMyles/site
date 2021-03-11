@@ -67,9 +67,6 @@ export default () => (
             <StyledLink to="/blog">Blog</StyledLink>
           </li>
           <li>
-            <StyledLink to="/cv">CV</StyledLink>
-          </li>
-          <li>
             <StyledLink to="/research">Research</StyledLink>
           </li>
           <li>

@@ -19,21 +19,16 @@ export default function NavbarLink(props) {
     },
     {
       id: 2,
-      path: "/cv/",
-      name: "CV",
-    },
-    {
-      id: 3,
       path: "/research/",
       name: "research",
     },
     {
-      id: 4,
+      id: 3,
       path: "/other/",
       name: "other",
     },
     {
-      id: 5,
+      id: 4,
       path: "/about/",
       name: "about",
     },
