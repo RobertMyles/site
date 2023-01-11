@@ -39,7 +39,7 @@
     "gatsby-remark-responsive-iframe": "^2.5.0",
     "gatsby-source-filesystem": "^2.1.50",
     "gatsby-transformer-mdx": "^1.1.3",
-    "gatsby-transformer-remark": "^2.6.55",
+    "gatsby-transformer-remark": "^5.25.1",
     "gatsby-transformer-sharp": "^2.3.17",
     "install-peerdeps": "^2.0.1",
     "katex": "^0.10.2",
