@@ -16,7 +16,7 @@ format:
 editor: source
 drafts:
   - drafts/*.qmd
-draft-mode: visible 
+draft-mode: gone 
 execute: 
   eval: false
 freeze: true
