@@ -1,0 +1,1 @@
+"0","sixn_long <- pivot_longer(sixn, cols = c(england:wales))"

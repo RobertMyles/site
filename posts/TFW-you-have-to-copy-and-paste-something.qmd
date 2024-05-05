@@ -1,0 +1,66 @@
+---
+title: TFW you have to copy and paste something into R...
+date: "2017-04-22"
+categories: [R]
+---
+
+From time to time, you might need to copy and paste something into R and turn it into a character string. Maybe it's something from the output of an error message, or from someone else's malformed data, or something copied from a document or the internet. If it's something small, then it's usually OK to just manually insert `""` around the strings and `,` between them. For something large, that's just a nightmare.
+
+For example, I ran into the [global variables](https://stackoverflow.com/questions/9439256/how-can-i-handle-r-cmd-check-no-visible-binding-for-global-variable-notes-when) problem (again) recently with a package I was making. Only this time, it wasn't the `"."` from a dplyr-style pipe chain that was giving me trouble, it was a ton of variables (You can see the mess [here](https://github.com/RobertMyles/congressbr/blob/master/R/util.R)). Here's a snippet of what I had to copy and paste:
+
+``` r
+senator_bills_details senator_commissions_date_joined
+senator_commissions_name senator_date_of_birth senator_name
+senator_office_address senator_party_date_joined senator_party_name
+senator_positions_commission_date_start senator_suplente_name
+senator_titular_name senator_vote session_date session_description
+session_number session_type sigla sit_description situation_date
+situation_place sponsor_abbr sponsor_name sponsor_party topic_general
+topic_specific unit_name update_date vote_date vote_secret
+country_of_birth event_description event_type head id_rollcall
+```
+
+So what did I do? Well, a little hackiness with `strsplit`, `gsub` and `cat` got me sorted. First I put it all into a string:
+
+``` r
+x <- c("senator_bills_details senator_commissions_date_joined senator_commissions_name senator_date_of_birth senator_name senator_office_address senator_party_date_joined senator_party_name senator_positions_commission_date_start senator_suplente_name senator_titular_name senator_vote session_date session_description session_number session_type sigla sit_description situation_date situation_place sponsor_abbr sponsor_name sponsor_party topic_general topic_specific unit_name update_date vote_date vote_secret country_of_birth event_description event_type head id_rollcall")
+```
+
+Then we can use `strsplit` and `unlist` to get a character vector of the variables:
+
+``` r
+x <- strsplit(x, split = " ")
+x <- unlist(x)
+x[1:5]
+```
+
+```         
+## [1] "senator_bills_details"           "senator_commissions_date_joined"
+## [3] "\nsenator_commissions_name"      "senator_date_of_birth"
+## [5] "senator_name"
+```
+
+As you can see, some of these were separated by `" "`, and others had `"\n"` (newline) between them. With `gsub`, we can easily take that out. Don't forget `\` is a special character in R and so needs to be escaped with another `\`:
+
+``` r
+x <- gsub("\\n", "", x)
+x[1:5]
+```
+
+```         
+## [1] "senator_bills_details"           "senator_commissions_date_joined"
+## [3] "senator_commissions_name"        "senator_date_of_birth"
+## [5] "senator_name"
+```
+
+Ok, almost there. We could use `print(x)` and copy-and-paste the result into our desired result, but we would still have `[1]`, `[2]` etc., and no commas between the terms. To get over this, we can use `cat` with its `sep` argument. `", "` will insert quotation marks at the end of the words and a comma between them:
+
+``` r
+cat(x, sep = '", "')
+```
+
+``` r
+## senator_bills_details", "senator_commissions_date_joined", "senator_commissions_name", "senator_date_of_birth", "senator_name", "senator_office_address", "senator_party_date_joined", "senator_party_namesenator_positions_commission_date_start", "senator_suplente_namesenator_titular_name", "senator_vote", "session_date", "session_descriptionsession_number", "session_type", "sigla", "sit_description", "situation_datesituation_place", "sponsor_abbr", "sponsor_name", "sponsor_party", "topic_generaltopic_specific", "unit_name", "update_date", "vote_date", "vote_secretcountry_of_birth", "event_description", "event_type", "head", "id_rollcall
+```
+
+The only part left after this is to copy the output and place a comma at the start and the end. Irritating problem solved!

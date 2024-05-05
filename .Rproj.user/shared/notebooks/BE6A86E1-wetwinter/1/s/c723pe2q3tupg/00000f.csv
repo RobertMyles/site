@@ -1,0 +1,4 @@
+"0","month_rain |> "
+"0","  filter(year(m_date) > 2018, winter) |> "
+"0","  ggplot(aes(x = m_date, y = month_sum)) +"
+"0","  geom_col()"

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2017-02-01">
+
+<title>Rob McDonnell:Blog – How to make a GitHub pages blog with RStudio and Hugo</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rob McDonnell:Blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How to make a GitHub pages blog with RStudio and Hugo</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">blogging</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 1, 2017</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Update: for some people who may have some issues setting up the blog the way I’ve set out here, see Kate’s helpful comments below.</em></p>
+<p>Since April or so of last year, I’ve had a personal website on GitHub pages, where I keep this blog and a few other things. Setting it up was at times frustrating, but a good learning process (I especially picked up a lot of Git through that experience). Actually writing, not so good. I picked a theme I <a href="https://jekyllthemes.io/theme/45074676/sustain">liked</a>, all good, but I soon realised that writing as I often do in R Markdown was a little less convenient in the GitHub-flavoured markdown <span class="math inline">\(\rightarrow\)</span> jekyll <span class="math inline">\(\rightarrow\)</span> theme <span class="math inline">\(\rightarrow\)</span> website process. This post is an explanation of why I moved to <a href="https://gohugo.io/">Hugo</a> and specifically to <a href="https://github.com/rstudio/blogdown">blogdown</a>. I found the guides on the process (blogdown-focused, that is) to have some errors<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, so I will explain each step in getting your own GitHub pages blog, built by blogdown in RStudio, for anybody who is interested. Feel free to skip to the setup <a href="#how-to-set-up-your-own-github-pages-blog-and-post-using-blogdown">guide</a> to get started.</p>
+<section id="what-i-used-to-do" class="level3">
+<h3 class="anchored" data-anchor-id="what-i-used-to-do">What I <em>used</em> to do</h3>
+<p>In R Markdown, code (naturally) and equations are easy to format. Backticks format the text inside as <code>code</code> style text, and full chunks of R code (or <a href="https://yihui.name/knitr/demo/engines/">other languages</a>) can be placed inside three backticks with the accompanying name of the language afterwards inside two curly braces. To do this in April last year, with the theme I had chosen, I needed to write a whole load of Liquid tags like this: <code>{% highlight R linenos=table %}</code> and <code>{% endhighlight %}</code>.</p>
+<p>So that was code formatting, which is quite a frequent need in my blogging. But that wasn’t as bad as <span class="math inline">\(\LaTeX\)</span>. “Meu Deus”, as my Brazilian wife might say. To get the word “LaTeX” like I just wrote above, I had to write <code>{% raw %}\\(\LaTeX\\){% endraw %}</code>. Put that in a paragraph a few times and start to regret it. In R Markdown? <code>$\LaTeX$</code>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> I’ll take that, thanks very much.</p>
+<p>Footnotes were also irritating. Instead of the simple <code>^[footnote]</code> in R Markdown, I was using this: <code>&lt;sup id="a1"&gt;[1](#fn1)&lt;/sup&gt;</code>, with the accompanying <code>&lt;b id="fn1"&gt;1&lt;/b&gt; footnote (#a1)</code> (actually, I think that last part is missing something). I thought I was doing great. Hahaha!</p>
+</section>
+<section id="enter-r-pt.-1" class="level3">
+<h3 class="anchored" data-anchor-id="enter-r-pt.-1">Enter R (pt.&nbsp;1)</h3>
+<p>So I liked the sustain theme that I had chosen, but after seeing that <a href="https://juliasilge.com/">Julia Silge</a> writes her lovely GitHub pages blog in R Markdown, I thought, ‘huh? That would be <em>much</em> easier’. Yes, and no. Big no.</p>
+<p>First, I changed my theme. I chose the same one as Julia, simply because I liked it the most. It’s called the so-simple theme, and its developer Michael Rose is a <em>really</em> nice guy (you can see him <a href="https://github.com/mmistakes/so-simple-theme/issues/227">here</a> helping me out of my confusion relative to a point I will get to shortly about jekyll). So now I was happy, with a cool new blog that I could write in R Markdown.</p>
+<p>In order to convert the .Rmd R Markdown files to ordinary markdown .md files that both jekyll and GitHub can process, I first used the same converting <a href="https://github.com/dgrtwo/dgrtwo.github.com/blob/master/_scripts/knitpages.R">function</a> that Julia uses, adapted by David Robinson from <a href="https://jfisher-usgs.github.io/r/2012/07/03/knitr-jekyll">Jason Fisher</a>. It was ok, except it converted whatever .Rmd files I had in the source folder, even ones that weren’t ready, and I still had to manually change the draft to a full post (changing the title to the date format jekyll uses) and move it around. There were a few other things about it that discommoded me, I can’t remember now. Anyway, I then found <a href="https://github.com/AndySouth/andysouth.github.io/blob/master/rmd2md.r">this one</a>, adapted by a chap called Andy South. I liked the look of this and set about customizing it to do what I wanted. <em>Then</em> I realised just how annoying the R Markdown – jekyll – GitHub pages workflow can be.</p>
+<p>The issues had to do with the paths that jekyll and knitr use to find the files they need to create the posts I was writing. Any file that starts with <code>_</code> is ignored by jekyll. That’s useful for putting our .Rmd files in, so I did, in a <code>_source</code> folder. But then when I tried to preview the drafts with jekyll (which was forever unreliable even before this problem), it couldn’t find the images which were embedded in a <code>_</code> folder. Fine. Then I made <code>_source</code> into <code>source</code> and knitr started complaining about file paths. Not to mention that jekyll started giving errors about datetimes being ‘nil’ and refusing to build or serve the site 😣. Putting the images on imgur solved that, but that meant that I was writing code chunks that I was never actually evaluating at “knitting time” (conjures images of grannies sitting at fireplaces), and just linking to the images from the output I had run earlier. Hardly ideal.</p>
+<p>Another thing I like to do in my R Markdown html output is to include some custom css, nothing too fancy, just things like background images and different fonts. I actually don’t like css much, nor do I like html. So naturally I tried to do this on a blog post. It’s pretty easy in R Markdown: <code>custom_css:</code> just goes in the YAML header, nothing too taxing on this most weary of boys. And I had a funky little system of converting all this to .md, moving around files with <code>system2()</code> and so forth. I thought I was rocking. Of course not. Apart from the same problem with file paths, the css just never showed up. So then I modified the layouts and so on. (There are lots of examples of how to do this on the web.) No dice. Or sometimes, like the headers. But for all the posts, not just the one I wanted. Sigh. And remember, I am principally a “data analyst” or some type of “data scientist/researcher”. I’m not a web developer and I have very limited patience for messing around with scss variables etc etc. This is not to criticise the theme, it’s great, but I want to spend my time writing blog posts that interest me, not messing around with html and css.</p>
+</section>
+<section id="enter-r-pt.-2" class="level3">
+<h3 class="anchored" data-anchor-id="enter-r-pt.-2">Enter R (pt.&nbsp;2)</h3>
+<p>So I had seen the genius Yihui’s blogdown package a little while ago, and I thought to myself, ‘that’s an option for the future’. I had just learned all about jekyll and I wasn’t particularly in the mood for diving into the world of Hugo. However, necessity is the mother of doing stuff. So I dived in.</p>
+<p>I have to say, blogdown seemed <em>amazing</em>. Do practically everything from inside Rstudio? Fantastic. Write all my posts in R Markdown and leave behind all those finicky converting functions? More fantastic. Live preview (remember my jekyll preview of drafts almost never worked)? Still more fantastic. Ok, Hugo works a little differently to jekyll, and involved a bit of a learning curve, but it’s actually quite straightforward. And blogdown just makes all of this tremendously easy, so I can get back to writing about stuff that interests in me, in an editor that I like (Rstudio), using a great and simple language (R Markdown, okay, ‘language’ might a bit much, but I can certainly use a few languages in it). You rock, Yihui, you really do. And Hugo is very fast. Why is this good? When you’re previewing your blog post as you write in RStudio, it makes a difference. Ok, let’s get to the meat of the post.</p>
+</section>
+<section id="how-to-set-up-your-own-github-pages-blog-and-post-using-blogdown" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-set-up-your-own-github-pages-blog-and-post-using-blogdown">How to set up your own GitHub pages blog and post using blogdown</h2>
+<p>1: This is not a Git tutorial. <a href="https://git-scm.com/book/en/v2">Lots</a> of those exist already; here I will be using git commands in Terminal (I write on a macbook) without much explanation.</p>
+<p>2: Neither is this a Hugo or R Markdown tutorial. <a href="https://gohugo.io/overview/introduction/">Those</a> <a href="https://kbroman.org/knitr_knutshell/pages/Rmarkdown.html">exist</a> already, too.</p>
+<p>Ok, let’s get started. I’m assuming you have RStudio and all that installed.</p>
+<section id="blogdown-and-hugo" class="level3">
+<h3 class="anchored" data-anchor-id="blogdown-and-hugo">blogdown and Hugo</h3>
+<p>First, open up RStudio. If you don’t have the devtools package installed, install it (<code>install.packages("devtools")</code>). Now, using this, we install blogdown (<code>devtools::install_github('rstudio/blogdown')</code>).</p>
+<p>Next, <code>library(blogdown)</code>. We can use blogdown to install Hugo, but if you are using a mac, you may need to install <a href="https://brew.sh/">homebrew</a> first. It’s easy, just paste <code>/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</code> into Terminal. If you don’t use Terminal or the command line much, now is a good time to start. It can be extremely useful.</p>
+<p>Now we can run <code>install_hugo()</code>. Next, we need to do some Git things.</p>
+</section>
+<section id="github" class="level3">
+<h3 class="anchored" data-anchor-id="github">GitHub</h3>
+<p>If you do not have a GitHub account, you can open one <a href="https://github.com/join">here</a>. Choose a good username, it will be the name of your GitHub pages website, unless you pay for a seperate domain name.</p>
+<p>On your GitHub home page, there is a <code>+</code> sign with a downward arrow in the upper-right-hand corner. Click this and go to ‘New Repository’. This new repo will be the repo for your website. For example, mine is RobertMyles.github.io, since my username is RobertMyles. (So the entire repo address is RobertMyles/RobertMyles.github.io). Click ‘Create Repository’ and we’re good to “clone”.</p>
+<p>On the page of the repo, there is an option to “Clone or Download” on the right-hand side. Clone with HTTPS by copying the url of the repo to your clipboard. In Terminal, or whatever command line tool you use, type: - <code>git clone &lt;url&gt;</code>, where <code>&lt;url&gt;</code> is the url you just copied. (By the way, for first time Git use, you need to authenticate your machine. Details <a href="https://help.github.com/articles/generating-an-ssh-key/">here</a>.) - <code>cd &lt;directory&gt;</code>, where <code>&lt;directory&gt;</code> is the name of the folder that you just copied from GitHub. If you don’t know how <code>cd</code> works, you will need to be in the <em>enclosing folder</em> for that bit of script to work (<code>cd</code> moves the working directory like <code>setwd()</code> in R). What we’re doing is moving into the new folder that we have just cloned.</p>
+<p>This folder may or may not have a “README.md” file, depending on whether you chose that option when you set it up. It will have an invisible <code>.git</code> folder. If it does have a “README”, delete it, as blogdown needs an empty directory to start. If you do delete this file, you will need to run the following git commands afterwards:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">'delete README.md'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin master</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Before we move back to blogdown, you need to create another repository, one that will host all of the hugo/blogdown content. I called this one “website-hugo”, but’s what it’s called isn’t important (short and easy to type is better). Like we did with the first repo, clone this one on your computer (a “local” repo, in Git-world).</p>
+</section>
+</section>
+<section id="blogdown-again" class="level2">
+<h2 class="anchored" data-anchor-id="blogdown-again">Blogdown (again)</h2>
+<p>In Rstudio, either set your working directory to the <em>Hugo</em> folder that we just cloned, or open an RStudio project in this folder. I don’t think it’s necessary to open a project, and anyway I keep getting problems trying to shut down <a href="https://support.rstudio.com/hc/en-us/community/posts/223936487-RStudio-won-t-quit-when-closing-Projects-on-Mac-">projects</a>, but remember to set the working directory each time you want to do something on the website (<code>setwd("path/to/your/folder")</code>).</p>
+<p>Ok, so in the console in RStudio, type <code>new_site()</code>. This will create a site for you with a theme adapted by Yihui that you can interactively tinker with. I quite like this theme, but if you fancy using another, there is a list <a href="https://themes.gohugo.io/">here</a>. The relevant function is <code>install_theme()</code>. All of the folders of the site should be now in the Hugo folder (<em>not</em> the username.github.io folder). If you’re happy with the theme (for now, it’s easy to get a new theme), then return to Terminal, <code>cd</code> to the Hugo folder if you are not already there (it might be easiest to return to your home folder first, with <code>cd ~</code>) and type <code>rm -rf public</code>.</p>
+<section id="git-submodules" class="level3">
+<h3 class="anchored" data-anchor-id="git-submodules">Git Submodules</h3>
+<p>This is where <a href="https://github.com/blog/2104-working-with-submodules">Git Submodules</a> come in, and they are really useful. Forget about the other approach using orphaned masters and such, this is the best way to do it (and it’s <a href="https://gohugo.io/tutorials/github-pages-blog/">here</a> on the Hugo website). The idea of a Git submodule is that the repo you want to use can make use of a folder from another repo. Simple. So in our case, our website repo (e.g.&nbsp;RobertMyles.github.io) will use the <code>public</code> folder from our Hugo repo as a submodule (that is, a folder inside it). There will be very little in your Hugo folder repo on GitHub, it should say something like “public @ f8fdbff” where the public folder is.</p>
+<p>So, the git command to get all this running is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> submodule add <span class="at">-b</span> master git@github.com:<span class="op">&lt;</span>username<span class="op">&gt;</span>/<span class="op">&lt;</span>username<span class="op">&gt;</span>.github.io.git public</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>where <code>&lt;username&gt;</code> is your username.</p>
+<p>So now I think it’s a good idea to write a little test blog post on your nice new blog. The blogdown command (there is more than one, see <code>?hugo_cmd</code>) is <code>new_post()</code>. This function has some options for the name of the author and the type of file created (markdown or R Markdown). I didn’t want to set these things every time, so I opened up my .Rprofile file (you can create it on your home folder if you don’t have one. Use Terminal: <code>cd ~; touch '.Rprofile'</code>) and added the following lines to it:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## blogdown options:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">options</span><span class="er">(</span><span class="ex">blogdown.use.rmd</span> = TRUE<span class="kw">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">options</span><span class="er">(</span><span class="ex">blogdown.author</span> = <span class="st">'Robert McDonnell'</span><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now <code>new_post()</code> will automatically create an . Rmd and use me as the author. There are a couple of options you can use in the YAML front matter (the stuff between the <code>---</code> lines at the top of the post). The ones I used for this post are below, and there is a full list <a href="https://gohugo.io/content/front-matter/">here</a>. I used <code>draft: true</code> while I was working on the post (no more <code>_drafts</code> crap, yay!), but when you want this to actually appear on your site, delete the line or set it to false.</p>
+<pre><code>---
+title: How to make a GitHub pages blog with RStudio and Hugo
+author: Robert McDonnell
+date: '2017-02-01'
+categories:
+  - R
+  - GitHub
+  - Hugo
+tags:
+  - R
+  - GitHub
+description: 'How I produce this blog'
+draft: true
+---</code></pre>
+<p>Once you’ve written something, it’s time to go back to our buddy Terminal. There are some suggestions for pushing to GitHub using custom builds in RStudio <a href="https://github.com/rstudio/blogdown/issues/39">here</a>, but I found that this was more effort than it was worth (like I said, knowing the command line is a good thing) and anyway gave errors about permissions (I fully admit this may have been my own fault). The Hugo tutorial I linked to earlier suggests using a small bash script, but since it’s so small we can just as easily do it in Terminal. First, we move to the public folder (remember, we are in the Hugo repo folder) and add our changes to be committed:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> public</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Next, we commit and push to GitHub (that’s not so hard now, is it?)</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">'lovely new site'</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin master</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now go check out your <code>https://&lt;username&gt;.github.io</code> website!</p>
+<p>Posts are easy, just run the <code>new_post()</code> command again. You can preview the page with <code>serve_site()</code> (or click on “Live Preview Site” on the Addins button in Rstudio). <code>build_site()</code> then builds the site with our pal Hugo, and the git commands above push it all to your repo and to the site.</p>
+</section>
+<section id="migrating-from-jekyll" class="level3">
+<h3 class="anchored" data-anchor-id="migrating-from-jekyll">Migrating from jekyll</h3>
+<p>If you already have a jekyll-powered GitHub pages blog, you will have to make a few adjustments for Hugo. First of all, you may need to change any <code>{% raw %}</code> Liquid tags you had (I had to ), and secondly (and more importantly), you will have to include <code>url:</code> in the YAML to point to the old urls where the webpages currently (or previously, if you’ve been reckless and already set up your new Hugo blog). For example, I had a blog post at robertmyles.github.io/ElectionsBR.html. After setting up this new version of the site with blogdown and Hugo, the blog post was at something like <code>https://robertmyles.github.io/posts/ElectionsBR.html</code> (I can’t remember exactly). So any links to the original post will now be broken, which is a shame since that post was quite popular on a Brazilian facebook group (“Métodos”, full of nice people who are interested in social science methods and stuff like R). So the YAML for the new version of the post now contains:</p>
+<pre><code>url: /ElectionsBR.html</code></pre>
+<p>Note the leading slash. Perhaps <a href="https://gohugo.io/extras/aliases/">aliases</a> will be of use, it depends on the structure of your previous site.</p>
+<p><em>(Note: these repos no longer exist [May 2019])</em> To see the exact layout of my two repos, see https://github.com/RobertMyles/website-hugo and https://github.com/RobertMyles/RobertMyles.github.io. And please leave a comment or question if you have one. I’m sure I’ll customise this <a href="https://github.com/jpescador/hugo-future-imperfect">theme</a> I’ve chosen, the comments are too dark in the code sections, for example. But that can wait for another day.</p>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>There are three guides that I found on the net, not including the Hugo tutorial, and a big thanks to the authors for taking the time to write those posts and share their experience. In the end I think they confused me more than they helped, but it was a learning process! One is <a href="https://hjdskes.github.io/blog/deploying-hugo-on-personal-gh-pages/index.html">here</a>, by Jente Hidskes, which has some curious items in the bash scripts he provides (why the “Grabbing one file from the $SOURCE&nbsp;branch so that a commit can be made” part, when “touch file” would have been far easier, for example? And anyway, it didn’t work, for me, there is an error with <code>git rm --cached</code> from what I can figure out, and some other lines didn’t work.) Another is <a href="https://code.markedmondson.me/new-blog-down/">here</a>, which is closest to what I did (apart from the Hugo tutorial), except it’s missing a whole host of info on blogdown, Hugo and particularly GitHub. It also takes the project-custom-build approach, which gave me problems. But nice site, Mark. The last one is <a href="https://proquestionasker.github.io/blog/Making_Site/">here</a>, which is lovely and detailed (thanks Amber for taking the time), although it depends on the (I think) faulty bash scripts of Jente. It is also overly complicated, there is no need for the orphan master process. Anyway, they all helped, so thanks folks.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>If you are <em>not</em> using the default blogdown Hugo theme, you will have to enable mathjax, and include <a href="https://github.com/yihui/hugo-lithium-theme/blob/7d436d803df90c873cdaecf24aeeff827696d77c/layouts/partials/footer.html#L21-L30">this</a> piece of html in one of the html files in your layouts/partials files, preferably one that is loaded with every blog post, like footer or header. I put mine in footer.html.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

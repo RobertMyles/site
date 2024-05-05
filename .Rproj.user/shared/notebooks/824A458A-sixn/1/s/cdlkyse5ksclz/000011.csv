@@ -1,0 +1,25 @@
+"0","rugger <- list_rbind(results) |> 
+  select(Pos:year, -T) |> 
+  mutate(
+    PD = PF - PA,
+    slam = case_when(
+      year %in% c(2002, 2004, 2010, 2022) & name == ""France"" ~ TRUE,
+      year %in% c(2003, 2016) & name == ""England"" ~ TRUE,
+      year %in% c(2005, 2008, 2012, 2019) & name == ""Wales"" ~ TRUE,
+      year %in% c(2009, 2018, 2023) & name == ""Ireland"" ~ TRUE,
+      .default = FALSE
+      )
+    )
+"
+"1","[1m[33mError[39m in `mutate()`:[22m
+[38;5;232m[36mℹ[38;5;232m In argument: `slam = case_when(...)`.[39m
+[1mCaused by error in `case_when()`:[22m
+[38;5;232m[33m![38;5;232m Failed to evaluate the left-hand side of formula 1.[39m
+[1mCaused by error:[22m
+[33m![39m object 'name' not found
+Backtrace:
+[90m  1. [39m[1mdplyr[22m::mutate(...)
+[90m  8. [39m[1m[94mdplyr::case_when([39m[22m...[1m[94m)[39m[22m
+[90m  9. [39mdplyr:::case_formula_evaluate(...)
+[90m 11. [39m[1mrlang[22m::eval_tidy(pair$lhs, env = default_env)
+"

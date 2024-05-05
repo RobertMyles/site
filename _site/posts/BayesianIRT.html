@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2016-05-21">
+
+<title>Rob McDonnell:Blog – Bayesian IRT in R and Stan</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rob McDonnell:Blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Bayesian IRT in R and Stan</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">IRT</div>
+    <div class="quarto-category">Stan</div>
+    <div class="quarto-category">MCMC</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 21, 2016</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>This blog post is outdated and the code will not run – for newer, cleaner IRT R code, see this <a href="https://github.com/RobertMyles/IRT">github repo</a> and this <a href="https://robertmylesmcdonnell.netlify.com/2018/01/05/stan-irt-code/">blog post</a>.</strong></p>
+<p><em>The code below on Stan is also available as an <a href="https://rpubs.com/RobertMylesMc/Bayesian-IRT-ideal-points-with-Stan-in-R"><code>RPub webpage</code></a>, if you’d rather work through the examples than read all of the post.</em></p>
+<p>One of the first areas where Bayesian modelling gained an entry point into the social sciences (and in particular political science) was in the area of legislator ideal points, with the use of the Item-Response Theory (IRT) models from the educational testing literature in psychology. This topic proved to be the perfect subject for the comparison of Bayesian and frequentist methods, since ideal point creation usually depends on nominal voting data, which may contain a lot of missing data (legislators who miss votes or abstain) and a huge number of parameters (hundreds of roll-calls by hundreds of legislators). The benefits of Bayesian methods over frequentist techniques for ideal point analysis is discussed at length elsewhere<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, but here I’ll talk about a side-effect of using Bayesian methods for creating ideal points from roll-call data, that is, the long time it can take to run these models on a desktop computer. (In the following discussion, I refer to ‘legislators’, but these IRT models apply to all types of response to a question, whether the ‘question’ is a vote by a politician or a judge or questions on a test or survey.)</p>
+<p>To create ideal points in <code>R</code>, you have three or four main options if you want to use ol’ Bayes. First, there is the ready-made <bdi style="font-family:courier; color:#011a99">ideal()</bdi> command of the package <a href="https://cran.r-project.org/web/packages/pscl/index.html">pscl</a> by Simon Jackman &amp; co. <code>pscl</code> includes some very handy little functions for those interested in generating ideal points from legislative voting data – summary statistics and plots are all easy to make, and come ready-made, such as party loyalty statistics, for example. However, <bdi style="font-family:courier; color:#011a99">ideal()</bdi> suffers somewhat from being so ‘ready’: it is a bit unsuited for more complex or indivualistic models compared to some of the options mentioned later. I’ve also repeatedly run into problems with <bdi style="font-family:courier; color:#011a99">ideal()</bdi> when trying to use some of the <code>pscl</code> package options (<bdi style="font-family:courier; color:#011a99">dropList()</bdi>, for example), or when estimating multidimensional models. In terms of <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a>, only one chain at a time may be run. In fact, it is what it says on the tin: it’s a Bayesian version of W-NOMINATE, which means it has the advantages of that program (easy to use) and the disadvantages (when it doesn’t work you’re not sure why…a bit ‘black-box’).</p>
+<p>The <code>MCMCpack</code> package also allows for the creation of ideal points, although its output is slightly less friendly to the beginner (an <bdi style="font-family:courier; color:#011a99">mcmclist</bdi> object). Its <bdi style="font-family:courier; color:#011a99">MCMCirt1d()</bdi> command is pretty similar to <bdi style="font-family:courier; color:#011a99">ideal()</bdi> but allows for setting ‘soft’ constraints rather than the spike prior that pscl uses to pin down the position of (at least) two legislators. This is better for two reasons, in my opinion. First, it avoids a hard constraint on legislators for legislatures in which we do not have strong <em>a priori</em> evidence to suppose that, for example, Legislator X is an extremist to the right, or Legislator Y to the left (the use of extremist legislators on either end of the supposed scale ‘anchors’ it). With <code>MCMCpack</code>, the ideal points of the constrained legislators are drawn from a truncated normal distribution (truncated at zero) and so Legislator X (our extremist to the right) simply cannot have an ideal point on the left side of the scale and the opposite for our left-side extremist legislator (the use of these soft constraints obviates the need for them actually <em>being</em> extremists too). I’ve also found <code>MCMCpack</code> to be faster, although I haven’t tested that formally. In either case, both functions are quite similar. <code>MCMCpack</code> also has functions for dynamic models, robust &amp; multidimensional models, and Ordinal IRT. They’ve all worked well for me with the exception of <bdi style="font-family:courier; color:#011a99">MCMCirtkd()</bdi>, the multidimensional model function, which never seems to get started.</p>
+<p>The next option is to use the <code>BUGS</code> modelling language, either with <code>BUGS</code> itself or its cousin <code>JAGS</code>, both of which have been heavily used in the literature but can be <strong>extremely</strong> slow. I don’t recommend their use for ideal points.</p>
+<p>Next, we have <a href="https://mc-stan.org/">Stan</a>, which doesn’t have the simpler syntax of <code>JAGS</code> &amp; <code>BUGS</code>, but is simply incomparably better in terms of speed. However, since it’s newer, you won’t find the amount of resources available for <code>BUGS</code>, for example (like <a href="https://www.jstatsoft.org/article/view/v036c01">here</a>). There are a few resources: a simple one-dimensional model can be seen on Pablo Barberá’s <a href="https://github.com/pablobarbera/quant3materials/blob/master/bayesian/lab14_IRT_issues.R">github</a>; a friend of mine, Guilherme Duarte, has an example of a dynamic model on his github <a href="https://github.com/duarteguilherme/Quinn-Martin-Replication">too</a>.</p>
+<p>There are some other resources available, but relate to slightly different IRT models, more common in the educational-testing literature, and less so in ideal point studies: the ‘Rasch’ <a href="https://www.stat.columbia.edu/~gelman/research/unpublished/stan_v_stata.pdf">model</a>; the <a href="https://rpubs.com/rfarouni/64284">2PL model</a> (in which a ‘yes’ answer has a specific associated movement in the dimensional space and the discrimination parameter only takes on postive values; in the ideal-point model of <a href="https://www.cs.princeton.edu/courses/archive/fall09/cos597A/papers/Jackman2001.pdf">Jackman</a> it can possess negative and positive values).</p>
+<p>Since there are so few Stan resources for ideal point IRT models, I thought I’d post a few models here. The code is also available as an <a href="https://rpubs.com/RobertMylesMc/Bayesian-IRT-ideal-points-with-Stan-in-R">RPub webpage</a>, as mentioned earlier. The statistical model we’ll employ is:</p>
+<p><span class="math display">\[
+y_{ij} = \beta_j \bf{x_i} - \alpha_j,
+\]</span></p>
+<p>where <span class="math inline">\(y_{ij}\)</span> are the votes, in binary form (1 = ‘Yes’; 2 = ‘No’); the <span class="math inline">\(\bf x_i\)</span> are the ideal points of the legislators; and <span class="math inline">\(\beta_j\)</span> and <span class="math inline">\(\alpha_j\)</span> are the discrimination and difficulty parameters of the model.</p>
+<p>Starting from scratch in <code>R</code> in a new session (you’ll need a C++ compiler if you don’t have one, see <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">here</a>):</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-1_c37d8e07355fcfcb2b9eee6e0ecebf55">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rstan"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"rstan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ideal points are created from a <em>j</em> <inlinemath math="\times"> <em>m</em> matrix of voting data (<em>j</em> legislators voting on <em>m</em> votes), coded <bdi style="font-family:courier">1</bdi> for ‘yes’ and <bdi style="font-family:courier">0</bdi> for ‘no’ and abstentions. Missing data are <bdi style="font-family:courier">NA</bdi>, and are deleted out before running in Stan. We can easily simulate data for this type of thing, but let’s use a real database. This data is from the 53rd legislature of the Brazilian Federal Senate (with thanks to <a href="https://www.cebrap.org.br/v2/pages/home">CEBRAP</a>, who built the original database, this comes from an extended version I created), we’ll download it from my Github repo. You’ll need to install <code>readr</code> if you don’t have it. (I also have the bad habit of naming my data as “data”… not generally a great idea. It’ll be ok here, though.)</inlinemath></p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-3_0cb59c4b00f7f54a9ad409aeb16536fd">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/RobertMyles/Bayesian-Ideal-Point-IRT-Models/master/Senate_Example.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So let’s take a look at the data. You’ll see the column names are “VoteNumber”, “SenNumber”, “SenatorUpper”, “Vote”, “Party”, “GovCoalition”, “State”, “FP”, “Origin”, “Contentious”, “IndGov”, and “VoteType”. I’ve kept them in this state so that we can tidy things up and manipulate things a little, stuff you’ll probably have to do any time you deal with real data of this sort. We can also have a look later at different plotting options using some of these variables. First, let’s change the votes, which are in the format “S” (<em>Sim</em>, ‘Yes’), “N” (‘No’), “A” (Abstention), and “O” (Obstruction), to numeric format.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-4_df7316a680900241ebc1e8c1df9844fe">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Vote[data<span class="sc">$</span>Vote<span class="sc">==</span><span class="st">"S"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Vote[data<span class="sc">$</span>Vote<span class="sc">==</span><span class="st">"N"</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Vote[data<span class="sc">$</span>Vote  <span class="sc">%in%</span> <span class="fu">c</span>(<span class="cn">NA</span>,<span class="st">"O"</span>,<span class="st">"A"</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Vote <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>Vote)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we’ll create the ‘vote matrix’. This is the <em>j</em> <span class="math inline">\(\times\)</span> <em>m</em> matrix that we will use to create the ideal points with Stan. The rows will be the legislators and the columns the votes. We will also need to deal with the issue of <a href="https://polmeth.wustl.edu/files/polmeth/river03.pdf">‘constraints’</a>: we need to identify <em>d(d + 1)</em> legislators in <em>d</em> dimensions and constrain their ideal points in some way. For now, we’ll just organise our vote matrix in such a way that the two legislators that will be constrained are placed in rows 1 and 2 of the matrix. For this example, we can use Senators Agripino and Suplicy, who belong to two parties that are generally considered to be on opposite sides of the political ‘space’ that we will place our ideal points upon. Organizing things in this way is not necessary but makes the Stan model code cleaner later on.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-5_7bb99df480b2aa73c4413ba593ed44f6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>FullID <span class="ot">&lt;-</span> <span class="fu">paste</span>(data<span class="sc">$</span>SenatorUpper, data<span class="sc">$</span>Party, <span class="at">sep=</span><span class="st">":"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>NameID <span class="ot">&lt;-</span> <span class="fu">unique</span>(data<span class="sc">$</span>FullID)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>J <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(NameID))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">"JOSE AGRIPINO:PFL"</span>, NameID)  <span class="co">#34</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">"EDUARDO SUPLICY:PT"</span>, NameID) <span class="co">#12</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>NameID <span class="ot">&lt;-</span> NameID[<span class="fu">c</span>(<span class="dv">34</span>, <span class="dv">12</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>, <span class="dv">13</span><span class="sc">:</span><span class="dv">33</span>, <span class="dv">35</span><span class="sc">:</span>J)]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,J,M)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>Rows <span class="ot">&lt;-</span> <span class="fu">match</span>(data<span class="sc">$</span>FullID, NameID)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>Cols <span class="ot">&lt;-</span> <span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>Columns <span class="ot">&lt;-</span> <span class="fu">match</span>(data<span class="sc">$</span>VoteNumber, Cols)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(data)[<span class="dv">1</span>]){</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  y[Rows[i], Columns[i]] <span class="ot">&lt;-</span> data<span class="sc">$</span>Vote[i]</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(y) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">unique</span>(NameID), <span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I presume you’re using RStudio. Clicking on the viewer should show you the vote matrix, which should look like this:</p>
+<p><img src="https://i.imgur.com/iOh3lfY.png?1"></p>
+<p>Next we’ll make a dataframe of legislator variables which we’ll use later on, and one of vote characteristics.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-6_2791aa4ee9cc0607cb0ebc8313ea311d">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ldata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">FullID =</span> <span class="fu">unique</span>(NameID),</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">Party =</span> data<span class="sc">$</span>Party[<span class="fu">match</span>(<span class="fu">unique</span>(NameID),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                             data<span class="sc">$</span>FullID)],</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">GovCoalition =</span> data<span class="sc">$</span>GovCoalition[<span class="fu">match</span>(<span class="fu">unique</span>(NameID),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                                                           data<span class="sc">$</span>FullID)],</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">Name =</span> data<span class="sc">$</span>SenatorUpper[<span class="fu">match</span>(<span class="fu">unique</span>(NameID),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                                                   data<span class="sc">$</span>FullID)],</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">State =</span> data<span class="sc">$</span>State[<span class="fu">match</span>(<span class="fu">unique</span>(NameID),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                                             data<span class="sc">$</span>FullID)],</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">row.names =</span> <span class="cn">NULL</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>vdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">VoteNumber =</span> <span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">VoteType =</span> data<span class="sc">$</span>VoteType[<span class="fu">match</span>(<span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                                                   data<span class="sc">$</span>VoteNumber)],</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">SenNumber =</span> data<span class="sc">$</span>SenNumber[<span class="fu">match</span>(<span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                                                     data<span class="sc">$</span>VoteNumber)],</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">Origin =</span> data<span class="sc">$</span>Origin[<span class="fu">match</span>(<span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                                               data<span class="sc">$</span>VoteNumber)],</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">Contentious =</span> data<span class="sc">$</span>Contentious[<span class="fu">match</span>(<span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>                                                         data<span class="sc">$</span>VoteNumber)],</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">IndGov =</span> data<span class="sc">$</span>IndGov[<span class="fu">match</span>(<span class="fu">unique</span>(data<span class="sc">$</span>VoteNumber),</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>                                               data<span class="sc">$</span>VoteNumber)],</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Stan is not like <code>JAGS</code> and <code>BUGS</code> in that <bdi style="font-family:courier">NA</bdi> is unwieldy to incorporate. The best thing to do is to delete missing data out, as can be seen in Barberá’s script linked to earlier, which I’ll copy here.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-7_3b62266cb5152af3445f9acc3a4ca0ee">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>J, <span class="at">times=</span>M)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>M, <span class="at">each=</span>J)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>miss <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">is.na</span>(y))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> N <span class="sc">-</span> <span class="fu">length</span>(miss)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> j[<span class="sc">-</span>miss]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> m[<span class="sc">-</span>miss]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[<span class="sc">-</span>miss]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we’ll set our initial values. There are various ways to do this, ranging from leaving it up to Stan (i.e.&nbsp;not setting any values) to creating lists with specific starting values for each parameter. What we’ll do here is use the starting values as a way to start the parties off in separate places. This has several advantages: we already know that these parties don’t vote together very often (i.e., they are parties of the government and the opposition) and so we can speed up the model by starting the legislators off where we already know they’ll be (i.e.&nbsp;right-wing parties on the right etc.). This also has the benefit of making it less likely that we’ll end up with ‘sign-flips’, where a legislator with a bi-modal posterior distribution has an ideal point from the ‘wrong’ mode.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> For the discrimination and difficulty paramters, we’ll use a random sample from normal distributions. We’ll also save all this information as <code>stan.data</code>, which is the list of data we’ll use with Stan.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-8_3d87822209218da3732351050f5429fc">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ldata<span class="sc">$</span>ThetaStart <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(J, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ldata<span class="sc">$</span>ThetaStart[ldata<span class="sc">$</span>Party<span class="sc">==</span><span class="st">"PFL"</span> <span class="sc">|</span> ldata<span class="sc">$</span>Party<span class="sc">==</span><span class="st">"PTB"</span> <span class="sc">|</span> ldata<span class="sc">$</span>Party<span class="sc">==</span><span class="st">"PSDB"</span> <span class="sc">|</span> ldata<span class="sc">$</span>Party<span class="sc">==</span><span class="st">"PPB"</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>ldata<span class="sc">$</span>ThetaStart[ldata<span class="sc">$</span>Party<span class="sc">==</span><span class="st">"PT"</span> <span class="sc">|</span> ldata<span class="sc">$</span>Party<span class="sc">==</span><span class="st">"PSOL"</span> <span class="sc">|</span> ldata<span class="sc">$</span>Party<span class="sc">==</span><span class="st">"PCdoB"</span>] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ThetaStart <span class="ot">&lt;-</span> ldata<span class="sc">$</span>ThetaStart</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>initF <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">theta=</span>ThetaStart, <span class="at">beta=</span><span class="fu">rnorm</span>(M, <span class="dv">0</span>, <span class="dv">2</span>), <span class="at">alpha=</span><span class="fu">rnorm</span>(M, <span class="dv">0</span>, <span class="dv">2</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>stan.data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">J=</span>J, <span class="at">M=</span>M, <span class="at">N=</span>N, <span class="at">j=</span>j, <span class="at">m=</span>m, <span class="at">y=</span>y, <span class="at">ThetaStart=</span>ThetaStart)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Stan model code differs from those mentioned above in a few aspects. Firstly, variables need to be declared, along with their type. For example, <em>J</em>, which is our index for the number of senators, is declared in the following code as an integer. The parameters are likewise declared, as real numbers. The model code has three blocks: data, parameters and the model itself (there are other blocks possible, such as<bdi style="font-family:courier; color:#011a99">generated data</bdi>, see the Stan <a href="https://mc-stan.org/documentation/">manual</a>. Stan code is also imperative – the order of the blocks matters.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-9_c5b75d1d3ba4c69b118e3a23be32f81c">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stan.code <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="st">    data {</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; J; //Senators</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; M; //Proposals</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; N; //no. of observations</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1, upper=J&gt; j[N]; //Senator for observation n</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1, upper=M&gt; m[N]; //Proposal for observation n</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=0, upper=1&gt; y[N]; //vote of observation n</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="st">    parameters {</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="st">    real alpha[M];</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="st">    real beta[M];</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="st">    real theta[J];</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="st">    model {</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="st">    alpha ~ normal(0,5);</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="st">    beta ~ normal(0,5);</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="st">    theta ~ normal(0,1);</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="st">    theta[1] ~ normal(1, .01);</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="st">    theta[2] ~ normal(-1, .01);</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="st">    for (n in 1:N)</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="st">    y[n] ~ bernoulli_logit(theta[j[n]] * beta[m[n]] - alpha[m[n]]);</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="st">    }"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This IRT model can be run using either the logistic or probit link function, however, since Stan has a built in <bdi style="font-family:courier; color:#011a99">bernoulli_logit</bdi>, we’ll use that. You can see from the model block above that we have specified specific prior distributions for <bdi style="font-family:courier; color:#011a99">theta[1]</bdi> and <bdi style="font-family:courier; color:#011a99">theta[2]</bdi>. These are our constrained legislators – Agripino and Suplicy. We can do this using truncated normal distributions in Stan (i.e.&nbsp;<bdi style="font-family:courier; color:#011a99">theta[1] ~ normal(1, .01)T[0,]</bdi>, for example), but in my experience this makes things slower and increases the number of divergent transitions reported by Stan. We then use the <code>stan()</code> command to run our model in Stan. Here, I’m using 1000 iterations just to show (as it doesn’t take too long); these IRT models generally need more iterations than other models, for good estimates from this data, I run 5000 iterations with 2500 burn-in. A couple of hundred iterations usually suffices in Stan, depending on the model. The number of chains and cores are linked to what I have available on my computer. You can check this with the parallel package using <bdi style="font-family:courier; color:#011a99">detectCores()</bdi>. A quick way to check convergence of the chains is with a graph of Rhat, shown below.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-10_d1959a9b021c2b2681c1b411bf894b72">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stan.fit <span class="ot">&lt;-</span> <span class="fu">stan</span>(<span class="at">model_code=</span>stan.code, <span class="at">data=</span>stan.data, <span class="at">iter=</span><span class="dv">3000</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">chains=</span><span class="dv">4</span>, <span class="at">thin=</span><span class="dv">5</span>, <span class="at">init=</span>initF,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">verbose=</span><span class="cn">TRUE</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">seed=</span><span class="dv">1234</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stan_rhat</span>(stan.fit, <span class="at">bins=</span><span class="dv">60</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="https://i.imgur.com/YNBevMV.png?1"></p>
+<p>Values of Rhat should be 1.03 or lower. As you can see, even from 1000 iterations, we can be confident these chains are converging.</p>
+<section id="graphing-ideal-points" class="level2">
+<h2 class="anchored" data-anchor-id="graphing-ideal-points">Graphing Ideal Points</h2>
+<p>I find the best way to plot ideal points is by using ggplot2. It’s automatically loaded as part of rstan. I also prefer to use an mcmc.list object, simply because I’m more used to it. But you can use the <bdi style="font-family:courier; color:#011a99">stan.fit</bdi> object directly if you prefer.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-11_bc12a669b0a447776de8d18a7b12f60c">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>MS <span class="ot">&lt;-</span> <span class="fu">As.mcmc.list</span>(stan.fit)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sMS <span class="ot">&lt;-</span> <span class="fu">summary</span>(MS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are various things we can plot from the summary above. Of main interest is usually the ideal points, so we’ll start with those first. First, let’s extract the ideal points (“theta”) from the summary, along with the lower and upper ends of the 95% credible interval:</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-12_0b37b3ea6f0348ebcdc42f014fcddfb7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Theta <span class="ot">&lt;-</span> sMS<span class="sc">$</span>statistics[<span class="fu">grep</span>(<span class="st">"theta"</span>, <span class="fu">row.names</span>(sMS<span class="sc">$</span>statistics)),<span class="dv">1</span>]</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ThetaQ <span class="ot">&lt;-</span> sMS<span class="sc">$</span>quantiles[<span class="fu">grep</span>(<span class="st">"theta"</span>, <span class="fu">row.names</span>(sMS<span class="sc">$</span>statistics)),<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Theta <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">cbind</span>(Theta, ThetaQ))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(ThetaQ)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>Theta<span class="sc">$</span>FullID <span class="ot">&lt;-</span> ldata<span class="sc">$</span>FullID</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(Theta) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Theta)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Mean"</span>, <span class="st">"Lower"</span>, <span class="st">"Upper"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>Theta <span class="ot">&lt;-</span> <span class="fu">merge</span>(Theta, ldata, <span class="at">by=</span><span class="st">"FullID"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>Theta <span class="ot">&lt;-</span> Theta[<span class="fu">order</span>(Theta<span class="sc">$</span>Mean),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we have a dataframe of legislator characteristics alng with their ideal points. Since we’re dealing with a one-dimensional model here, the most straight-forward way to plot is along a scale ranging from the lowest ideal point to the highest. Here, I’ll colour the ideal points and their intervals by membership of the government coalition. I’ve used some other plotting options to make this plot the way I like it, but it’s easy to change things to your taste in ggplot2.</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-13_ea24a6c456c2a3d638a3adb543629264">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="dv">1</span>, <span class="at">to=</span><span class="fu">length</span>(Theta<span class="sc">$</span>Mean), <span class="at">by=</span><span class="dv">1</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Theta, <span class="fu">aes</span>(<span class="at">x=</span>Mean, <span class="at">y=</span>Y)) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour=</span>GovCoalition),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">shape=</span><span class="dv">19</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> Lower, <span class="at">xmax =</span> Upper,<span class="at">colour =</span> GovCoalition),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">height =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> Upper, <span class="at">label =</span> FullID, <span class="at">colour =</span> GovCoalition),</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">05</span>) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>)) <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>(<span class="at">linetype =</span> <span class="dv">1</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">colour =</span> <span class="st">"grey"</span>),</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="cn">NA</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">size =</span> .<span class="dv">4</span>)) <span class="sc">+</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.7</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="https://i.imgur.com/fE2LY5L.png?1"></p>
+<p>Of course, that’s not all the information we have in our ldata dataframe. We could plot things by party or by state. Let’s plot something by region (since there are a lot of states):</p>
+<div class="cell" data-hash="BayesianIRT_cache/html/unnamed-chunk-14_6326954d00697847cd227f4bf39de39e">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>St <span class="ot">&lt;-</span> Theta[<span class="fu">is.na</span>(Theta<span class="sc">$</span>State)<span class="sc">==</span><span class="cn">FALSE</span>,]  <span class="co"># take out president</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>St<span class="sc">$</span>Region <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"SP"</span>, <span class="st">"RJ"</span>, <span class="st">"ES"</span>, <span class="st">"MG"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"RS"</span>, <span class="st">"PR"</span>, <span class="st">"SC"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AM"</span>, <span class="st">"RO"</span>, <span class="st">"RR"</span>, <span class="st">"TO"</span>, <span class="st">"PA"</span>, <span class="st">"AC"</span>, <span class="st">"AP"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>CW <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DF"</span>, <span class="st">"GO"</span>, <span class="st">"MT"</span>, <span class="st">"MS"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>NE <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CE"</span>, <span class="st">"MA"</span>, <span class="st">"AL"</span>, <span class="st">"RN"</span>, <span class="st">"PB"</span>, <span class="st">"SE"</span>, <span class="st">"PI"</span>, <span class="st">"BA"</span>, <span class="st">"PE"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>St<span class="sc">$</span>Region[St<span class="sc">$</span>State <span class="sc">%in%</span> SE] <span class="ot">&lt;-</span> <span class="st">"South-East"</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>St<span class="sc">$</span>Region[St<span class="sc">$</span>State <span class="sc">%in%</span> S] <span class="ot">&lt;-</span> <span class="st">"South"</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>St<span class="sc">$</span>Region[St<span class="sc">$</span>State <span class="sc">%in%</span> NE] <span class="ot">&lt;-</span> <span class="st">"North-East"</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>St<span class="sc">$</span>Region[St<span class="sc">$</span>State <span class="sc">%in%</span> CW] <span class="ot">&lt;-</span> <span class="st">"Centre-West"</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>St<span class="sc">$</span>Region[St<span class="sc">$</span>State <span class="sc">%in%</span> N] <span class="ot">&lt;-</span> <span class="st">"North"</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>nameorder <span class="ot">&lt;-</span> St<span class="sc">$</span>FullID[<span class="fu">order</span>(St<span class="sc">$</span>Region, St<span class="sc">$</span>Mean)]</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>St<span class="sc">$</span>FullID <span class="ot">&lt;-</span> <span class="fu">factor</span>(St<span class="sc">$</span>FullID, <span class="at">levels=</span>nameorder)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(St, <span class="fu">aes</span>(<span class="at">x=</span>Mean, <span class="at">y=</span>FullID)) <span class="sc">+</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="fu">aes</span>(<span class="at">colour =</span> Region)) <span class="sc">+</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> Lower, <span class="at">xmax =</span> Upper, <span class="at">colour =</span> Region),</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                 <span class="at">height =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Region <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"orange"</span>, <span class="st">"black"</span>, <span class="st">"red"</span>,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"blue"</span>, <span class="st">"darkgreen"</span>)) <span class="sc">+</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="https://i.imgur.com/M4sx2az.png?1"></p>
+<p>We can also analyse the other parameters of the model, and run multidimensional models too. See the <a href="https://rpubs.com/RobertMylesMc/Bayesian-IRT-ideal-points-with-Stan-in-R">RPub</a> for the code for these.</p>
+<p>&nbsp;</p>
+<p><link rel="image_src" href="https://i.imgur.com/VuCDpaX.png?1"></p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>There are many discussions on this topic, but <a href="https://my.vanderbilt.edu/joshclinton/files/2011/10/CJ_LSQ2009.pdf">Clinton &amp; Jackman (2009)</a> is a good place to start. An earlier <a href="https://www.cs.princeton.edu/courses/archive/fall09/cos597A/papers/ClintonJackmanRivers2004.pdf">paper</a> by Clinton, Jackman &amp; Rivers makes the point somewhat more forcefully.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>For more on this point, see <a href="https://www.cs.princeton.edu/courses/archive/fall09/cos597A/papers/Jackman2001.pdf">Jackman</a> 2001, <a href="https://polmeth.wustl.edu/files/polmeth/river03.pdf">Rivers 2003</a> paper cited in the main text, or the Appendix of my PhD <a href="https://robertmyles.github.io//assets/Explaining%20the%20Determinants%20of%20Foreign%20Policy%20Voting%20Behaviour%20in%20the%20Brazilian%20Houses%20of%20Legislature.pdf">thesis</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

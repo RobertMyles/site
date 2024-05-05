@@ -1,0 +1,28 @@
+"0","library(readr)"
+"0","library(dplyr)"
+"0","library(stringr)"
+"0","library(lubridate)"
+"0","library(ggplot2)"
+"0",""
+"0","rain <- read_csv(""https://cli.fusio.net/cli/climate_data/webdata/dly518.csv"", skip = 24) |> "
+"0","  select(date, rain)"
+"1","[1m[22mNew names:
+[36m•[39m `ind` -> `ind...2`
+[36m•[39m `ind` -> `ind...4`
+[36m•[39m `ind` -> `ind...8`
+[36m•[39m `ind` -> `ind...12`
+[36m•[39m `ind` -> `ind...14`
+[36m•[39m `ind` -> `ind...16`
+"
+"1","[1mRows: [22m[34m28702[39m [1mColumns: [22m[34m25[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (1): date
+[32mdbl[39m (24): ind...2, maxtp, ind...4, mintp, igmin, gmin, ind...8, rain, cbl, wdsp, ind...12, hm, ind...14, ddhm,...
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"0","head(rain)"

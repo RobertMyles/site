@@ -1,0 +1,16 @@
+"0","library(formattable)"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"2","
+Attaching package: ‘formattable’
+
+"
+"2","The following object is masked from ‘package:patchwork’:
+
+    area
+
+"
+"0","library(packagemetrics)"
+"0","library(dplyr)"

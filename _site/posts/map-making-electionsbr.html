@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2016-10-09">
+
+<title>Rob McDonnell:Blog – Map-making with R and electionsBR</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rob McDonnell:Blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Map-making with R and electionsBR</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">political science</div>
+    <div class="quarto-category">dataViz</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 9, 2016</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>For those interested in Brazilian politics, there’s a great new package called <code>electionsBR</code> (those who understand Portuguese can find a post on it <a href="https://fmeireles.com/blog/rstats/electionsbr-um-pacote-para-baixar-dados-eleitorais-do-tse">here</a>). This package takes data from the <em>Tribunal Superior Eleitoral</em> and makes it available in a tidy format for users of R. Given my recent obsession with <a href="https://www.robertmylesmcdonnell.com/content/posts/re-creating-plots-from-the-economist-in-r/">map-making</a>, I think it’s only natural I’d want to make maps of Brazil with this package.</p>
+<p>So, what can we do with it? Well, how about a map of how Brazilians voted in the general election of 2014? To do this, we can use <code>electionsBR</code> to get the election data, and a mixture of <code>tidyverse</code> and some mapping and plotting packages:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(electionsBR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgdal)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maptools)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>vote_mun_zone_fed()</code> function takes a single argument, <code>year</code>, as an integer. There are quite a lot of data, so it takes a little while to download.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Mun <span class="ot">&lt;-</span> <span class="fu">vote_mun_zone_fed</span>(<span class="dv">2014</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Once we have these data, we can use the <code>tidyverse</code> to clean it up and organize it they way we want. I’m going to change the character encoding to ASCII, using the <code>stringi</code> package, and select only the columns I need.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Mun <span class="ot">&lt;-</span> Mun <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SIGLA_UF, DESCRICAO_CARGO, CODIGO_MUNICIPIO, TOTAL_VOTOS,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         NUMERO_CAND, NOME_MUNICIPIO, NUM_TURNO, SIGLA_PARTIDO) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">NOME_MUNICIPIO =</span> <span class="fu">stri_trans_general</span>(NOME_MUNICIPIO, <span class="st">"Latin-ASCII"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>One interesting thing we could do with this dataset is map the percentage of the electorate that voted for Dilma. We’ll need shapefiles for Brazil, which you can get from <a href="https://www.gadm.org/country">gadm.org</a>.</p>
+<p>We’ll also need to isolate the vote for Dilma and then calculate the proportion in each municipality that voted for her. There were also two rounds of voting, so we can show each one. The code below does this for the first round, to do the same thing for the second round, we just change the first call to <code>filter</code> to <code>NUM_TURNO == 2</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Pres1 <span class="ot">&lt;-</span> Mun <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DESCRICAO_CARGO <span class="sc">==</span> <span class="st">"PRESIDENTE"</span>, NUM_TURNO <span class="sc">==</span> <span class="dv">1</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         SIGLA_UF <span class="sc">!=</span> <span class="st">"ZZ"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(NUMERO_CAND, CODIGO_MUNICIPIO) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SUM =</span> <span class="fu">sum</span>(TOTAL_VOTOS)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(CODIGO_MUNICIPIO, <span class="at">.keep_all=</span>T) <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CODIGO_MUNICIPIO) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PERC =</span> TOTAL_VOTOS<span class="sc">/</span><span class="fu">sum</span>(TOTAL_VOTOS)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(SIGLA_UF, NOME_MUNICIPIO) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NUMERO_CAND <span class="sc">==</span> <span class="dv">13</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Next, we read in our shape files. We have some work to do to tidy up the names of the municipalities and to correct for coding errors.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>BRmap <span class="ot">&lt;-</span> <span class="fu">readOGR</span>(<span class="at">dsn =</span> <span class="st">"BRA_adm_shp"</span>, <span class="at">layer =</span> <span class="st">"BRA_adm3"</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2 <span class="ot">&lt;-</span> BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2 <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.character</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stri_trans_general</span>(<span class="st">"Latin-ASCII"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">toupper</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s see what municipalities are missing from our <code>electionsBR</code> municipality data.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">'%ni%'</span> <span class="ot">&lt;-</span> <span class="fu">Negate</span>(<span class="st">'%in%'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[<span class="fu">which</span>(BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2 <span class="sc">%ni%</span> Mun<span class="sc">$</span>NOME_MUNICIPIO)])</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="st">"BARRA DA CHOCA"</span>                <span class="st">"DIAS D'VILA"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">3</span>] <span class="st">"LIVRAMENTO DO BRUMADO"</span>         <span class="st">"MUQUEM DE SAO FRANCISCO"</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">5</span>] <span class="st">"OLIVERIA DOS BREJINHOS"</span>        <span class="st">"PAU BRAZIL"</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">7</span>] <span class="st">"QUIJINGUE"</span>                     <span class="st">"ITAPAJE"</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">9</span>] <span class="st">"MISSO VELHA"</span>                   <span class="st">"SAO JOAO DO BELM"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a> [<span class="dv">11</span>] <span class="st">"SAO LUIZ DO CURU"</span>              <span class="st">"GUIA BRANCA"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a> [<span class="dv">13</span>] <span class="st">"ILHA TRINDADE"</span>                 <span class="st">"ILHAS DE MARTIM VAZ"</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a> [<span class="dv">15</span>] <span class="st">"AMERICANO DO BRAZIL"</span>           <span class="st">"BRASABRANTES"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a> [<span class="dv">17</span>] <span class="st">"MATEIRA"</span>                       <span class="st">"PORTEIRO"</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a> [<span class="dv">19</span>] <span class="st">"SANTA RITA DE ARAGUAIA"</span>        <span class="st">"ALTO ALEGRE DO MARANHO"</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a> [<span class="dv">21</span>] <span class="st">"AMAPA DO MARANHO"</span>              <span class="st">"ANAPUROS"</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a> [<span class="dv">23</span>] <span class="st">"BOM JARDIN"</span>                    <span class="st">"HUMBERTO CAMPOS"</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a> [<span class="dv">25</span>] <span class="st">"MATES DO NORTE"</span>                <span class="st">"VICTORINO FREIRE"</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a> [<span class="dv">27</span>] <span class="st">"BATAIPORA"</span>                     <span class="st">"BARRA DOS BUGRE"</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a> [<span class="dv">29</span>] <span class="st">"POXOREO"</span>                       <span class="st">"SAO FELIX XINGU"</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a> [<span class="dv">31</span>] <span class="st">"BANDIERA DO SUL"</span>               <span class="st">"BRASOPOLIS"</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a> [<span class="dv">33</span>] <span class="st">"CACHOEIRA DE PAJES"</span>            <span class="st">"CAMPOS VERDES DE GOIAS"</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a> [<span class="dv">35</span>] <span class="st">"CARAVALHOPOLIS"</span>                <span class="st">"CASSITERITA"</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a> [<span class="dv">37</span>] <span class="st">"CHAVESLANDIA"</span>                  <span class="st">"FELISBERTO CALDEIRA"</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a> [<span class="dv">39</span>] <span class="st">"FRANCISCO DUMON"</span>               <span class="st">"GOUVEA"</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a> [<span class="dv">41</span>] <span class="st">"ITABIRINHA DE MANTENA"</span>         <span class="st">"ITACARAMBIRA"</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a> [<span class="dv">43</span>] <span class="st">"PIEDADE DO PONTE NOVA"</span>         <span class="st">"PIUI"</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a> [<span class="dv">45</span>] <span class="st">"QUELUZITA"</span>                     <span class="st">"SAO FRANCISCO DE OLIVEIRA"</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a> [<span class="dv">47</span>] <span class="st">"SAO SEBASTIO DA VARGEM ALEGRE"</span> <span class="st">"SAN ANTONIO DO ITAMBE"</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a> [<span class="dv">49</span>] <span class="st">"SAN ANTONIO DO RIO ABAI"</span>       <span class="st">"SANTA RITA DO IBITIPOCA"</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a> [<span class="dv">51</span>] <span class="st">"SANTA RITA ITUETO"</span>             <span class="st">"ALMERIM"</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a> [<span class="dv">53</span>] <span class="st">"BRAGANGA"</span>                      <span class="st">"ME DO RIO"</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a> [<span class="dv">55</span>] <span class="st">"BOQUEIRAO DOS COCHOS"</span>          <span class="st">"DESTERRO DE MALTA"</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a> [<span class="dv">57</span>] <span class="st">"MONGEIRO"</span>                      <span class="st">"PEDRA LAVADRA"</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a> [<span class="dv">59</span>] <span class="st">"RIACHO"</span>                        <span class="st">"SAO MIGUEL TAIPU"</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a> [<span class="dv">61</span>] <span class="st">"SERIDO"</span>                        <span class="st">"ALTAMIRA DO PARAN"</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a> [<span class="dv">63</span>] <span class="st">"ARAPU"</span>                         <span class="st">"ASSIS CHATEAUBRI"</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a> [<span class="dv">65</span>] <span class="st">"CAMPO"</span>                         <span class="st">"CONSELHEIRO MAYRINCK"</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a> [<span class="dv">67</span>] <span class="st">"IVATUVA"</span>                       <span class="st">"JABUTI"</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a> [<span class="dv">69</span>] <span class="st">"SAO ANTONIO DE SUDOESTE"</span>       <span class="st">"SALTO DO LONDRA"</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a> [<span class="dv">71</span>] <span class="st">"SANTA CRUZ DE MONTE CASTE"</span>     <span class="st">"SANTA ISABEL DO OESTE"</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a> [<span class="dv">73</span>] <span class="st">"TEXEIRA SOARES"</span>                <span class="st">"TIBAJI"</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a> [<span class="dv">75</span>] <span class="st">"VENCESLAU BRAS"</span>                <span class="st">"VILA ALTA"</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a> [<span class="dv">77</span>] <span class="st">"BARRA DE GUABIRA"</span>              <span class="st">"CABO"</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a> [<span class="dv">79</span>] <span class="st">"CACHOERINHA"</span>                   <span class="st">"IGARACU"</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a> [<span class="dv">81</span>] <span class="st">"LAGOA DO ITAENGA"</span>              <span class="st">"SAO JOAO DO BELMONTE"</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a> [<span class="dv">83</span>] <span class="st">"SAO JOAQUIN DO MONTE"</span>          <span class="st">"SITIO DOS MOREIRAS"</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a> [<span class="dv">85</span>] <span class="st">"TAMBE"</span>                         <span class="st">"PEDRO LI"</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a> [<span class="dv">87</span>] <span class="st">"SAO JOAO PIAUI"</span>                <span class="st">"SAO MIGUEL TAPUIO"</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a> [<span class="dv">89</span>] <span class="st">"CAMPOS"</span>                        <span class="st">"CAREPEBUS"</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a> [<span class="dv">91</span>] <span class="st">"CONCEICAO MACABU"</span>              <span class="st">"ENGENHEIRO PAULO DE FRONT"</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a> [<span class="dv">93</span>] <span class="st">"PARATI"</span>                        <span class="st">"VALENCIA"</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a> [<span class="dv">95</span>] <span class="st">"ACU"</span>                           <span class="st">"AUGUSTO SEVERO"</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a> [<span class="dv">97</span>] <span class="st">"GOVERNADOR DIX-SEPT ROSAD"</span>     <span class="st">"JANUARIO CICCO"</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a> [<span class="dv">99</span>] <span class="st">"JARDIM-PIRANHAS"</span>               <span class="st">"JUNCO"</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>[<span class="dv">101</span>] <span class="st">"LAGOA DE ANTA"</span>                 <span class="st">"LAGOAS DE VELHOS"</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>[<span class="dv">103</span>] <span class="st">"SAO MIGUEL DE TOUROS"</span>          <span class="st">"BAJE"</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>[<span class="dv">105</span>] <span class="st">"BARO"</span>                          <span class="st">"BOA VISTA DAS MISSES"</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>[<span class="dv">107</span>] <span class="st">"CAMAGUA"</span>                       <span class="st">"CAMPO REAL"</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>[<span class="dv">109</span>] <span class="st">"CHIAPETA"</span>                      <span class="st">"DILERMANO DE AGUIAR"</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>[<span class="dv">111</span>] <span class="st">"ERVAL"</span>                         <span class="st">"INHACOR"</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>[<span class="dv">113</span>] <span class="st">"LAGOA MIRIM"</span>                   <span class="st">"MARCIONILIO DIAS"</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>[<span class="dv">115</span>] <span class="st">"MAXIMILIANO DE ALMAEIDA"</span>       <span class="st">"PALMITINHOS"</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>[<span class="dv">117</span>] <span class="st">"SAO MIGUEL DAS MISSES"</span>         <span class="st">"UREA"</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>[<span class="dv">119</span>] <span class="st">"VITORIA DAS MISSES"</span>            <span class="st">"ALTA FLORESTA D'OESTE"</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>[<span class="dv">121</span>] <span class="st">"ALVORADA D'OESTE"</span>              <span class="st">"ESPIGAO D'OESTE"</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>[<span class="dv">123</span>] <span class="st">"NOVA BRASILANDIA D'OESTE"</span>      <span class="st">"SAO FELIPE D'OESTE"</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>[<span class="dv">125</span>] <span class="st">"SANTA LUZIA D'OESTE"</span>           <span class="st">"ALFREDO MARCONDE"</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>[<span class="dv">127</span>] <span class="st">"APARECIDA DOESTE"</span>              <span class="st">"BRODOSQUI"</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>[<span class="dv">129</span>] <span class="st">"DULCINOPOLIS"</span>                  <span class="st">"EMBU"</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>[<span class="dv">131</span>] <span class="st">"ESTRELA DO OESTE"</span>              <span class="st">"FERNO"</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>[<span class="dv">133</span>] <span class="st">"FERRAZ DE VASCON"</span>              <span class="st">"FLORINIA"</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>[<span class="dv">135</span>] <span class="st">"GUARANI DO OESTE"</span>              <span class="st">"IPAUCU"</span></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>[<span class="dv">137</span>] <span class="st">"JABUTICABAL"</span>                   <span class="st">"LUISIANIA"</span></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>[<span class="dv">139</span>] <span class="st">"PALMEIRA DO OESTE"</span>             <span class="st">"PARANAPAREMA"</span></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>[<span class="dv">141</span>] <span class="st">"PIRACUNUNGA"</span>                   <span class="st">"PONTES GESTRAL"</span></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>[<span class="dv">143</span>] <span class="st">"QUITANA"</span>                       <span class="st">"SAO LUIZ DO PARAITINGA"</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>[<span class="dv">145</span>] <span class="st">"SALTO DO PIRAPORA"</span>             <span class="st">"SANTA CLARA DO OESTE"</span></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>[<span class="dv">147</span>] <span class="st">"SANTA RITA DO OESTE"</span>           <span class="st">"GRAO PARA"</span></span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>[<span class="dv">149</span>] <span class="st">"LUIZ ALVES"</span>                    <span class="st">"PAULO LOPEZ"</span></span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>[<span class="dv">151</span>] <span class="st">"PICARRAS"</span>                      <span class="st">"PONTA ALTA"</span></span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>[<span class="dv">153</span>] <span class="st">"BUQUIM"</span>                        <span class="st">"GRACHO CARDOSO"</span></span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>[<span class="dv">155</span>] <span class="st">"ITAPORANGA DAJUDA"</span>             <span class="st">"NOSSA SENHORA APRECIDO"</span></span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>[<span class="dv">157</span>] <span class="st">"COUTO MAGALHAES"</span>               <span class="st">"MOSQUITO"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Hmmm, that’s a little annoying, but some are easy to fix, so in the end, we’ll be missing only a few municipalities because of these coding differences. Some others are harder to figure out: I don’t know if the errors are in the TSE’s data, or in this geo-data. I don’t feel like spending a long time recoding stuff though, so let’s leave it aside for now.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"ASSIS BRAZIL"</span>] <span class="ot">&lt;-</span> <span class="st">"ASSIS BRASIL"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"JOINVILE"</span>] <span class="ot">&lt;-</span> <span class="st">"JOINVILLE"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"MACEIO (CAPITAL)"</span>] <span class="ot">&lt;-</span> <span class="st">"MACEIO"</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"SAO GABRIEL DE CAHOEIRA"</span>] <span class="ot">&lt;-</span> <span class="st">"SAO GABRIEL DA CACHOEIRA"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"NOVO BRAZIL"</span>] <span class="ot">&lt;-</span> <span class="st">"NOVO BRASIL"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"PERI-MIRIM"</span>] <span class="ot">&lt;-</span> <span class="st">"PERI MIRIM"</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"SEM-PEIXE"</span>] <span class="ot">&lt;-</span> <span class="st">"SEM PEIXE"</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"BRAZIL NOVO"</span>] <span class="ot">&lt;-</span> <span class="st">"BRASIL NOVO"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"OLHOS-D'AGUA"</span>] <span class="ot">&lt;-</span> <span class="st">"OLHOS D'AGUA"</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"OLHO-D'AGUA DO BORGES"</span>] <span class="ot">&lt;-</span> <span class="st">"OLHO D'AGUA DO BORGES"</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"SERRA DA SAUDAD"</span>] <span class="ot">&lt;-</span> <span class="st">"SERRA DA SAUDADE"</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"PEIXE BOI"</span>] <span class="ot">&lt;-</span> <span class="st">"PEIXE-BOI"</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"RICAHO DOS CAVALOS"</span>] <span class="ot">&lt;-</span> <span class="st">"RIACHO DOS CAVALOS"</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"BRAZILEIRA"</span>] <span class="ot">&lt;-</span> <span class="st">"BRASILEIRA"</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"SUL BRAZIL"</span>] <span class="ot">&lt;-</span> <span class="st">"SUL BRASIL"</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"FLORINIAPOLIS"</span>] <span class="ot">&lt;-</span> <span class="st">"FLORIANOPOLIS"</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"BON JESUS DOS PERDOES"</span>] <span class="ot">&lt;-</span> <span class="st">"BOM JESUS DOS PERDOES"</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"OLHO-D'AGUA DO BORGES"</span>] <span class="ot">&lt;-</span> <span class="st">"OLHO D'AGUA DO BORGES"</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"MISSO"</span>] <span class="ot">&lt;-</span> <span class="st">"MISSAO"</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"SALIDAO"</span>] <span class="ot">&lt;-</span> <span class="st">"SOLIDAO"</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"SAO JOAO DAS DUAS PONTE"</span>] <span class="ot">&lt;-</span> <span class="st">"SAO JOAO DAS DUAS PONTES"</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2[BRmap<span class="sc">@</span>data<span class="sc">$</span>NAME_2<span class="sc">==</span><span class="st">"ORLEAES"</span>] <span class="ot">&lt;-</span> <span class="st">"ORLEANS"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can use <code>fortify</code> to get all this into something useful for <code>ggplot()</code> to deal with. Then we can add in all the data we have for Dilma’s vote totals and then we’re ready to plot something.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Brasil <span class="ot">&lt;-</span> <span class="fu">fortify</span>(BRmap, <span class="at">region =</span> <span class="st">"ID_2"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.integer</span>(id)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(BRmap<span class="sc">@</span>data, <span class="at">by =</span><span class="fu">c</span>(<span class="st">"id"</span> <span class="ot">=</span> <span class="st">"ID_2"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(id, long, lat, order, hole, piece, group, NAME_2)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">NOME_MUNICIPIO =</span> NAME_2)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Brasil)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  id      long       lat order  hole piece group NOME_MUNICIPIO</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>  <span class="dv">1</span> <span class="sc">-</span><span class="fl">67.10586</span> <span class="sc">-</span><span class="fl">9.688110</span>     <span class="dv">1</span> <span class="cn">FALSE</span>     <span class="dv">1</span>   <span class="fl">1.1</span>     ACRELANDIA</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span>  <span class="dv">1</span> <span class="sc">-</span><span class="fl">67.05984</span> <span class="sc">-</span><span class="fl">9.706651</span>     <span class="dv">2</span> <span class="cn">FALSE</span>     <span class="dv">1</span>   <span class="fl">1.1</span>     ACRELANDIA</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span>  <span class="dv">1</span> <span class="sc">-</span><span class="fl">66.80647</span> <span class="sc">-</span><span class="fl">9.814520</span>     <span class="dv">3</span> <span class="cn">FALSE</span>     <span class="dv">1</span>   <span class="fl">1.1</span>     ACRELANDIA</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span>  <span class="dv">1</span> <span class="sc">-</span><span class="fl">66.62003</span> <span class="sc">-</span><span class="fl">9.894039</span>     <span class="dv">4</span> <span class="cn">FALSE</span>     <span class="dv">1</span>   <span class="fl">1.1</span>     ACRELANDIA</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span>  <span class="dv">1</span> <span class="sc">-</span><span class="fl">66.58875</span> <span class="sc">-</span><span class="fl">9.903196</span>     <span class="dv">5</span> <span class="cn">FALSE</span>     <span class="dv">1</span>   <span class="fl">1.1</span>     ACRELANDIA</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span>  <span class="dv">1</span> <span class="sc">-</span><span class="fl">66.62333</span> <span class="sc">-</span><span class="fl">9.923209</span>     <span class="dv">6</span> <span class="cn">FALSE</span>     <span class="dv">1</span>   <span class="fl">1.1</span>     ACRELANDIA</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>Dilma_1 <span class="ot">&lt;-</span> <span class="fu">left_join</span>(Brasil, Pres1) <span class="sc">%&gt;%</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PERC =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(PERC), <span class="fu">mean</span>(PERC, <span class="at">na.rm=</span>T), PERC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data =</span> Dilma_1, <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">group =</span> group, <span class="at">fill =</span> PERC),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">breaks =</span> <span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Dilma (%)"</span>) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_nothing</span>(<span class="at">legend =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">range</span>(Dilma_1<span class="sc">$</span>long)) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">range</span>(Dilma_1<span class="sc">$</span>lat)) <span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/dilma2014.png" class="img-fluid"></p>
+<p>We can see that even in 2014, Dilma’s support in the South-east of the country was not overwhelming.</p>
+<p>We can also use <code>electionsBR</code> to look at other items of interest, such as the share of the party vote. For example, perhaps you’re interested in whether the Communist Party of Brazil has strongholds in the country. All we need to do is subset the <code>Mun</code> dataframe that we downloaded earlier by <code>DESCRICAO_CARGO == "DEPUTADO FEDERAL"</code> and <code>SIGLA_PARTIDO == "PC do B"</code>. Apart from these changes, everything else can be done in the same way. Once we have this dataframe (which I’ll call <code>pc</code>), we plot it in the same way:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data =</span> pc, <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">fill =</span> PERC),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">breaks =</span> <span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"PC do B (%)"</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_nothing</span>(<span class="at">legend =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">range</span>(pc<span class="sc">$</span>long)) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">range</span>(pc<span class="sc">$</span>lat)) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/comm2014.png" class="img-fluid"></p>
+<p>Not a very Communist country, by the looks of things.</p>
+<p>Well, that’s a brief look at <code>electionsBR</code>. Data for other years and elections is available, as well as data at other administrative levels, and not just the President and Federal Deputies. The TSE also holds data on the background of the candidates and their campaign spending, all of which can be utilized with <code>electionsBR</code>. And if you fancy combining all this information with legislative behaviour from inside the Chamber of Deputies, just load the <code>bRasilLegis</code> package and you have a wealth of data on Brazilian Federal Deputies at your fingertips. Indeed, I’m proud to be involved in both packages. It’s great to help to make the access to these data easier for those interested in Brazilian politics.</p>
+<p>P.s. This blog post was written using <a href="https://rmarkdown.rstudio.com/r_notebooks.html"><code>R Notebooks</code></a>. I’d have to say that I really like <code>R Notebooks</code> so far, especially the preview. Try it out.</p>
+<p>Update: it seems that some folks might be running into problems running the scripts above, with <strong>R</strong> spitting out: <code>Error: isTRUE(gpclibPermitStatus()) is not TRUE</code>. The solution to this is to make sure you have rgdal or rgeos or a similar mapping package installed.</p>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

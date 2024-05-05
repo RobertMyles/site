@@ -1,0 +1,8 @@
+"0","library(lubridate)"
+"0","library(glue)"
+"0",""
+"0","sixn_dates <- sixn_long |> "
+"0","  mutate("
+"0","    year = glue(""{year}-01-01""),"
+"0","    year = as_datetime(year)"
+"0","  )"

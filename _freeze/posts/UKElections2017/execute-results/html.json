@@ -1,0 +1,14 @@
+{
+  "hash": "a9ca1da03c26740b2dccf60aaa7c0424",
+  "result": {
+    "markdown": "---\ntitle: UK Elections 2017\ndate: \"2017-09-27\"\ncategories: [political science, dataViz]\nexecute: \n  eval: false\n---\n\n\nThis post is a quickie to show how we can visualize the UK election results with just a few lines of R code. (Really, very few). [^1]\n\n[^1]: I’m using the dev version of ggplot2 here, we need it for `geom_sf()`.\n\nWe can load in our usual tidyverse tools, along with a handy little data package, [parlitools](https://github.com/EvanOdell/parlitools).\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(readr)\nlibrary(dplyr)\nlibrary(ggplot2)\nlibrary(parlitools)\nlibrary(sf)\n```\n:::\n\n\nThanks to [this R Bloggers post](https://www.r-bloggers.com/uk-2017-general-election-results-data/), we have the data (the UK Electoral Commission must have it up by now anyway), so visualizing it is very easy:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nresults <- read_csv(\"/Users/robert/Downloads/EconomistUK2017.csv\")\n\nuk <- west_hex_map\n\nres <- inner_join(results, uk, by = c(\"Constituency.ID\" = \"gss_code\")) %>%\n  filter(!is.na(win)) %>%\n  st_as_sf()\n\n\nggplot(res) +\n  geom_sf(aes(fill = win), size = 0.2) +\n  theme_minimal() +\n  guides(fill = guide_legend(title = \"party\")) +\n  scale_fill_manual(values = c(\"#006BA4\", \"#800B05\", \"#349B3A\", \"#888888\", \"#DB434E\",\n                    \"#E8B335\", \"#98B3D1\", \"#60B031\", \"#8DDC64\",\"#FCDD02\"))\n```\n:::\n\n\n![](images/uk.png)\n\nBam! Easy, quick and lovely 😄.\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

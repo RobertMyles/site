@@ -5,4 +5,3 @@ TODO.txt
 site.Rproj
 /.quarto/
 renv/
-posts/renv_cache/
