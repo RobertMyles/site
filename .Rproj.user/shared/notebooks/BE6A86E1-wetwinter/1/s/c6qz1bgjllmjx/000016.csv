@@ -1,0 +1,11 @@
+"0","month_rain <- month_rain |> "
+"0","  mutate("
+"0","    winter = if_else(month(m_date) %in% c(10, 11, 12, 1, 2), TRUE, FALSE)"
+"0","    )"
+"0",""
+"0","ggplot(month_rain, aes(x = m_date, y = month_sum)) +"
+"0","  geom_line() +"
+"0","  facet_grid(~winter) +"
+"0","  geom_smooth()"
+"1","[1m[22m`geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+"

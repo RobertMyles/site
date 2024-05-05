@@ -1,0 +1,1 @@
+"0","sixn_long <- sixn_long |> mutate(value = as.character(value))"

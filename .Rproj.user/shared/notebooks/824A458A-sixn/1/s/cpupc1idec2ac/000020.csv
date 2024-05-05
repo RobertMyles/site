@@ -1,0 +1,5 @@
+"0","ggplot(sixn_dates, aes(x = year, y = value, group = name, colour = name)) +"
+"0","  geom_line() +"
+"0","  geom_point() +"
+"0","  scale_y_discrete(limits=rev) +"
+"0","  scale_x_datetime(date_breaks = ""2 years"", date_labels = ""%Y"")"

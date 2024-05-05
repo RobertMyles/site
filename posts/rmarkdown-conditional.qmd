@@ -1,0 +1,36 @@
+---
+title: Render RMarkdown Code Chunks Based on Output Document Type
+date: "2020-04-26"
+categories: [rmarkdown]
+execute: 
+  eval: false
+---
+
+RMarkdown users -- did you know you can render code chunks based on the type of output you want to produce? It's even easy-peasy 🤓
+
+knitr makes available some parameters that you can access with `opts_knit$get()`. The one we want is "rmarkdown.pandoc.to". Once you have that, you can conditionally render code chunks with the `eval` argument of the code chunk.
+
+For example, let's say you were making a series of reports. You'd like to have some detail in case it was needed, but it would be nice to leave things simple in case that was needed too. In this case, you could make a MS Word document for the detail and a PowerPoint for the simpler presentation. Thinking back to R code, this might mean you include text and plots in the Word file and only the plots in the PowerPoint. So you're knitting the same RMarkdown documents, but producing a Word and a PowerPoint version of the output, which you could do by running `render()` twice, once for each output type.
+
+Then in one of your code chunks, get the values we need:
+
+``` r
+ppt_true <- opts_knit$get("rmarkdown.pandoc.to") == "pptx"
+docx_true <- opts_knit$get("rmarkdown.pandoc.to") == "docx"
+```
+
+Since these will be `TRUE` or `FALSE` depending on which output you're `render`ing to, we can include these in the code chunk like so (you'll need three backticks before the `{`):
+
+``` r
+  {r eval = docx_true}
+```
+
+And whatever you put in there will render only in the Word document. If this was text, for example, you could use knitr's `as_output()`:
+
+``` r
+    {r eval = docx_true}
+    asis_output("This report shows lots of interesting things that I bet you never knew were possible.")
+    
+```
+
+Whereas your PowerPoint won't have any of this text. E-Z P-Z. knitr is awesome.

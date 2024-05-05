@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2020-03-12">
+
+<title>Rob McDonnell - From R to Gatsby</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rob McDonnell</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">From R to Gatsby</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">gatsby.js</div>
+    <div class="quarto-category">blogging</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 12, 2020</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p><em>I don’t use Gatsby or JavaScript for this blog anymore, but this post is here for posterity anyway.</em></p>
+<p>This post details how I use <a href="https://www.gatsbyjs.org/">Gatsby.js</a> to blog about R stuff. My site is deployed by <a href="https://www.netlify.com/">Netlify</a>, which builds it after any merges into the master branch repo on <a href="https://github.com/RobertMyles/site">GitHub</a>. I use a little tool I wrote called <a href="https://github.com/RobertMyles/writeMDX">writeMDX</a> to help me out.</p>
+<p>The workflow is quite simple: write something -&gt; commit, upload to GitHub -&gt; Netlify builds and deploys. This post is about when that <em>‘write something’</em> part is about R and written in <a href="https://rmarkdown.rstudio.com/">RMarkdown</a>. Let’s go! 🦔</p>
+<hr>
+<p>If you’re an R user and you have a blog, there’s a fair chance you use <a href="https://bookdown.org/yihui/blogdown/">blogdown</a>. I used to, it’s very handy. (I’m not suggesting ditching blogdown btw, I think it’s fantastic. If that works for you, great.) What if you want to continue to write about R, use RMarkdown etc., but build your site using something like Gatsby?</p>
+<p>Well, Gatsby itself is pretty easy to get started with, and I’ve found the <a href="https://www.gatsbyjs.org/tutorial/">docs</a> quite good and the community helpful (have a look <a href="https://github.com/RobertMyles/site/issues/1">here</a> to see how helpful people can be). The nice thing is that you have a lot of control over how your website looks and behaves.</p>
+<p>Gatsby also utilises Facebook’s <a href="https://graphql.org/">GraphQL</a> to source data. The ‘data’ here are elements of your site – making it really useful to render items, internal links and so on by querying the data of the site. (If that last sentence makes no sense, see <a href="https://www.gatsbyjs.org/docs/why-gatsby-uses-graphql/">here</a>.) For example, the list of my blog posts found <a href="https://www.robertmylesmcdonnell.com/blog/">here</a> is done dynamically by querying the data of the site using GraphQL.</p>
+<p>The actual query for the ‘blog list’ page of my site looks like this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> query <span class="op">=</span> <span class="fu">graphql</span><span class="vs">`</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="vs">  query {</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="vs">    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="vs">      totalCount</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="vs">      edges {</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="vs">        node {</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="vs">          id</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="vs">          frontmatter {</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="vs">            title</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="vs">            date</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="vs">            featuredImage {</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="vs">              childImageSharp {</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="vs">                fixed(width: 100, height: 100) {</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="vs">                  ...GatsbyImageSharpFixed</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="vs">                }</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="vs">              }</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="vs">            }</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="vs">          }</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="vs">          fields {</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="vs">            slug</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="vs">          }</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="vs">          excerpt(pruneLength: 280)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="vs">        }</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="vs">      }</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="vs">    }</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="vs">  }</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For a data scientist, that’s quite interesting – it’s like a SQL query to get all the MDX files, count them, extract some fields and an excerpt. Pretty cool, eh?</p>
+<hr>
+<p>So the world of Gatsby websites is exciting and interesting, but what if you want to blog about R things still? The great thing about blogdown is that it fits so snugly into the RStudio ecosystem. So that’s just not going to be the same with Gatsby.</p>
+<p>However, there are some other benefits. First of all, I use <a href="https://code.visualstudio.com/">VS Code</a> to work on any non-RMarkdown stuff for the site. VS Code for R is not great in my opinion, at least it doesn’t compare to RStudio. But for JavaScript, it’s fantastic.</p>
+<p>Secondly, since there is such a ginormous JS/web developer community, there are lots of little tools to help with developing sites. For example, I use <a href="https://github.com/marketplace/actions/merge-schedule">Merge Schedule</a> to automatically merge Pull Requests into the master branch of my site (although not particularly a JS-specific tool). This allows me to schedule blog posts, as I simply create a branch, write whatever I’m going to post, and push to the branch on GitHub. Using <code>schedule /&lt;YEAR&gt;-&lt;MONTH&gt;-&lt;DAY&gt;</code> in the PR description schedules it for merging. I’ve only been using this for a short while, but it’s working well. This helps me to blog when I’m feeling productive and not have to do it when I’m not, so I hope to have a more regular blog schedule now, in terms of when the post appear on the site. Another one is <a href="https://dependabot.com/">Dependabot</a>, which updates my JS packages for me. (While I’m here, using <a href="https://www.npmjs.com/">NPM</a> has highlighted the amazingness of <a href="https://cran.r-project.org/">CRAN</a> – often I’ve been left with something breaking because of a package – that doesn’t happen often with R. Goooo CRAN! 🥳)</p>
+<p>Thirdly, I use <a href="https://mdxjs.com/">MDX</a> for a flavour of Markdown that allows you to embed React components in the Markdown. This is quite similar to how you can run R code in RMarkdown. Where this gets useful is when you create a D3 chart as a React component. It can then be used whenever you like in your MDX-Markdown posts, by importing it at the top of the post, under the YAML header. I’ve written about this <a href="https://www.robertmylesmcdonnell.com/content/posts/d3_in_MDX/">before</a>, it’s a nice way to do such things.</p>
+<p>So ok, all nice JS-associated things, but what about blogging about R, especially if you’ve got R code examples? Well, my workflow is quite simple:</p>
+<ul>
+<li>I open up a new RMarkdown document in RStudio;</li>
+<li>I write whatever I’m going to write;</li>
+<li>I use <a href="https://github.com/RobertMyles/writeMDX">writeMDX</a> to write the .Rmd file to .mdx format;</li>
+<li>I take the .mdx file and put it in the directory I’m using for blog posts and Gatsby renders it as part of the site.</li>
+</ul>
+<p>What’s writeMDX? It’s just a little helper I wrote to take RMarkdown and change it to MDX. If you have an RMarkdown document with the following YAML header:</p>
+<pre><code>---
+title: "MDXtest"
+author: "Robert McDonnell"
+date: "2/29/2020"
+output: html_document
+featuredImage: "image/png.png"
+---</code></pre>
+<p>writeMDX will change it to:</p>
+<pre><code>---
+title: "MDXtest
+date: "2020-02-29"
+featuredImage: "images/some_image.png"
+---</code></pre>
+<p>which is the format I use for my blog posts. What appears here is configurable, so you can change these as you need.</p>
+<p>Likewise for the document body. If we have:</p>
+<pre><code>## writeMDX test
+
+This is a test document for writeMDX. It has **bold**, *italic*
+
+- lists
+  - sublists
+- and so on
+
+And it has code. For R:
+``{r}
+x &lt;- 5
+print(x)
+
+print(head(mtcars))
+``</code></pre>
+<p>It will become:</p>
+<pre><code>
+This is a test document for writeMDX. It has **bold**, _italic_
+
+- lists
+  - sublists
+- and so on
+
+And it has code. For R:
+
+::: {.cell hash='r-to-gatsby_cache/html/unnamed-chunk-1_a465b710693caa5479950dde66942685'}
+
+```{.r .cell-code}
+x &lt;- 5
+print(x)
+```
+:::
+
+    ## [1] 5
+
+::: {.cell hash='r-to-gatsby_cache/html/unnamed-chunk-2_2ea7fa01b3f700e8d3af2c51758ceb3b'}
+
+```{.r .cell-code}
+print(head(mtcars))
+```
+:::
+
+    ##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+    ## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+    ## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+    ## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+    ## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+    ## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+    ## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+
+```</code></pre>
+<p>Which renders as:</p>
+<p>This is a test document for writeMDX. It has <strong>bold</strong>, <em>italic</em></p>
+<ul>
+<li>lists
+<ul>
+<li>sublists</li>
+</ul></li>
+<li>and so on</li>
+</ul>
+<p>And it has code. For R:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] 5</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(mtcars))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="do">##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>There’s usually some fix-up with code, indentations and so on, and a couple of other things, but normally not a lot (maybe placing images in the right place…writeMDX might take of these things in future. Now it’s quite minimal.).</p>
+<p>So it’s really quite simple to include R in a Gatsby site. You can write RMarkdown as you would regularly, run whatever code you normally would and then just transform the result to mdx. (You can also just use regular markdown if you don’t want to use MDX.)</p>
+<p>There are a couple of things that need to be done differently. For equations, RMarkdown has lovely simple syntax: simply put your equation between <code>$</code> or <code>$$</code> and RMarkdown takes care of it. With MDX, I do the following. First, import these components from <a href="https://www.npmjs.com/package/react-katex">react-katex</a>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { InlineMath<span class="op">,</span> BlockMath } <span class="im">from</span> <span class="st">"react-katex"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>InlineMath</code> is like RMarkdown’s <code>$</code> and <code>BlockMath</code> is like <code>$$</code>. Then you just use it as you would use any other React component:</p>
+<pre><code>&lt;BlockMath math="y_{ij} = \beta_j\bf{x_i} - \alpha_j" /&gt;</code></pre>
+<p>Which gives:</p>
+<p><span class="math display">\[
+y_{ij} = \beta_j\bf{x_i} - \alpha_j
+\]</span></p>
+<p>Like I mentioned above, you might need to change the paths to any images, depending on your setup. Images created from code chunks have a specific way of being in organised in RMarkdown. I source images in blog posts from a subfolder named, surprisingly, <code>images/</code>. So if I make something with ggplot2 in a code chunk, this will need to go into <code>images/</code> so the .mdx will find it.</p>
+<p>So that’s how you can use Gatsby for writing about R-related stuff if you’re interested. I haven’t written about the actual Gatsby/React/JS side of things and how it was for a data scientist to learn all that, but I might do that in the future.</p>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

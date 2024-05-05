@@ -1,0 +1,31 @@
+{
+    "id": "B509229A",
+    "path": "~/robert/quarto/site/index.qmd",
+    "project_path": "index.qmd",
+    "type": "quarto_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1710330695088.0,
+    "source_on_save": true,
+    "relative_order": 1,
+    "properties": {
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "source_window_id": "",
+        "Source": "Source",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "cursorPosition": "1,8",
+        "scrollLine": "0",
+        "rmdVisualModeLocation": "184:0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1714816377,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1714816377600,
+    "read_only": false,
+    "read_only_alternatives": []
+}

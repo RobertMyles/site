@@ -1,0 +1,7 @@
+.DS_Store
+.Rhistory
+.Rprofile
+TODO.txt
+site.Rproj
+/.quarto/
+renv/

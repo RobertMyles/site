@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2020-02-08">
+
+<title>Rob McDonnell - Using Docker for Data Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rob McDonnell</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Using Docker for Data Science</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">docker</div>
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">python</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 8, 2020</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In this post, I’ll go through a few examples of how you can use Docker for data science, from running a simple script to making reports. It’s based on real usage, so I think there are a couple of things in there that are interesting. In fact, using Docker for data science involves some non-beginner uses of Docker – sharing files between the host and the container, installing packages, connecting to databases etc – and we’ll go through these here. Of course, there are tons of posts and whatnot on using Docker with R or Python – see <a href="https://colinfay.me/docker-r-reproducibility/">here</a> for an intro with R (or <a href="https://www.symbolix.com.au/blog-main/r-docker-hello">here</a>); <a href="https://ropenscilabs.github.io/r-docker-tutorial/">here</a> for a more detailed piece, and <a href="https://arxiv.org/abs/2001.10641">here</a> for a recently-published ArXiv paper that goes into detail on the state of Docker use with R. For Python users, since many come from computer science backgrounds, I assume you can already find the millions of posts on using Python with Docker 🤓. This post is approached from the R side of things, but plenty of it is applicable to Docker and Data Science more generally.</p>
+<p>We’ll start off simple and increase in complexity until we have a realistic example of how you can use Docker for thy data science needs. If you want to jump to the final section, <a href="#mainexample">off you go!</a></p>
+<p>We’ll begin with a simple R script, then we’ll share files between the container and the host. Then we will include some Python code, called from R. After that, we’ll include some R packages and <a href="https://rstudio.github.io/renv/articles/renv.html">renv</a>, a package manager for R, and take advantage of its caching abilities, and see how we can use local (private) packages too. We will then include a database connection and set all that up. It’s very possible you’d want to run something like this as a command line script, so we’ll set it up as one, and see how we can pass in arguments to the Docker container. Last but not least, we’ll see how we can share the container for use by someone else, or for putting on a remote server, quite a common use case. The R &amp; Python scripts will be simple to keep focus on Docker.</p>
+<p>First of all, let’s get some terminology out of the way. The ‘host’ is your computer; we will build a docker <em>image</em>, and then from this image, we can run ‘containers’, which can be understood as <em>instances</em> of the image. The Docker documentation is actually pretty good, you can access it <a href="https://docs.docker.com/">here</a>. We’ll use <a href="https://docs.docker.com/compose/">docker-compose</a>, which is like a config file for your image, and the image itself is build from a <em>Dockerfile</em>. We won’t use compose at the start but it will be useful later. We’ll stick to some basic commands, but if you find yourself with a whole load of memory use, see <a href="https://gist.github.com/bastman/5b57ddb3c11942094f8d0a97d461b430">here</a> for simple ways to clean up. I’m doing this on a Mac, but as far as I’m aware, things are pretty similar on Windows and Linux.</p>
+<section id="running-a-simple-script" class="level3">
+<h3 class="anchored" data-anchor-id="running-a-simple-script">Running a simple script</h3>
+<p>Ok, so make a new directory and go into it, and from there create a file: our first <code>Dockerfile</code> 👶. I’ll include the code for this here, but from here on, I’ll assume you know how to do this. If not, have a look <a href="https://www.davidbaumgold.com/tutorials/command-line/">here</a>, or just search on the web, there are tons of useful resources. On your command line:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> simple <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> simple</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> Dockerfile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After this, we should have a folder with an empty file in it. Open up the Dockerfile in an editor you like. I like <a href="https://code.visualstudio.com/">VS Code</a> for this type of thing. Place this in the file:</p>
+<pre class="docker"><code>FROM r-base:3.6.0</code></pre>
+<p>This sticks with a <a href="https://hub.docker.com/_/r-base">simple base image</a> that will come with R already installed, but there are <a href="https://www.rocker-project.org/">many</a> <a href="https://github.com/rstudio/r-docker">others</a>. We’ll do something simple:</p>
+<p>From your terminal/command line, you can now run:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> <span class="st">"simple"</span> .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will instruct Docker to build an image called “simple” (<code>-t</code> is a tag). You should see something like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> <span class="st">"simple"</span> .</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Sending</span> build context to Docker daemon  2.048kB</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Step</span> 1/1 : FROM r-base:3.6.0</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">---</span><span class="op">&gt;</span> 876f4d7b60e9</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Successfully</span> built 876f4d7b60e9</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Successfully</span> tagged simple:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now we can run it. We’ll use <code>-it</code>, which makes the use of Docker interactive.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> simple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Whaddya know, we’re in R in a container:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> version 3.6.0 <span class="er">(</span><span class="ex">2019-04-26</span><span class="kw">)</span> <span class="ex">--</span> <span class="st">"Planting of a Tree"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Copyright</span> <span class="er">(</span><span class="ex">C</span><span class="kw">)</span> <span class="ex">2019</span> The R Foundation for Statistical Computing</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Platform:</span> x86_64-pc-linux-gnu <span class="er">(</span><span class="ex">64-bit</span><span class="kw">)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> is free software and comes with ABSOLUTELY NO WARRANTY.</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> are welcome to redistribute it under certain conditions.</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'license()'</span> or <span class="st">'licence()'</span> for distribution details.</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Natural</span> language support but running in an English locale</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> is a collaborative project with many contributors.</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'contributors()'</span> for more information and</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="st">'citation()'</span> on how to cite R or R packages in publications.</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'demo()'</span> for some demos, <span class="st">'help()'</span> for on-line help, or</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="st">'help.start()'</span> for an HTML browser interface to help.</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'q()'</span> to quit R.</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can play away to your heart’s content.</p>
+<p>Ok, that’s nice, but not exactly compelling. Let’s add some stuff to our Dockerfile to allow it to run an R script inside the container.</p>
+<pre class="docker"><code>FROM r-base:3.6.0
+WORKDIR /r_stuff
+RUN touch little_script.R
+RUN echo "print('hi, every-body!')" &gt;&gt; little_script.R
+CMD ["Rscript", "little_script.R"]</code></pre>
+<p>So what does this do? We’re now creating a working directory and entering it (<code>WORKDIR</code>), which is a cleaner way to operate (I’ve had problems doing things in the root folder of the container). Then we create a <code>little_script.R</code> file with <code>RUN touch</code> (<code>RUN</code> allows you to run a command). We send some text to this file, which is the R code <code>print('hi, every-body!')</code> (you can say this in a <a href="https://simpsons.fandom.com/wiki/Nick_Riviera">Dr.&nbsp;Nick</a> voice). You can build it as before. Running this will give us:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run simple</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[1]</span> <span class="st">"hi, every-body!"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>R users will recognize that familiar <code>[1]</code>.</p>
+<p>Ok, let’s clean up and move onto something a little more complex. <code>docker ps -a</code> will show us what containers we have running:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-a</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID        IMAGE               COMMAND                  CREATED             STATUS                         PORTS               NAMES</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">9889a905c62c</span>        simple              <span class="st">"Rscript little_scri…"</span>   2 minutes ago       Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">2</span> minutes ago                           magical_davinci</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can grab the <code>CONTAINER ID</code> and remove it:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rm 9889a905c62c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s remove our image too:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> image ls</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>             TAG                 IMAGE ID            CREATED             SIZE</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">simple</span>                 latest              7452901b888b        9 minutes ago       644MB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rmi simple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You might have noticed that image was 644MB, so it’s best to clean up images and containers you’re not using. If you’re trying this out, you’ll probably build a few containers from an image. If you want to delete a few, but not just everything, just put the container ids one after another:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rm <span class="op">&lt;</span>CONTAINER ID<span class="op">&gt;</span> <span class="op">&lt;</span>CONTAINER ID<span class="op">&gt;</span> <span class="op">&lt;</span>CONTAINER ID<span class="op">&gt;</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Otherwise there are simple ways to remove everything you’re not using, as linked to above.</p>
+</section>
+<section id="reading-writing-files" class="level3">
+<h3 class="anchored" data-anchor-id="reading-writing-files">Reading &amp; Writing Files</h3>
+<p>This time we’ll use docker-compose. Leave the simple directory, create a new one (mine’s called ‘readwrite’), and create three files: a Dockerfile, a file called <code>docker-compose.yml</code> and another called <code>input.txt</code>. In your Dockerfile, put:</p>
+<pre class="docker"><code>FROM r-base:3.6.0
+WORKDIR /main
+CMD ["Rscript", "readwrite.R"]</code></pre>
+<p>In <code>docker-compose.yml</code>, put:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.5"</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">readwrite</span><span class="kw">:</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">context</span><span class="kw">:</span><span class="at"> .</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> .:/main</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And in <code>input.txt</code>, put: <code>Hi, every-body!</code> (continuing our temporary Simpson’s theme) and hit return for a newline. The only thing we need to do now is write <code>readwrite.R</code>, which will be a little R script to read a text file and append some text to it before writing it out.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>infile <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="st">"input.txt"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>outfile <span class="ot">&lt;-</span> <span class="fu">append</span>(infile, <span class="st">"</span><span class="sc">\n</span><span class="st">I'm Dr. Nick!"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(outfile, <span class="st">"output.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>What we’re hoping will happen here is that the Docker container, when run, will use R to read in our input file and write out the expanded text. We’re able to do this through the use of:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> .:/main</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This allows us to map our folder (<code>.</code>) to the <code>main</code> folder inside the container – the syntax is <code>host folder: container folder</code>.<br>
+We’ll use <code>docker-compose build</code> instead of <code>docker build .</code>:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> build</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Building</span> readwrite</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Step</span> 1/3 : FROM r-base:3.6.0</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">---</span><span class="op">&gt;</span> 876f4d7b60e9</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Step</span> 2/3 : WORKDIR /main</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a> <span class="ex">---</span><span class="op">&gt;</span> Running in 046bb8b83085</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="ex">Removing</span> intermediate container 046bb8b83085</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a> <span class="ex">---</span><span class="op">&gt;</span> f1fa9502a856</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Step</span> 3/3 : CMD [<span class="st">"Rscript"</span>, <span class="st">"readwrite.R"</span>]</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a> <span class="ex">---</span><span class="op">&gt;</span> Running in 166e6004cc99</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Removing</span> intermediate container 166e6004cc99</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a> <span class="ex">---</span><span class="op">&gt;</span> 82d026f1e6f4</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="ex">Successfully</span> built 82d026f1e6f4</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="ex">Successfully</span> tagged readwrite_readwrite:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now we run:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> run readwrite</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Creating</span> network <span class="st">"readwrite_default"</span> with the default driver</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ok! If you open up <code>output.txt</code>, you should see:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Hi, every-body!</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>I'm Dr. Nick!</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Nice.</p>
+</section>
+<section id="including-python" class="level3">
+<h3 class="anchored" data-anchor-id="including-python">Including Python</h3>
+<p>Alrighty, then. We’re keeping this super simple to show what’s happening with Docker, but as you can imagine, it’s straightforward to replace our R script with something a little more involved. While still sticking to simple scripts, let’s add something done in Python. In a regular data science work environment, you might use both of these languages together, and probably some others (there are <a href="https://hub.docker.com/r/jupyter/datascience-notebook">Docker images</a> with these already available). Similarly to before, exit this directory, clean up if you need to, make a new folder (I’ll call it pyr) and create your Dockerfile and docker-compose.yml. We’ll create two simple R files and another simple Python one. Here’s the Dockerfile for this one:</p>
+<pre class="docker"><code>FROM r-base:3.6.0
+WORKDIR /main
+RUN apt-get update \
+    &amp;&amp; apt-get -y install python3.7 \
+    &amp;&amp; apt -y install python3-pip
+RUN pip3 install pandas==0.25.1
+CMD ["Rscript", "rpy.R"]</code></pre>
+<p>If you’re not familiar with all that <code>apt-</code> stuff, it’s the <strong>A</strong>dvanced <strong>P</strong>ackage <strong>T</strong>ool for Debian and Ubuntu-based linux distributions (<a href="https://en.wikipedia.org/wiki/APT_(software)">have a look</a>). We’re using it to install Python 3.7 and pip, and with pip we install Pandas 0.25.1. Our <code>docker-compose.yml</code> is almost identical to the previous one (we’re changing the name of the service):</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.5"</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pyr</span><span class="kw">:</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">context</span><span class="kw">:</span><span class="at"> .</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> .:/main</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Our Dockerfile is calling an Rscript, <code>rpy.R</code>. This is the contents of said file:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mtcars, <span class="st">"mtcars.csv"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">system2</span>(<span class="st">"python3"</span>, <span class="st">"mtcars.py"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.sleep</span>(<span class="dv">10</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"pyr.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I’ll get back to <code>Sys.sleep()</code> in a moment. This file calls Python, through the use of <code>system2()</code> and then sources another R file. <code>mtcars.py</code> looks like this:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mt <span class="op">=</span> pd.read_csv(<span class="st">"mtcars.csv"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>mt.rename(columns<span class="op">=</span>{<span class="st">'Unnamed: 0'</span>:<span class="st">'cars'</span>})</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>mt.to_csv(<span class="st">"mtcars_py.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>…and <code>pyr.R</code> looks like this:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"mtcars_py.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(mt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>As before, we can run <code>docker-compose build</code> and <code>docker-compose run pyr</code>. This one will take noticeably longer because we’re installing Python and Pandas. So with all of these files, your <code>pyr</code> directory should look like this:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> Dockerfile</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> docker-compose.yml</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> mtcars.csv</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> mtcars.py</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> pyr.R</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> rpy.R</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>What are we doing here? We’re saving out the mtcars dataset to a csv with R, calling Python to change a column name with Pandas, and saving the result out to a new csv, which we then call back into R and print the <code>head()</code>. Are you likely to do this? No.&nbsp;Does it show a simple way to link R and Python in a Docker container? Yup 👽</p>
+<p>Well, running <code>docker-compose run pyr</code> gives us:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>  <span class="ex">X</span>              cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> 0         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span> 1     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span> 2        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="ex">4</span> 3    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="ex">5</span> 4 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="ex">6</span> 5           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>So it worked nicely. The rownames of mtcars were transformed into a column named <code>cars</code> by Pandas and then printed out by R.</p>
+<p>A glance at our folder shows us that the file was written successfully:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> Dockerfile</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> docker-compose.yml</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> mtcars.csv</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> mtcars.py</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> mtcars_py.csv</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> pyr.R</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> rpy.R</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>So about that <code>Sys.sleep()</code>…</p>
+</section>
+<section id="including-r-packages" class="level3">
+<h3 class="anchored" data-anchor-id="including-r-packages">Including R packages</h3>
+<p>I included <code>Sys.sleep(10)</code> in the R script above because I wanted to make sure that Python had finished running, but this is obs <em>NOT</em> a good way to do things. Let’s see we wanted to monitor the Python process and only act when it was done or completed successfully. It’s likely we would want the expanded capacities of a package like <a href="https://github.com/r-lib/processx">processx</a> (<code>system2()</code> is supposed to be lightweight).</p>
+<p>Installing R packages into a Docker container is quite straightforward. If you are installing only one or a small number of packages, you can add:</p>
+<pre class="docker"><code>RUN R -e "install.packages('&lt;PACKAGE&gt;', repos = c(CRAN = 'https://cloud.r-project.org'))"</code></pre>
+<p>where <code>&lt;PACKAGE&gt;</code> is the name of the package. However, each one of these commands (<code>WORKDIR</code>, <code>RUN</code> etc.) create a <em>layer</em> in the Docker container, and good practice is to keep these layers to a minimum (you saw how they’re not small objects to have on your computer). So what can we do if we have a whole load of packages to install? One solution is to use renv. You could also throw them all into the <code>&lt;PACKAGE&gt;</code> part above, but renv is a nice tool for package management in general, so we’ll go with that for now. L8Rz, I’ll throw them all together.</p>
+<p>When using renv with Docker, I’ve found the best way to do things is to share the cache, which we will do through our <code>docker-compose.yml</code> file. First, let’s get renv set up in another folder.</p>
+<p>For reference, the complete documentation for renv can be found <a href="https://rstudio.github.io/renv/index.html">here</a>. Let’s set up a new folder, initialize an <a href="https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects">RStudio project</a> in it and initialize renv. Once you’ve got your project set up, install renv in R:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'remotes'</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'rstudio/renv@0.9.2-31'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Once this is done, you can run this from R:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">init</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will set up renv for this project (folder). By default, renv uses a global cache. Let’s stick to a project-specific cache, since we don’t want to transfer anything over to our Docker container that we don’t need. We’ll use an environment variable for this. First, make a project-specific .Renviron file:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> .Renviron</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now add the following line to it:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">RENV_PATHS_CACHE</span> = renv/cache</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Restart your R session and now we’ll have a local cache.</p>
+<p>Ok, so now we can install a few R packages that we might use. Let’s start with the aforementioned processx.</p>
+<p>renv uses a lockfile in the style of <a href="https://nodejs.dev/the-package-lock-json-file">npm</a> to keep track of what packages are used in a project (you can see the npm one used for this website <a href="https://github.com/RobertMyles/site/blob/master/package-lock.json">here</a>). At this stage, it should just have the following entries:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"R"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Version"</span><span class="fu">:</span> <span class="st">"3.6.2"</span><span class="fu">,</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Repositories"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"Name"</span><span class="fu">:</span> <span class="st">"CRAN"</span><span class="fu">,</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"URL"</span><span class="fu">:</span> <span class="st">"https://cran.rstudio.com"</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"Packages"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"renv"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Package"</span><span class="fu">:</span> <span class="st">"renv"</span><span class="fu">,</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Version"</span><span class="fu">:</span> <span class="st">"0.9.2-28"</span><span class="fu">,</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Source"</span><span class="fu">:</span> <span class="st">"GitHub"</span><span class="fu">,</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteType"</span><span class="fu">:</span> <span class="st">"github"</span><span class="fu">,</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteHost"</span><span class="fu">:</span> <span class="st">"api.github.com"</span><span class="fu">,</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteRepo"</span><span class="fu">:</span> <span class="st">"renv"</span><span class="fu">,</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteUsername"</span><span class="fu">:</span> <span class="st">"rstudio"</span><span class="fu">,</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteRef"</span><span class="fu">:</span> <span class="st">"master"</span><span class="fu">,</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteSha"</span><span class="fu">:</span> <span class="st">"89248dcee7e3cc367de09fefee90cbd529d4b7cf"</span><span class="fu">,</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Hash"</span><span class="fu">:</span> <span class="st">"c07009d1397ccdc76280404cd85394b4"</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We will use renv to install processx, and tibble for pretty printing. Since we’re moving in the direction of a cli, let’s install, well, <a href="https://github.com/r-lib/cli">cli</a>. For now, we’ll just use it to make a spinner, but later it will form an important part of our appzinho.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">install</span>(<span class="st">"processx"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">install</span>(<span class="st">"tibble"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">install</span>(<span class="st">"cli"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This allows us to clean up our R scripts and monitor the Python process properly. Let’s write a new R script called <code>r_processx.R</code>:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(processx)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cli)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mtcars, <span class="st">"mtcars.csv"</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> process<span class="sc">$</span><span class="fu">new</span>(<span class="st">"python3"</span>, <span class="st">"mtcars.py"</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="fu">make_spinner</span>(<span class="st">"bouncingBall"</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (p<span class="sc">$</span><span class="fu">is_alive</span>()) {</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  sp<span class="sc">$</span><span class="fu">spin</span>()</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">1</span>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"mtcars_py.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(mt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This adds a process <code>p</code> that we can monitor (the <code>p$is_alive()</code> part) and a nice spinner that’s cool. We call our Python script from before (you’ll need to copy it over to this folder, it’s the same one, <code>mtcars.py</code>), it hasn’t changed. Let’s run <code>renv::snapshot()</code>, which should show you this:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> renv<span class="sc">::</span><span class="fu">snapshot</span>()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>The following <span class="fu">package</span>(s) will be updated <span class="cf">in</span> the lockfile<span class="sc">:</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CRAN ===============================</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> R6           [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">2</span>.<span class="fl">4.1</span>]</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> assertthat   [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">0</span>.<span class="fl">2.1</span>]</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> cli          [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">2</span>.<span class="fl">0.1</span>]</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> crayon       [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">1</span>.<span class="fl">3.4</span>]</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> digest       [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">0</span>.<span class="fl">6.23</span>]</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> ellipsis     [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">0</span>.<span class="fl">3.0</span>]</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> fansi        [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">0</span>.<span class="fl">4.1</span>]</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> glue         [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">1</span>.<span class="fl">3.1</span>]</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> pillar       [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">1</span>.<span class="fl">4.3</span>]</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> pkgconfig    [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">2</span>.<span class="fl">0.3</span>]</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> processx     [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">3</span>.<span class="fl">4.1</span>]</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> ps           [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">1</span>.<span class="fl">3.0</span>]</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> rlang        [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">0</span>.<span class="fl">4.4</span>]</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> tibble       [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">2</span>.<span class="fl">1.3</span>]</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> utf8         [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">1</span>.<span class="fl">1.4</span>]</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> vctrs        [<span class="sc">*</span> <span class="ot">-&gt;</span> <span class="dv">0</span>.<span class="fl">2.2</span>]</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>Do you want to proceed? [y<span class="sc">/</span>N]<span class="sc">:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Hit <code>y</code> and renv will create a lockfile. Our docker-compose.yml will look like this:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.5"</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">processx</span><span class="kw">:</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">context</span><span class="kw">:</span><span class="at"> .</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> .:/main</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ./renv/cache/v5/R-3.6/x86_64-apple-darwin15.6.0:/main/renv/cache</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You’ll notice we’re now sharing the renv cache across to the container. <strong>This is also a <em>platform-specific</em> path, so if you are on Windows or using a different version of R, you will need to change this.</strong> How do you get this path? <code>renv:::renv_paths_cache()</code> will give it you, see <a href="https://rstudio.github.io/renv/articles/docker.html">here</a>.</p>
+<p>Our Dockerfile also looks a little different:</p>
+<pre class="docker"><code>FROM r-base:3.6.0
+WORKDIR /main
+RUN apt-get update \
+    &amp;&amp; apt-get -y install python3.7 \
+    &amp;&amp; apt -y install python3-pip
+RUN pip3 install pandas==0.25.1
+# renv and R packages
+ENV RENV_VERSION 0.9.2-31
+RUN echo "options(renv.consent = TRUE)" &gt;&gt; .Rprofile
+COPY renv.lock .
+RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
+RUN R -e "remotes::install_github('rstudio/renv@${RENV_VERSION}')"
+RUN R -e "renv::restore(confirm = FALSE)"
+RUN R -e "renv::snapshot(confirm = FALSE)"
+CMD ["Rscript", "r_processx.R"]</code></pre>
+<p>We’re installing renv onto the image, passing in some renv options and using <code>restore()</code>, which will take our lockfile and ‘restore’ the renv environment according to it. First time around, this will take some time to build our library, but afterwards it is much quicker as we’re taking advantage of renv’s cache. We then use <code>snapshot()</code> to make sure that the lockfile is updated with the packages that we’ve just installed (we shouldn’t really need to do this, but I’ve found it to be necessary).<br>
+What else is new here? We create an environment variable with <code>ENV</code> (the version of renv we want). It’s not strictly necessary, but makes the Dockerfile easier to read and maintain. We have two renv options to take care of too – setting <code>renv.consent = TRUE</code> and making <code>confirm = FALSE</code> on <code>restore()</code> and <code>snapshot()</code>. Leaving <code>confirm = FALSE</code> out will make the Docker build hang as it’s waiting for interactive input, which you won’t be able to give. So sad.</p>
+<p>You can build this as before, and you’ll notice that it will use the lockfile to install our R packages. If you’re curious about the cache, run <code>docker-compose build</code> again and you’ll see that Docker uses it. You’ll see something like:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Step</span> 12/13 : RUN R <span class="at">-e</span> <span class="st">"renv::restore(confirm = FALSE)"</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> <span class="ex">---</span><span class="op">&gt;</span> Using cache</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Great! 🤗 Ok, so after all this, we should have a directory that looks like this (I’m making these folder structure lists with <a href="https://sourabhbajaj.com/mac-setup/iTerm/tree.html">tree</a>, in case you haven’t seen it before and were wondering. You probably weren’t):</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> .Renviron</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> .Rprofile</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> .Rproj.user</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> Dockerfile</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> docker-compose.yml</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> mtcars.py</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> r_processx.R</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> renv</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> renv.lock</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> renvdocker.Rproj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>So running this should show us the following:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> run processx</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span> <span class="ex">●</span>    <span class="kw">)</span>  <span class="ex">X</span>              cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> 0         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span> 1     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span> 2        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="ex">4</span> 3    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="ex">5</span> 4 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="ex">6</span> 5           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>As you can see from this thing – <code>( ● )</code> – we enabled a spinner from processx and cli (the execution of the script is too quick to see our ball bounce around, but you get the idea). This is a toy example, but if you’re calling Python from R in this way it’s important to see what happens, especially in the case of errors. Monitoring the process with processx is a great way to do it. More to the point, this shows how we can a) include Python and R together; b) install R and Python packages; and c) use a package manager and cache for R.</p>
+</section>
+<section id="package-management-for-python" class="level3">
+<h3 class="anchored" data-anchor-id="package-management-for-python">Package Management for Python</h3>
+<p>For Python, you can use <code>pip freeze &gt; requirements.txt</code>, which is a common pattern for saving Python project dependencies. With the <code>COPY</code> command in your Dockerfile, you can copy your requirements text file from your host project folder over to the image and then use pip to install your packages from there. Nice and simple.</p>
+</section>
+<section id="including-local-source-packages-for-r" class="level3">
+<h3 class="anchored" data-anchor-id="including-local-source-packages-for-r">Including local source packages for R</h3>
+<p>Another use case you might come across is that of having a local package, i.e.&nbsp;something that is not publicly available, perhaps an internal R package you use in-company or whatever. Since we’re using renv, you may want to have a read <a href="https://rstudio.github.io/renv/articles/local-sources.html">of this</a>. You have a few options for how you go about this, but a relatively straightforward one is the following. Create a <code>local</code> folder inside of the <code>renv</code> directory:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">renv</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> activate.R</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cache</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> library</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> local</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> settings.dcf</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> staging</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Copy the <a href="https://devtools.r-lib.org/reference/build.html">built</a> package over into the <code>renv/local/</code> folder. In your Dockerfile, add a COPY command to copy the package over (with the name of your package in <code>&lt;PACKAGE&gt;</code>):</p>
+<pre class="docker"><code>FROM r-base:3.6.0
+WORKDIR /main
+RUN apt-get update \
+    &amp;&amp; apt-get -y install python3.7 \
+    &amp;&amp; apt -y install python3-pip
+RUN pip3 install pandas==0.25.1
+# renv and R packages
+ENV RENV_VERSION 0.9.2-31
+RUN echo "options(renv.consent = TRUE)" &gt;&gt; .Rprofile
+COPY renv.lock .
+RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
+RUN R -e "remotes::install_github('rstudio/renv@${RENV_VERSION}')"
+# restore from copied lockfile
+RUN R -e "renv::restore(confirm = FALSE)"
+# Copy package
+COPY renv/local/&lt;PACKAGE&gt;.tar.gz main/renv/local/&lt;PACKAGE&gt;.tar.gz
+RUN R -e "renv::install('renv/local/&lt;PACKAGE&gt;')"
+# record
+RUN R -e "renv::snapshot(confirm = FALSE)"
+CMD ["Rscript", "r_processx.R"]</code></pre>
+<p>You can set an environment variable for the local renv source, as we did earlier for <code>RENV_PATHS_CACHE</code>. It’s <code>RENV_PATHS_LOCAL</code>, as can be seen by <code>renv:::renv_paths_local()</code>. I don’t think this is strictly necessary. Maybe it should be. renv isn’t yet v1, so that could change.</p>
+<p>I’ve had a few problems with this part, so if you run into trouble, there are other ways to do it. You can do this in R code from when you run the container. It will install the packages first time around, but since we’re using the renv cache, it will not do this a second time. Your <code>r_processx.R</code> could have something like this at the top:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">row.names</span>(<span class="fu">installed.packages</span>())</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="st">"&lt;YOUR LOCAL PACKAGE&gt;"</span> <span class="sc">%in%</span> x) renv<span class="sc">::</span><span class="fu">install</span>(<span class="st">'&lt;YOUR LOCAL PACKAGE&gt;.tar.gz'</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">snapshot</span>(<span class="at">confirm =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co"># continue with script...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you do it through R, you will see this the second time you run the container:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> run processx</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="ex">*</span> The library is already synchronized with the lockfile.</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="ex">*</span> The lockfile is already up to date.</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span> <span class="ex">●</span>    <span class="kw">)</span>  <span class="ex">X</span>              cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="ex">1</span> 0         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span> 1     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span> 2        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="ex">4</span> 3    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="ex">5</span> 4 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="ex">6</span> 5           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Meaning the local package was successfully installed and our code ran as before.</p>
+</section>
+<section id="system-dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="system-dependencies">System Dependencies</h3>
+<p>Depending on your local package, or indeed on the R/Python packages you install, you may need to add system dependencies. For example, if using the <a href="https://cran.r-project.org/web/packages/magick/vignettes/intro.html#build_from_source">magick</a> package for R, you’ll need to install the ImageMagick++ library (since the Docker container is Linux; for OSX and Windows, this comes with magick.) These dependencies need to be installed on the image. For the example of magick, this would be the following:</p>
+<pre class="docker"><code>RUN apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends \
+    libmagick++-dev \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*</code></pre>
+<p>You’ll need to check package documentation for dependencies for different packages, but your Dockerfile shouldn’t be much different from this example above.</p>
+</section>
+<section id="database-connections" class="level3">
+<h3 class="anchored" data-anchor-id="database-connections">Database Connections</h3>
+<p>Another common use case it’s that your R or Python scripts will first pull some data from a database. You have two options for setting this up. First, you can start with a database image. For example, this terminal command will download an Oracle image from <a href="https://hub.docker.com/_/oraclelinux/">Docker Hub</a>:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> image pull oraclelinux:7-slim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then you can build your R or Python layers on top of this.</p>
+<p>Alternatively, you can add some extra lines to the type of Dockerfile we’ve already been using. Here I’ll run through a quick Oracle example in another folder. This time we’ll use <a href="https://rstudio.github.io/reticulate/">reticulate</a> to connect R and Python. reticulate’s great. 🐍</p>
+<p>So again we’re starting with an R base image, but this time we set up an Oracle-related working directory and download and install all the Oracle stuff we need. The only other changes from the type of thing we did before is an extra Python library, <a href="https://cx-oracle.readthedocs.io/en/latest/">cx_Oracle</a> and that we install reticulate and ggplot2. You may need to set up reticulate, there’s plenty of info <a href="https://rstudio.github.io/reticulate/articles/versions.html">here</a>. I chose to set the environment variable <code>RETICULATE_PYTHON="/usr/local/bin/python3"</code> in my global <code>.Renviron</code>, but how you do it is up to you.</p>
+<pre class="docker"><code>FROM r-base:3.6.0
+
+# Oracle setup
+WORKDIR /opt/oracle
+RUN apt-get update &amp;&amp; apt-get install -y libaio1 wget unzip \
+    &amp;&amp; wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip \
+    &amp;&amp; unzip instantclient-basiclite-linuxx64.zip \
+    &amp;&amp; rm -f instantclient-basiclite-linuxx64.zip \
+    &amp;&amp; cd /opt/oracle/instantclient* \
+    &amp;&amp; rm -f *jdbc* *occi* *mysql* *README *jar uidrvci genezi adrci \
+    &amp;&amp; echo /opt/oracle/instantclient* &gt; /etc/ld.so.conf.d/oracle-instantclient.conf \
+    &amp;&amp; ldconfig
+
+WORKDIR /main
+COPY . /main
+RUN apt-get update \
+    &amp;&amp; apt-get -y install python3.7 \
+    &amp;&amp; apt -y install python3-pip
+RUN pip3 install pandas==0.25.1 \
+    cx-Oracle==7.2.3 --trusted-host pypi.org --trusted-host files.pythonhosted.org
+RUN R -e "install.packages(c('ggplot2', 'reticulate'))"
+
+CMD ["Rscript", "db_connect.R"]</code></pre>
+<p>This is a toy example, since I’m not going to connect to a database here. But, filling in for your database credentials (password etc.), your <code>db_connect.R</code> could be something like this:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source_python</span>(<span class="st">"connect.py"</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">give_me_data</span>(<span class="st">"url"</span>, <span class="st">"port number"</span>, <span class="st">"SID"</span>, <span class="st">"my_username"</span>, <span class="st">"my_password"</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> X, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Where the Python file, <code>connect.py</code>, sourced by reticulate, has this:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cx_Oracle</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> give_me_data(URL, PORT, SID, USERNAME, PASSWORD):</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Takes in args to make Data Source Name (DSN), then</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co">    create an Orcale connection and read the data with</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Pandas.</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    dsn <span class="op">=</span> cx_Oracle.makedsn(URL, PORT, SID)</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    connection <span class="op">=</span> cx_Oracle.<span class="ex">connect</span>(user<span class="op">=</span>USERNAME, password<span class="op">=</span>PASSWORD, dsn<span class="op">=</span>dsn)</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_sql(sql<span class="op">=</span>test_query, con<span class="op">=</span>conn)</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With all your DB credentials. Our docker-compose.yml is simple:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.5"</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">dbconnect</span><span class="kw">:</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">context</span><span class="kw">:</span><span class="at"> .</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> .:/main</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And you would build and run this as before, if you had a real database to connect to.</p>
+<hr>
+<p>As you can see, there are lots of use cases for how you might want to use Docker for data science. The examples above are deliberately simple on the DS-side so that the use of Docker is clear. However, they’re not so realistic, so let’s build out an example which is. This is an RMarkdown report, run as a cli that you can schedule, and in a future post I’ll describe how to Dockerise a machine learning model prediction service. Kewlz. Let’s go! 🏄🏿‍♂️</p>
+</section>
+<section id="complete-example-automated-report" class="level2">
+<h2 class="anchored" data-anchor-id="complete-example-automated-report">Complete Example – Automated Report</h2>
+<div id="mainexample">
+<p>I’ll include all the code here so you can reproduce this yourself. Explanations will be minimal since we already went through that 👮‍♂️</p>
+<p>Ok, let’s get set up. We’re not going to get mega-complex here, any of the extras you need, you should be able to use some of the examples above (including Python, local packages, DB connections etc.). We’ll have one master RMarkdown file and a <code>main.R</code> file that will control all of the other things we do.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> reporting <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> reporting</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> Dockerfile <span class="kw">&amp;&amp;</span> <span class="fu">touch</span> docker-compose.yml</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> rmarkdown <span class="kw">&amp;&amp;</span> <span class="fu">mkdir</span> R</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> rmarkdown/master.Rmd</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> R/main.R</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ok, let’s see what we’d need for a realistic reporting app. We’ll use cli to get a nice CLI and <a href="https://github.com/trevorld/r-optparse">optparse</a> to parse command line options fed in. We’ll need a logger, so I’ll use <a href="https://github.com/johnmyleswhite/log4r">log4r</a>. I’ll also use some <a href="https://github.com/tidyverse">tidyverse</a> packages. Let’s put all this in a <code>R/libraries.R</code> file so that <code>main.R</code> doesn’t get cluttered up. Our project looks like this now:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="ex">tree</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> Dockerfile</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> R</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── libraries.R</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── main.R</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> docker-compose.yml</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> reporting.Rproj</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> rmarkdown</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> master.Rmd</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span> directories, 6 files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>libraries.R</code> looks like this:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"dplyr"</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tibble"</span>)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"rmarkdown"</span>)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"log4r"</span>)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"cli"</span>)</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"optparse"</span>)</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"knitr"</span>)</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"glue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We’ll create a few more things to get going. First, create a <code>reports/</code> folder in the project root, that’s where we’ll put our rendered reports. In our <code>R</code> folder, also create a <code>cmdargs.R</code>, which is where we’ll parse the command line arguments that we’ll pass to our script. <code>cmdargs.R</code> looks like this:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>parse_cmd_args <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  option_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">make_option</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(<span class="st">"-i"</span>, <span class="st">"--input"</span>),</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"character"</span>,</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">help =</span> <span class="st">"The text inoput you'd like to see rendered"</span>,</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">metavar =</span> <span class="st">"character"</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">make_option</span>(</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(<span class="st">"-g"</span>, <span class="st">"--graph"</span>),</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"character"</span>,</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">default =</span> <span class="st">"yes"</span>,</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">help =</span> <span class="st">"Would you like a graph? Or a table?"</span>,</span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">metavar =</span> <span class="st">"character"</span></span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>  opt_parser <span class="ot">&lt;-</span> <span class="fu">OptionParser</span>(<span class="at">option_list =</span> option_list)</span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>  opt <span class="ot">&lt;-</span> <span class="fu">parse_args</span>(opt_parser)</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(opt)</span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We’re going to allow the user to choose between a graph or a table in their output, and to put in some input that will be rendered as text. The graph is chosen by default.</p>
+<p>Our RMarkdown file, <code>master.Rmd</code>, will produce a HTML page. It looks like this:</p>
+<pre><code>---
+title: "Awesome Report"
+author: "Report Guy"
+params:
+  input: NULL
+  graph: NULL
+date: "Produced on: `r format(Sys.time(), '%b %d, %Y')`"
+output: html_document
+---
+
+This is your amazeballs report, automated with R, RMarkdown and Docker. Your input was:
+
+`r asis_output(input)`
+
+{r message=FALSE, warning=FALSE}
+mcars &lt;- mtcars %&gt;% rownames_to_column()
+if (graph == "yes") {
+  asis_output("You asked for a graph! So here you go: ")
+  ggplot(mcars, aes(x = wt, y = reorder(rowname, wt))) +
+    geom_col(fill = "firebrick", col = "black") +
+    theme_bw() +
+    labs(y = NULL, x = "Weight of Car")
+} else {
+  asis_output("You wanted a table! So here you go: ")
+  kable(mcars)
+}</code></pre>
+<p>What’s happening here? Well, with <code>params</code> in the YAML header, we’re sending command line arguments to the document, which are our input and whether the user wants a graph or not (<code>"yes"</code> and <code>"no"</code>). <code>input</code> gets printed with <code>r asis_output(input)</code>, and the code chunk prints either a plot or a table.</p>
+<p>All of this is called from <code>main.R</code>. This file contains the CLI code so our script will print some pretty output to the terminal as it’s working, and it loads our other R files as well as calls the rendering of the RMarkdown file. The CLI stuff starts with <code>cli_</code> or it’s a rule (I use an empty rule to get some blank space). Other than that, we’re just sourcing files, parsing the command line arguments, logging anything of interest, and sending everything off to <code>render()</code> for RMarkdown to take care of it.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env Rscript</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressMessages</span>(</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressPackageStartupMessages</span>(</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">source</span>(<span class="st">"R/libraries.R"</span>)</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/cmdargs.R"</span>)</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="fu">rule</span>(<span class="at">line =</span> <span class="st">" "</span>)</span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rule</span>(</span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">center =</span> <span class="st">"Awesome Automated Report"</span>, <span class="at">col =</span> <span class="st">"cyan"</span>,</span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="fu">console_width</span>()</span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a><span class="fu">rule</span>(<span class="at">line =</span> <span class="st">" "</span>)</span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cli_text</span>(<span class="st">"{col_grey('Reports started at ')}{col_magenta(start)}."</span>)</span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"logs/"</span>)) {</span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="st">"logs/"</span>)</span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>log_file <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"logs/awesome_report_"</span>, start, <span class="st">".log"</span>)</span>
+<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>logger <span class="ot">&lt;-</span> <span class="fu">logger</span>(<span class="st">"INFO"</span>, <span class="at">appenders =</span> <span class="fu">file_appender</span>(log_file))</span>
+<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a><span class="fu">info</span>(logger, <span class="fu">glue</span>(<span class="st">"Reports started at {start}."</span>))</span>
+<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>cmdargs <span class="ot">&lt;-</span> <span class="fu">parse_cmd_args</span>()</span>
+<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> cmdargs<span class="sc">$</span>graph</span>
+<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a>input <span class="ot">&lt;-</span> cmdargs<span class="sc">$</span>input</span>
+<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (graph <span class="sc">==</span> <span class="st">"yes"</span>) {</span>
+<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cli_text</span>(<span class="fu">col_green</span>(<span class="st">"You asked for a graph, so we'll make one!"</span>))</span>
+<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">info</span>(logger, <span class="st">"Graph chosen by user."</span>)</span>
+<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cli_text</span>(<span class="fu">col_green</span>(<span class="st">"You asked for a table, so we'll make one!"</span>))</span>
+<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">info</span>(logger, <span class="st">"Table chosen by user."</span>)</span>
+<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a><span class="fu">rule</span>(<span class="at">line =</span> <span class="st">" "</span>)</span>
+<span id="cb58-40"><a href="#cb58-40" aria-hidden="true" tabindex="-1"></a>output_f <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"report_at_{start}.html"</span>)</span>
+<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a>param_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">graph =</span> graph, <span class="at">input =</span> input)</span>
+<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a><span class="fu">cli_alert_info</span>(<span class="fu">col_cyan</span>(<span class="st">"Report generation started..."</span>))</span>
+<span id="cb58-43"><a href="#cb58-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-44"><a href="#cb58-44" aria-hidden="true" tabindex="-1"></a><span class="fu">render</span>(</span>
+<span id="cb58-45"><a href="#cb58-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">input =</span> <span class="st">"rmarkdown/master.Rmd"</span>, <span class="at">output_format =</span> <span class="st">"html_document"</span>,</span>
+<span id="cb58-46"><a href="#cb58-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_file =</span> output_f, <span class="at">envir =</span> <span class="fu">new.env</span>(),</span>
+<span id="cb58-47"><a href="#cb58-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_dir =</span> <span class="fu">glue</span>(<span class="st">"reports/"</span>),</span>
+<span id="cb58-48"><a href="#cb58-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">params =</span> param_list</span>
+<span id="cb58-49"><a href="#cb58-49" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-50"><a href="#cb58-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-51"><a href="#cb58-51" aria-hidden="true" tabindex="-1"></a><span class="fu">cli_alert_success</span>(<span class="fu">col_green</span>(<span class="st">"Reports finished!"</span>))</span>
+<span id="cb58-52"><a href="#cb58-52" aria-hidden="true" tabindex="-1"></a><span class="fu">rule</span>(<span class="at">line =</span> <span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>What does this look like when we run it? Since it’s got <code>#!/usr/bin/env Rscript</code> at the top, we can run this from the terminal with <code>Rscript</code> and supply our arguments with <code>--</code>:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> Rscript R/main.R <span class="at">--input</span><span class="op">=</span><span class="st">"hello"</span> <span class="at">--graph</span><span class="op">=</span><span class="st">"yes"</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="ex">────────────────────────────────────</span> Awesome Automated Report ───────────────────────────────────────</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Reports</span> started at 2020-02-25 10:53:21.</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> asked for a graph, so we<span class="st">'ll make one!</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="st">ℹ Report generation started...</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="st">✓ Reports finished!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Great 👻. You can’t see the nice colours here, but they’ll render in your local terminal 👨🏼‍🎨.</p>
+<p>Our log file was written successfully, it has this in it, for no input and <code>graph="no"</code>:</p>
+<pre class="log"><code>INFO  [2020-02-25 12:06:38] Reports started at 2020-02-25 12:06:37.
+INFO  [2020-02-25 12:06:38] Table chosen by user.</code></pre>
+<p>What does the actual HTML look like? For when the user passes in <code>--input="hello"</code> and <code>graph="yes"</code>, it looks like this:</p>
+<p><img src="images/graph.png" class="img-fluid"></p>
+<p>And for when we pass in <code>"Here's a table this time"</code> as input and <code>graph="no"</code>:</p>
+<p><img src="images/table.png" class="img-fluid"></p>
+<p>Very nice! Ok, it says “automated with R, RMarkdown and <em>Docker</em>”, so let’s get to the Docker part.</p>
+<p>Our Dockerfile is as follows:</p>
+<pre class="docker"><code>FROM r-base:3.6.0
+
+WORKDIR /main
+COPY . /main
+
+RUN apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends \
+    pandoc \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+RUN R -e "install.packages(c('dplyr', 'ggplot2', 'optparse', 'knitr', 'cli', 'knitr', 'rmarkdown', 'log4r'), repos = 'http://cran.rstudio.com/')"
+
+ENTRYPOINT ["Rscript", "R/main.R"]</code></pre>
+<p>…with our docker-compose.yml as:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.5"</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">report</span><span class="kw">:</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">context</span><span class="kw">:</span><span class="at"> .</span></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> .:/main</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can build it with <code>docker-compose build</code> (actually, this takes quite a while, using a tidyverse R Docker image is probably a better idea here) and run it with <code>docker-compose run report</code>. What do we get?</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="ex">───────────────────────────</span> Awesome Automated Report ───────────────────────────</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Reports</span> started at 2020-02-25 22:43:13.</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> asked for a graph, so we<span class="st">'ll make one!</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="st">ℹ Report generation started...</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="st">✔ Reports finished!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Since we supplied no arguments, we got a report with a graph, you can check it out in your <code>reports/</code> folder. We can supply arguments:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> run report <span class="at">--graph</span><span class="op">=</span><span class="st">"no"</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="ex">───────────────────────────</span> Awesome Automated Report ───────────────────────────</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Reports</span> started at 2020-02-25 22:47:50.</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> asked for a table, so we<span class="st">'ll make one!</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="st">ℹ Report generation started...</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="st">✔ Reports finished!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>…aaaand a nice report appears in the appropriate folder with a table in it.</p>
+<p>These are obviously minimal reports, but all of the infrastructure is here to build as complicated a (static) report as you could wish with RMarkdown. Go at it! 🚀</p>
+</div>
+</section>
+<section id="sharing-the-docker-image" class="level2">
+<h2 class="anchored" data-anchor-id="sharing-the-docker-image">Sharing the Docker Image</h2>
+<p>Now that you’ve got a program that runs inside of a Docker image, you have a few options for sharing it. You can just copy the project folder over to wherever – a remote server, for example – and build the Docker image from the Dockerfile there. Or you can just save it and load it again. Much easier.</p>
+<p>You save the Docker image to a tarball as so:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> save reporting_report <span class="op">&gt;</span> reports.tar</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You then transfer this file over to wherever you need to run from. From this location, run:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> load <span class="op">&lt;</span> reports.tar</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now this can be run from the other location with <code>docker-compose run reports</code> as before. You can schedule it with <a href="https://www.shizidushu.com/2019/03/03/schedule-r-script-with-docker-and-airflow/">Airflow</a>, for example.</p>
+<p><br> Aaalright, hope this was helpful! Take it easy now 🐶</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
