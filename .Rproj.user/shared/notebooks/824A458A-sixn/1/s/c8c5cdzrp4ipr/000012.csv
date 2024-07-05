@@ -1,7 +1,0 @@
-"0","ggplot(sixn_dates, aes(x = year, y = value, group = name, colour = name)) +"
-"0","  geom_line() +"
-"0","  geom_point() +"
-"0","  scale_y_discrete(limits=rev) +"
-"0","  scale_x_datetime(date_breaks = ""2 years"", date_labels = ""%Y"") +"
-"0","  scale_colour_manual(values = c(""#FFFFFF"", ""#133472"", ""#296044"", ""#275DA1"", ""#1D4976"", ""#DB4733""))+"
-"0","  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())"

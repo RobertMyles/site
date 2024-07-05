@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/uk-elections-2024.html",
       "/posts/wetwinter.html",
       "/posts/modelscript.html",
       "/posts/mtcars.html",

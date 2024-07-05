@@ -1,8 +1,0 @@
-"0","blue <- ""dodgerblue4"""
-"0","theme_set(theme_minimal())"
-"0","update_geom_defaults(""point"", list(colour = blue))"
-"0","update_geom_defaults(""bar"", list(colour = blue, fill = ""dodgerblue2""))"
-"0","update_geom_defaults(""line"", list(colour = blue))"
-"0",""
-"0","ggplot(rain, aes(x = date, y = rain)) +"
-"0","  geom_line()"

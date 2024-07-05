@@ -1,8 +1,0 @@
-"0","month_rain <- rain |> "
-"0","  mutate(m_date = floor_date(date, ""month"")) |> "
-"0","  group_by(m_date) |> "
-"0","  summarise(month_sum = sum(rain)) |> "
-"0","  ungroup()"
-"0",""
-"0","ggplot(month_rain, aes(x = m_date, y = month_sum)) +"
-"0","  geom_line()"

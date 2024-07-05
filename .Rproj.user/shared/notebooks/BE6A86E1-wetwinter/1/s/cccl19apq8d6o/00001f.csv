@@ -1,5 +1,0 @@
-"0","rain |> "
-"0","  mutate("
-"0","    months = str_extract(date, ""-[a-z]*-"") |> str_remove_all(""-"")"
-"0","  ) |> "
-"0","  distinct(months)"

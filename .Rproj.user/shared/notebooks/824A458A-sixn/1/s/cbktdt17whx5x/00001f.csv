@@ -1,3 +1,0 @@
-"0","ggplot(sixn_long, aes(x = year, y = value, group = name, colour = name)) +"
-"0","  geom_line() +"
-"0","  geom_point()"
