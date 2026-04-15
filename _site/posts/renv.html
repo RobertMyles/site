@@ -182,7 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Basically, you can use the R-projects style that is already easy to do from RStudio. Either create a new project or associate a new project with an existing folder. Imagine you have a project that will read data from a database, calculate some summaries and produce plots, all for an automated report. To do something like this, you’ll probably use some tidyverse packages like dplyr and ggplot2, some document-making packages like knitr and rmarkdown, and maybe something like implyr and DBI/odbc for getting data. Maybe this will be a package for private use, and you may have devtools, tinytest/testthat and covr installed.</p>
 <p>Well, first you’ll obviously need to install renv. This is easy to do with <code>remotes::install_github("rstudio/renv")</code> (since it’s not on CRAN yet). Once you’ve made an R-project from RStudio (<code>File &gt; New Project &gt;</code> etc.), you can simply type <code>renv::init()</code>. This will set up the infrastructure that renv will use to keep track of the packages you use, and create a private library for these. Depending on what you’re already using in this project (maybe nothing apart from base R), renv will install the packages it sees in your .R files into this private library.</p>
 <p>Running <code>renv::init()</code> will show you something like this in your R console:</p>
-<div class="cell" data-hash="renv_cache/html/unnamed-chunk-1_8887f896b2886bb3d9c2dbe63fac5563">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> renv<span class="sc">::</span><span class="fu">init</span>()</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span> Discovering package dependencies ... Done<span class="sc">!</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="er">*</span> Copying packages into the cache ... <span class="sc">*</span> Querying repositories <span class="cf">for</span> available source packages ... Done<span class="sc">!</span></span>
@@ -208,7 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span> Project <span class="st">'~/renv_proj'</span> loaded. [renv <span class="dv">0</span>.<span class="fl">6.0</span><span class="dv">-113</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The packages that have been installed are recorded in a lockfile, which is a JSON file that looks like this (depending on what you’ve installed):</p>
-<div class="cell" data-hash="renv_cache/html/unnamed-chunk-2_859f1b737acd618c2e700187872facc0">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"renv"</span><span class="op">:</span> {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Version"</span><span class="op">:</span> <span class="st">"0.6.0-113"</span></span>
@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Any time you update a package or install a new one, you can call <code>renv::snapshot()</code> to record the current state of packages to the lockfile (this can be done automatically with <code>options(renv.config.auto.snapshot = TRUE)</code>). If you need a previous version of the lockfile, use <code>renv::restore()</code>, which by default will choose the previous snapshot.</p>
 <p>Here’s an example of the console printout from installing knitr with renv:</p>
-<div class="cell" data-hash="renv_cache/html/unnamed-chunk-3_1192afdf6b9874fa0f0b53d4018e3be5">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">install.packages</span>(<span class="st">"knitr"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span> Querying repositories <span class="cf">for</span> available source packages ... Done<span class="sc">!</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="er">*</span> Querying repositories <span class="cf">for</span> available binary packages ... Done<span class="sc">!</span></span>
@@ -262,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span> Lockfile written to <span class="st">'~/Documents/renv_proj/renv.lock'</span>.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It’s pretty easy to see package dependencies with renv. We can see what dependencies come from our .R files, for example, which is a nice feature:</p>
-<div class="cell" data-hash="renv_cache/html/unnamed-chunk-4_a67c2ab3b521cec4e5fad333c6b79d3e">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
