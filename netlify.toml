@@ -1,7 +1,5 @@
 [build]
   publish = "_site"
-  command = "quarto render"
 
 [build.environment]
   NODE_VERSION = "22"
-  QUARTO_VERSION = "1.5.31"
