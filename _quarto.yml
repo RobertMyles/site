@@ -7,7 +7,7 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/RobertMyles
 format:
   html:
     theme: united
