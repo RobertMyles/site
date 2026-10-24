@@ -10,4 +10,4 @@ Built with Quarto for R stuff, mainly.
 2. Commit to `main`, or open a pull request to get a preview link first.
 3. GitHub Actions renders the site with a pinned Quarto version and deploys it to Netlify. `_site/` is not committed.
 
-Code chunks don't run in CI (`execute.eval: false`). To include live R output in a post, set `eval: true` in that post, run `quarto render posts/my-post.qmd` locally once, and commit the post's folder under `_freeze/`.
+Code chunks don't run in CI (`execute.eval: false`); CI installs only base R with knitr to print them. To include live R output in a post, set `eval: true` in that post, run `quarto render posts/my-post.qmd` locally once, and commit the post's folder under `_freeze/`.
