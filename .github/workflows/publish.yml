@@ -55,6 +55,15 @@ jobs:
         with:
           node-version: 22
 
+      - name: Check Netlify secrets
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          # Without these, netlify-cli waits minutes for an interactive login.
+          : "${NETLIFY_AUTH_TOKEN:?Add the NETLIFY_AUTH_TOKEN repository secret}"
+          : "${NETLIFY_SITE_ID:?Add the NETLIFY_SITE_ID repository secret}"
+
       - name: Deploy to Netlify (production)
         if: github.event_name != 'pull_request'
         env:
