@@ -41,6 +41,8 @@ jobs:
           packages: |
             any::knitr
             any::rmarkdown
+          # Quarto comes from the pinned setup step below.
+          install-quarto: false
 
       - uses: quarto-dev/quarto-actions/setup@v2
         with:
