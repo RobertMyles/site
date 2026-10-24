@@ -1,2 +1,5 @@
+# The site is built and deployed by GitHub Actions (.github/workflows/publish.yml).
+# Skip Netlify's own git-triggered builds; CLI deploys from CI are unaffected.
 [build]
   publish = "_site"
+  ignore = "exit 0"
